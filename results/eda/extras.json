@@ -1,0 +1,288 @@
+{
+  "intensity": {
+    "object": {
+      "all": {
+        "mean": 0.9841547673883003,
+        "median": 1.0,
+        "max": 4,
+        "std": 0.811891957650373
+      },
+      "changed": {
+        "mean": 1.3717257318952234,
+        "median": 1.0,
+        "max": 4,
+        "std": 0.622185909829003
+      }
+    },
+    "event": {
+      "all": {
+        "mean": 1.0607093505297098,
+        "median": 1.0,
+        "max": 4,
+        "std": 0.9588009044581502
+      },
+      "changed": {
+        "mean": 1.4784283513097072,
+        "median": 1.0,
+        "max": 4,
+        "std": 0.8147157049515578
+      }
+    },
+    "attribute": {
+      "all": {
+        "mean": 1.5234454168585905,
+        "median": 1.0,
+        "max": 4,
+        "std": 1.28204778981404
+      },
+      "changed": {
+        "mean": 2.123394966615306,
+        "median": 2.0,
+        "max": 4,
+        "std": 1.0084655435753227
+      }
+    }
+  },
+  "drift_top3": {
+    "object": [
+      {
+        "label": "asphalt",
+        "rel_spread_pct": 90.70933268321741,
+        "values_pct": {
+          "train": 0.4266413842142688,
+          "val": 1.0084033613445378,
+          "test": 0.4889975550122249
+        }
+      },
+      {
+        "label": "land",
+        "rel_spread_pct": 74.38861275120333,
+        "values_pct": {
+          "train": 0.9954965631666272,
+          "val": 1.680672268907563,
+          "test": 0.8149959250203749
+        }
+      },
+      {
+        "label": "green",
+        "rel_spread_pct": 64.34154259575988,
+        "values_pct": {
+          "train": 0.3081298885991941,
+          "val": 0.33613445378151263,
+          "test": 0.16299918500407498
+        }
+      }
+    ],
+    "event": [
+      {
+        "label": "surround",
+        "rel_spread_pct": 53.170652465682785,
+        "values_pct": {
+          "train": 1.2325195543967764,
+          "val": 2.1848739495798317,
+          "test": 1.9559902200488997
+        }
+      },
+      {
+        "label": "remain",
+        "rel_spread_pct": 33.52660848667261,
+        "values_pct": {
+          "train": 0.9717942640436122,
+          "val": 1.3445378151260505,
+          "test": 1.3854930725346373
+        }
+      },
+      {
+        "label": "destroy",
+        "rel_spread_pct": 31.274205810190832,
+        "values_pct": {
+          "train": 5.593742593031524,
+          "val": 4.033613445378151,
+          "test": 5.623471882640587
+        }
+      }
+    ],
+    "attribute": [
+      {
+        "label": "dark",
+        "rel_spread_pct": 150.21617130940473,
+        "values_pct": {
+          "train": 0.5688551789523584,
+          "val": 0.0,
+          "test": 0.5704971475142624
+        }
+      },
+      {
+        "label": "dense",
+        "rel_spread_pct": 103.61172290300884,
+        "values_pct": {
+          "train": 0.8532827684285376,
+          "val": 0.33613445378151263,
+          "test": 1.1409942950285248
+        }
+      },
+      {
+        "label": "long",
+        "rel_spread_pct": 94.39423194322161,
+        "values_pct": {
+          "train": 2.180611519317374,
+          "val": 1.3445378151260505,
+          "test": 0.8149959250203749
+        }
+      }
+    ]
+  },
+  "image_stats": {
+    "resolution_distribution": {
+      "256x256": 500
+    },
+    "filesize_bytes": {
+      "mean": 114879.334,
+      "median": 114861.5,
+      "min": 49205,
+      "max": 156518,
+      "n_sampled": 500
+    }
+  },
+  "augmentation": {
+    "totals": {
+      "original": 5196,
+      "random_augment": 4128,
+      "ters": 850,
+      "ters+aug": 681
+    },
+    "per_split": {
+      "train": {
+        "original": 3625,
+        "random_augment": 3619,
+        "ters": 598,
+        "ters+aug": 596
+      },
+      "val": {
+        "original": 509,
+        "random_augment": 509,
+        "ters": 87,
+        "ters+aug": 85
+      },
+      "test": {
+        "original": 1062,
+        "ters": 165
+      }
+    }
+  },
+  "cooccurrence_top5": {
+    "object": [
+      {
+        "a": "building",
+        "b": "road",
+        "n": 812
+      },
+      {
+        "a": "building",
+        "b": "tree",
+        "n": 721
+      },
+      {
+        "a": "building",
+        "b": "field",
+        "n": 336
+      },
+      {
+        "a": "tree",
+        "b": "road",
+        "n": 217
+      },
+      {
+        "a": "building",
+        "b": "vegetation",
+        "n": 199
+      }
+    ],
+    "event": [
+      {
+        "a": "remove",
+        "b": "replace",
+        "n": 415
+      },
+      {
+        "a": "build",
+        "b": "appear",
+        "n": 367
+      },
+      {
+        "a": "build",
+        "b": "remove",
+        "n": 322
+      },
+      {
+        "a": "build",
+        "b": "replace",
+        "n": 320
+      },
+      {
+        "a": "appear",
+        "b": "replace",
+        "n": 302
+      }
+    ],
+    "attribute": [
+      {
+        "a": "blue",
+        "b": "gray",
+        "n": 1239
+      },
+      {
+        "a": "blue",
+        "b": "large",
+        "n": 610
+      },
+      {
+        "a": "blue",
+        "b": "black",
+        "n": 538
+      },
+      {
+        "a": "gray",
+        "b": "huge",
+        "n": 495
+      },
+      {
+        "a": "blue",
+        "b": "green",
+        "n": 488
+      }
+    ]
+  },
+  "diff_nochange_stats": [
+    {
+      "sample_id": "test_008778_02556png1_1_0.png",
+      "mean_abs_diff": 0.12163133919239044,
+      "p95_abs_diff": 0.3019607961177826,
+      "max_abs_diff": 0.729411780834198
+    },
+    {
+      "sample_id": "train_010026_06694png2_1_0_random_augment.png",
+      "mean_abs_diff": 0.08804021775722504,
+      "p95_abs_diff": 0.2509803771972656,
+      "max_abs_diff": 0.5686274766921997
+    },
+    {
+      "sample_id": "train_010254_07598png1_1_0_random_augment.png",
+      "mean_abs_diff": 0.11238798499107361,
+      "p95_abs_diff": 0.3058823347091675,
+      "max_abs_diff": 0.6274509429931641
+    },
+    {
+      "sample_id": "test_010677_10507png4_1_0.png",
+      "mean_abs_diff": 0.23321108520030975,
+      "p95_abs_diff": 0.5686274766921997,
+      "max_abs_diff": 0.9215686321258545
+    },
+    {
+      "sample_id": "train_009927_06320png1_1_0.png",
+      "mean_abs_diff": 0.16010604798793793,
+      "p95_abs_diff": 0.3960784375667572,
+      "max_abs_diff": 0.8745098114013672
+    }
+  ]
+}

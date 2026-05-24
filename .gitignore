@@ -216,4 +216,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project-specific
 dataset/
+# Heavy generated artifacts; keep summary docs in results/ tracked manually if needed.
+results/**/figures/
+*.ckpt
+*.pth
+*.pt
+.mcp.json

@@ -1,0 +1,14 @@
+# BLM5135 — Multi-label bi-temporal change classification
+# Python 3.12.7 reference environment.
+#
+# This file pins ONLY the packages currently used by the scripts in this
+# repository. Training/inference dependencies (torch, torchvision, timm,
+# scikit-learn, etc.) will be added as those scripts are introduced.
+#
+# Install with:
+#     pip install -r requirements.txt
+
+# --- Exploratory data analysis (scripts/run_eda.py) ----------------------
+numpy==1.26.4
+matplotlib==3.9.2
+Pillow==10.4.0

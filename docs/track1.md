@@ -211,10 +211,11 @@ Report micro-F1 (good because of `building`), macro-F1 (the honest metric for im
 
 ## Course Compliance Notes
 
-The course rubric specifies a few things that must be present:
+The course rubric is explicit: **missing `ReadMe.txt` or `requirements.txt` costs 10 points each**. Both files must exist with these exact names.
 
-- `requirements.txt` with pinned versions. Generate by `pip freeze` after the environment is set up; don't guess versions.
-- A `README.md` covering: description, install steps, how to run training / evaluation / visualization, and the file layout. The course PDF mentions a `ReadMe.txt`; we're using `README.md` instead (same content, more conventional name). The −10 penalty in the rubric is for missing content, not the extension.
+- `ReadMe.txt` — plain text, exact filename (capital R and M). Written in Turkish. Covers description, dependencies, and how to run training / evaluation / visualization. Keep it concise; the longer narrative version goes in `README.md`. The course PDF includes a template at the bottom of the project description — follow that structure.
+- `requirements.txt` — pinned versions. Generate by `pip freeze` after the environment is set up; don't hand-write.
+- `README.md` — keep this too, for repo discoverability. Same content as `ReadMe.txt` but in English and more detailed.
 - All experiments must produce text logs (.txt) of training output. Use a logger that writes to both console and file.
 
 ---
@@ -237,7 +238,7 @@ Track 1 is done when:
 - All four configs train without errors.
 - Each training run completes in under 2 hours on a Colab A100.
 - All expected outputs (logs, checkpoints, plots, metrics, qualitative examples) exist.
-- The README is complete.
+- `ReadMe.txt`, `README.md`, and `requirements.txt` are all complete.
 - A smoke test of `eval.py` and `visualize.py` works end-to-end.
 
 Then hand back for review. If you finish faster than expected, the answer is "do nothing extra." Track 2 is where extra effort goes.

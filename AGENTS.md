@@ -26,11 +26,32 @@ Course: BLM5135 Deep Learning (Yıldız Technical University). Deadline: **2026-
 
 ## Where compute runs
 
-Training runs on **Google Colab Pro (A100)**, not locally. Use the `colab` CLI via bash (see the `colab-session-operator` skill for full reference).
+**Primary (full training runs):** Google Colab Pro (A100) via the `colab` CLI (see the `colab-session-operator` skill).
 
-Dataset lives at `MyDrive/dataset/` on Google Drive. Standard session prep: `colab drivemount`, then read directly from `/content/drive/MyDrive/dataset/`. Don't copy the dataset every session.
+**Local fallback (debug + small runs):** the user's laptop has an **RTX 4060 (8 GB VRAM) + 64 GB RAM**. Usable for smoke tests, dataloader debugging, single-batch overfit checks, and small-subset training. ConvNeXt-Tiny at batch 32–64, 224×224 fits comfortably. Don't run the full 30-epoch training plan locally — that's what Colab A100 is for.
 
-The user's laptop is for code, EDA, and visualization only. Don't train locally.
+**Dataset paths:**
+- On Colab: `/content/drive/MyDrive/dataset/` after `colab drivemount`. Don't copy the dataset every session.
+- Locally: `dataset/` in the repo (gitignored).
+
+### Budget hygiene (~200 Colab credits)
+
+Credits are finite. Burn them only on runs that produce usable results.
+
+- **Local first for light work, Colab when you need real GPU throughput.** The 4060 handles debug iterations cheaper than any Colab session.
+- **CPU Colab sessions for non-training work on Colab** (smoke tests, vocab inspection, Drive I/O checks). ~50× cheaper than A100.
+- **Right-size GPU per task, not smallest-possible.** User prefers faster wall-clock over saved credits when the speedup is significant — don't downgrade an A100 run to T4 just to save units if A100 cuts training from 4 h to 1 h. Rough guide: T4 for subset sanity runs, A100 for full Track-1 training runs.
+- **High-end GPUs (H100, A100-80GB) need explicit user approval before provisioning.** They're available on Colab Pro but pricey. Ask first when the task is computation-heavy — full multi-hour training, hyperparameter sweep, large-scale ablation. No need to ask for routine debug runs, smoke tests, or single-config Track-1 training (A100 is fine by default).
+- **One Colab session at a time.** `colab stop -s <previous>` before `colab new -s <next>`.
+- **`colab stop` immediately when a task is done** — including before context-switching. Idle VMs burn credits with nothing executing.
+- **Smoke-test (locally or CPU) before paying for a GPU session.** Run end-to-end on a ~200-sample subset, then provision the GPU.
+- **Verify the GPU before training.** Exec `nvidia-smi`; if Colab handed you the wrong device, stop and re-provision.
+- **Checkpoint every epoch to Drive on long runs.** `/content/` is wiped on session loss; use `/content/drive/MyDrive/.../checkpoints/<run>/`.
+- **Stream logs to a Drive-backed file, flushed per epoch.** Partial results survive a mid-run crash.
+
+Guardrails — stop and ask before provisioning if either applies:
+- The task hasn't been smoke-tested (locally or on CPU) yet.
+- The task is computation-heavy enough to want a higher GPU tier (H100 / A100-80GB) or will run for several hours.
 
 ## Stack
 
@@ -56,7 +77,6 @@ If tempted to add one of these, ask first.
 - All experiments write text logs to `results/track1/<run>/logs/*.txt` — course rubric requires it.
 - Outputs go under `results/track1/`, never to repo root or `dataset/`.
 - `pathlib.Path` over `os.path.join`. `argparse` only in top-level scripts.
-- Always `colab stop` when done; idle VMs burn compute units.
 
 ## Required submission files
 

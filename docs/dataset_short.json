@@ -1,0 +1,614 @@
+{
+  "images": [
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00003_0_0.png",
+      "imgid": 0,
+      "changeflag": 1,
+      "sample_id": "train_000000_00003_0_0.png",
+      "rgb_A": "train/rgb/A/00003_0_0.png",
+      "rgb_B": "train/rgb/B/00003_0_0.png",
+      "object_labels": [
+        "tree"
+      ],
+      "attribute_labels": [
+        "dark",
+        "green"
+      ],
+      "event_labels": [
+        "turn"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00003_0_0_random_augment.png",
+      "imgid": 1,
+      "changeflag": 1,
+      "sample_id": "train_000001_00003_0_0_random_augment.png",
+      "rgb_A": "train/rgb/A/00003_0_0_random_augment.png",
+      "rgb_B": "train/rgb/B/00003_0_0_random_augment.png",
+      "object_labels": [
+        "tree"
+      ],
+      "attribute_labels": [
+        "dark",
+        "green"
+      ],
+      "event_labels": [
+        "turn"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00003_1_0.png",
+      "imgid": 2,
+      "changeflag": 1,
+      "sample_id": "train_000002_00003_1_0.png",
+      "rgb_A": "train/rgb/A/00003_1_0.png",
+      "rgb_B": "train/rgb/B/00003_1_0.png",
+      "object_labels": [
+        "tree"
+      ],
+      "attribute_labels": [
+        "green",
+        "dark"
+      ],
+      "event_labels": [
+        "replace"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00003_1_0_random_augment.png",
+      "imgid": 3,
+      "changeflag": 1,
+      "sample_id": "train_000003_00003_1_0_random_augment.png",
+      "rgb_A": "train/rgb/A/00003_1_0_random_augment.png",
+      "rgb_B": "train/rgb/B/00003_1_0_random_augment.png",
+      "object_labels": [
+        "tree"
+      ],
+      "attribute_labels": [
+        "green",
+        "dark"
+      ],
+      "event_labels": [
+        "replace"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00003_2_0.png",
+      "imgid": 4,
+      "changeflag": 1,
+      "sample_id": "train_000004_00003_2_0.png",
+      "rgb_A": "train/rgb/A/00003_2_0.png",
+      "rgb_B": "train/rgb/B/00003_2_0.png",
+      "object_labels": [
+        "field"
+      ],
+      "attribute_labels": [
+        "brown"
+      ],
+      "event_labels": [
+        "turn"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00003_2_0_random_augment.png",
+      "imgid": 5,
+      "changeflag": 1,
+      "sample_id": "train_000005_00003_2_0_random_augment.png",
+      "rgb_A": "train/rgb/A/00003_2_0_random_augment.png",
+      "rgb_B": "train/rgb/B/00003_2_0_random_augment.png",
+      "object_labels": [
+        "field"
+      ],
+      "attribute_labels": [
+        "brown"
+      ],
+      "event_labels": [
+        "turn"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00003_3_0.png",
+      "imgid": 6,
+      "changeflag": 1,
+      "sample_id": "train_000006_00003_3_0.png",
+      "rgb_A": "train/rgb/A/00003_3_0.png",
+      "rgb_B": "train/rgb/B/00003_3_0.png",
+      "object_labels": [
+        "field"
+      ],
+      "attribute_labels": [
+        "brown",
+        "huge"
+      ],
+      "event_labels": [
+        "turn"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00003_3_0_random_augment.png",
+      "imgid": 7,
+      "changeflag": 1,
+      "sample_id": "train_000007_00003_3_0_random_augment.png",
+      "rgb_A": "train/rgb/A/00003_3_0_random_augment.png",
+      "rgb_B": "train/rgb/B/00003_3_0_random_augment.png",
+      "object_labels": [
+        "field"
+      ],
+      "attribute_labels": [
+        "brown",
+        "huge"
+      ],
+      "event_labels": [
+        "turn"
+      ]
+    },
+    {
+      "filepath": "test",
+      "split": "test",
+      "filename": "00011_0_0.png",
+      "imgid": 8,
+      "changeflag": 1,
+      "sample_id": "test_000008_00011_0_0.png",
+      "rgb_A": "test/rgb/A/00011_0_0.png",
+      "rgb_B": "test/rgb/B/00011_0_0.png",
+      "object_labels": [
+        "tree"
+      ],
+      "attribute_labels": [
+        "blue"
+      ],
+      "event_labels": [
+        "replace",
+        "turn"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00011_1_0.png",
+      "imgid": 9,
+      "changeflag": 1,
+      "sample_id": "train_000009_00011_1_0.png",
+      "rgb_A": "train/rgb/A/00011_1_0.png",
+      "rgb_B": "train/rgb/B/00011_1_0.png",
+      "object_labels": [
+        "tree",
+        "building"
+      ],
+      "attribute_labels": [
+        "middle"
+      ],
+      "event_labels": [
+        "turn"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00011_1_0_random_augment.png",
+      "imgid": 10,
+      "changeflag": 1,
+      "sample_id": "train_000010_00011_1_0_random_augment.png",
+      "rgb_A": "train/rgb/A/00011_1_0_random_augment.png",
+      "rgb_B": "train/rgb/B/00011_1_0_random_augment.png",
+      "object_labels": [
+        "tree",
+        "building"
+      ],
+      "attribute_labels": [
+        "middle"
+      ],
+      "event_labels": [
+        "turn"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00011_2_0.png",
+      "imgid": 11,
+      "changeflag": 1,
+      "sample_id": "train_000011_00011_2_0.png",
+      "rgb_A": "train/rgb/A/00011_2_0.png",
+      "rgb_B": "train/rgb/B/00011_2_0.png",
+      "object_labels": [
+        "water",
+        "vegetation"
+      ],
+      "attribute_labels": [
+        "green",
+        "empty"
+      ],
+      "event_labels": [
+        "remove",
+        "appear"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00011_2_0_random_augment.png",
+      "imgid": 12,
+      "changeflag": 1,
+      "sample_id": "train_000012_00011_2_0_random_augment.png",
+      "rgb_A": "train/rgb/A/00011_2_0_random_augment.png",
+      "rgb_B": "train/rgb/B/00011_2_0_random_augment.png",
+      "object_labels": [
+        "water",
+        "vegetation"
+      ],
+      "attribute_labels": [
+        "green",
+        "empty"
+      ],
+      "event_labels": [
+        "remove",
+        "appear"
+      ]
+    },
+    {
+      "filepath": "val",
+      "split": "val",
+      "filename": "00011_3_0.png",
+      "imgid": 13,
+      "changeflag": 1,
+      "sample_id": "val_000013_00011_3_0.png",
+      "rgb_A": "val/rgb/A/00011_3_0.png",
+      "rgb_B": "val/rgb/B/00011_3_0.png",
+      "object_labels": [
+        "tree"
+      ],
+      "attribute_labels": [
+        "blue"
+      ],
+      "event_labels": [
+        "turn"
+      ]
+    },
+    {
+      "filepath": "val",
+      "split": "val",
+      "filename": "00011_3_0_random_augment.png",
+      "imgid": 14,
+      "changeflag": 1,
+      "sample_id": "val_000014_00011_3_0_random_augment.png",
+      "rgb_A": "val/rgb/A/00011_3_0_random_augment.png",
+      "rgb_B": "val/rgb/B/00011_3_0_random_augment.png",
+      "object_labels": [
+        "tree"
+      ],
+      "attribute_labels": [
+        "blue"
+      ],
+      "event_labels": [
+        "turn"
+      ]
+    },
+    {
+      "filepath": "val",
+      "split": "val",
+      "filename": "00013_0_0.png",
+      "imgid": 15,
+      "changeflag": 1,
+      "sample_id": "val_000015_00013_0_0.png",
+      "rgb_A": "val/rgb/A/00013_0_0.png",
+      "rgb_B": "val/rgb/B/00013_0_0.png",
+      "object_labels": [
+        "road",
+        "tree",
+        "building"
+      ],
+      "attribute_labels": [
+        "blue"
+      ],
+      "event_labels": [
+        "remove"
+      ]
+    },
+    {
+      "filepath": "val",
+      "split": "val",
+      "filename": "00013_0_0_random_augment.png",
+      "imgid": 16,
+      "changeflag": 1,
+      "sample_id": "val_000016_00013_0_0_random_augment.png",
+      "rgb_A": "val/rgb/A/00013_0_0_random_augment.png",
+      "rgb_B": "val/rgb/B/00013_0_0_random_augment.png",
+      "object_labels": [
+        "road",
+        "tree",
+        "building"
+      ],
+      "attribute_labels": [
+        "blue"
+      ],
+      "event_labels": [
+        "remove"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00013_1_0.png",
+      "imgid": 17,
+      "changeflag": 1,
+      "sample_id": "train_000017_00013_1_0.png",
+      "rgb_A": "train/rgb/A/00013_1_0.png",
+      "rgb_B": "train/rgb/B/00013_1_0.png",
+      "object_labels": [
+        "building",
+        "tree"
+      ],
+      "attribute_labels": [
+        "small",
+        "middle"
+      ],
+      "event_labels": [
+        "remove",
+        "replace",
+        "remain"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00013_1_0_random_augment.png",
+      "imgid": 18,
+      "changeflag": 1,
+      "sample_id": "train_000018_00013_1_0_random_augment.png",
+      "rgb_A": "train/rgb/A/00013_1_0_random_augment.png",
+      "rgb_B": "train/rgb/B/00013_1_0_random_augment.png",
+      "object_labels": [
+        "building",
+        "tree"
+      ],
+      "attribute_labels": [
+        "small",
+        "middle"
+      ],
+      "event_labels": [
+        "remove",
+        "replace",
+        "remain"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00013_2_0.png",
+      "imgid": 19,
+      "changeflag": 1,
+      "sample_id": "train_000019_00013_2_0.png",
+      "rgb_A": "train/rgb/A/00013_2_0.png",
+      "rgb_B": "train/rgb/B/00013_2_0.png",
+      "object_labels": [
+        "building"
+      ],
+      "attribute_labels": [
+        "blue"
+      ],
+      "event_labels": [
+        "replace",
+        "remove"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00013_2_0_random_augment.png",
+      "imgid": 20,
+      "changeflag": 1,
+      "sample_id": "train_000020_00013_2_0_random_augment.png",
+      "rgb_A": "train/rgb/A/00013_2_0_random_augment.png",
+      "rgb_B": "train/rgb/B/00013_2_0_random_augment.png",
+      "object_labels": [
+        "building"
+      ],
+      "attribute_labels": [
+        "blue"
+      ],
+      "event_labels": [
+        "replace",
+        "remove"
+      ]
+    },
+    {
+      "filepath": "test",
+      "split": "test",
+      "filename": "00013_3_0.png",
+      "imgid": 21,
+      "changeflag": 1,
+      "sample_id": "test_000021_00013_3_0.png",
+      "rgb_A": "test/rgb/A/00013_3_0.png",
+      "rgb_B": "test/rgb/B/00013_3_0.png",
+      "object_labels": [
+        "building"
+      ],
+      "attribute_labels": [
+        "blue"
+      ],
+      "event_labels": [
+        "build",
+        "replace"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00013_ters_1_0.png",
+      "imgid": 22,
+      "changeflag": 1,
+      "sample_id": "train_000022_00013_ters_1_0.png",
+      "rgb_A": "train/rgb/A/00013_ters_1_0.png",
+      "rgb_B": "train/rgb/B/00013_ters_1_0.png",
+      "object_labels": [
+        "building"
+      ],
+      "attribute_labels": [
+        "small"
+      ],
+      "event_labels": [
+        "build",
+        "replace"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00013_ters_1_0_random_augment.png",
+      "imgid": 23,
+      "changeflag": 1,
+      "sample_id": "train_000023_00013_ters_1_0_random_augment.png",
+      "rgb_A": "train/rgb/A/00013_ters_1_0_random_augment.png",
+      "rgb_B": "train/rgb/B/00013_ters_1_0_random_augment.png",
+      "object_labels": [
+        "building"
+      ],
+      "attribute_labels": [
+        "small"
+      ],
+      "event_labels": [
+        "build",
+        "replace"
+      ]
+    },
+    {
+      "filepath": "test",
+      "split": "test",
+      "filename": "00015_0_0.png",
+      "imgid": 24,
+      "changeflag": 0,
+      "sample_id": "test_000024_00015_0_0.png",
+      "rgb_A": "test/rgb/A/00015_0_0.png",
+      "rgb_B": "test/rgb/B/00015_0_0.png",
+      "object_labels": [
+        "none"
+      ],
+      "attribute_labels": [
+        "none"
+      ],
+      "event_labels": [
+        "none"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00015_1_0.png",
+      "imgid": 25,
+      "changeflag": 0,
+      "sample_id": "train_000025_00015_1_0.png",
+      "rgb_A": "train/rgb/A/00015_1_0.png",
+      "rgb_B": "train/rgb/B/00015_1_0.png",
+      "object_labels": [
+        "none"
+      ],
+      "attribute_labels": [
+        "none"
+      ],
+      "event_labels": [
+        "none"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00015_1_0_random_augment.png",
+      "imgid": 26,
+      "changeflag": 0,
+      "sample_id": "train_000026_00015_1_0_random_augment.png",
+      "rgb_A": "train/rgb/A/00015_1_0_random_augment.png",
+      "rgb_B": "train/rgb/B/00015_1_0_random_augment.png",
+      "object_labels": [
+        "none"
+      ],
+      "attribute_labels": [
+        "none"
+      ],
+      "event_labels": [
+        "none"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00015_2_0.png",
+      "imgid": 27,
+      "changeflag": 0,
+      "sample_id": "train_000027_00015_2_0.png",
+      "rgb_A": "train/rgb/A/00015_2_0.png",
+      "rgb_B": "train/rgb/B/00015_2_0.png",
+      "object_labels": [
+        "none"
+      ],
+      "attribute_labels": [
+        "none"
+      ],
+      "event_labels": [
+        "none"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00015_2_0_random_augment.png",
+      "imgid": 28,
+      "changeflag": 0,
+      "sample_id": "train_000028_00015_2_0_random_augment.png",
+      "rgb_A": "train/rgb/A/00015_2_0_random_augment.png",
+      "rgb_B": "train/rgb/B/00015_2_0_random_augment.png",
+      "object_labels": [
+        "none"
+      ],
+      "attribute_labels": [
+        "none"
+      ],
+      "event_labels": [
+        "none"
+      ]
+    },
+    {
+      "filepath": "train",
+      "split": "train",
+      "filename": "00015_3_0.png",
+      "imgid": 29,
+      "changeflag": 0,
+      "sample_id": "train_000029_00015_3_0.png",
+      "rgb_A": "train/rgb/A/00015_3_0.png",
+      "rgb_B": "train/rgb/B/00015_3_0.png",
+      "object_labels": [
+        "none"
+      ],
+      "attribute_labels": [
+        "none"
+      ],
+      "event_labels": [
+        "none"
+      ]
+    }
+  ],
+  "multilabel_metadata": {
+    "families": [
+      "object",
+      "event",
+      "attribute"
+    ],
+    "notes": "This file keeps only sample metadata and final multilabel targets per image."
+  }
+}

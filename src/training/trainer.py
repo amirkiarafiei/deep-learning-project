@@ -239,6 +239,10 @@ class Trainer:
             running[fam] = 0.0
         if self.cfg.model.include_changeflag:
             running["changeflag"] = 0.0
+        total_iters = len(self.train_loader)
+        log_every = max(1, total_iters // 5)  # ~5 progress lines per epoch
+        epochs = self.cfg.training.epochs
+        t_epoch = time.time()
         n_batches = 0
         for batch in self.train_loader:
             batch = self._move(batch)
@@ -258,6 +262,20 @@ class Trainer:
                 if k in losses:
                     running[k] += float(losses[k].detach())
             n_batches += 1
+            if n_batches % log_every == 0 or n_batches == total_iters:
+                elapsed = time.time() - t_epoch
+                eta_sec = int(elapsed / n_batches * (total_iters - n_batches))
+                avg = running["total"] / n_batches
+                if self.device.type == "cuda":
+                    mem = torch.cuda.memory_allocated() / 1e9
+                    tot = torch.cuda.get_device_properties(0).total_memory / 1e9
+                    mem_str = f"mem={mem:.1f}/{tot:.0f}GB  "
+                else:
+                    mem_str = ""
+                self.logger.info(
+                    f"  [ep {epoch:02d}/{epochs} iter {n_batches:>3d}/{total_iters}] "
+                    f"loss={avg:.4f}  {mem_str}eta_epoch={eta_sec}s"
+                )
         self.scheduler.step()
         n = max(n_batches, 1)
         return {k: v / n for k, v in running.items()}

@@ -60,7 +60,9 @@ PyTorch + timm. Plain PyTorch training loops, no Lightning. bf16 mixed precision
 
 ## Boundaries
 
-**Track 1 only** unless the user explicitly switches to Track 2. The following are reserved for Track 2 and must not be added now (the point of Track 1 is a clean baseline we can measure against later):
+**Track 1 only** unless the user explicitly switches to Track 2. Track 1 has its own internal iterations — Phase 1 (`v1.0.0`, shipped 2026-05-26) and Phase 2 (`v2`, planned) — both within Track 1 scope; see `docs/track1.md` § Phase structure for the map. Phase 2 stays inside Track 1; do not confuse it with Track 2.
+
+The following are reserved for Track 2 and must not be added in either Phase 1 or Phase 2 of Track 1 (the point of Track 1 is a clean baseline we can measure against later):
 
 - Foundation backbones (DINOv2, RemoteCLIP, SAM)
 - Asymmetric Loss, focal loss, distribution-balanced loss — plain BCE with `pos_weight` only

@@ -1,6 +1,6 @@
 # Track 1 — Implementation Spec
 
-A working, well-tested baseline that satisfies the course rubric. Track 2 (novel methods aimed at paper publication) is a separate document.
+A working, well-tested baseline that satisfies the course rubric. Track 2 (novel methods aimed at paper publication, likely transformer-heavy, will be planned separately after the deadline) is intentionally out of scope here.
 
 This spec describes *what* to build and *why* the choices are what they are, but does not prescribe every implementation detail. Use judgment on naming, formatting, error handling, and structure within the bounds described.
 
@@ -8,10 +8,30 @@ This spec describes *what* to build and *why* the choices are what they are, but
 
 ---
 
-## Goals
+## Phase structure of Track 1
 
-- Three Phase-1 models, one per label family (Object, Event, Attribute), each trained independently.
-- One Phase-2 model with a shared encoder and three heads, trained jointly.
+Track 1 progresses through controlled phases. Each phase ships a tagged release; v2 always builds on v1's data + analysis, never replaces it.
+
+| Phase | Version | Status | Scope |
+|---|---|---|---|
+| **Phase 1** | **v1.0.0** | ✅ shipped 2026-05-26 (commit `f16d610`, tag `v1.0.0`) | Clean baseline as originally specified. ConvNeXt-Tiny + concat-diff fusion + BCE+pos_weight(50). Both course-stages (single-task + multi-task) run end-to-end. |
+| **Phase 2** | **v2** | 📋 planned (this revision) | Diagnose Phase-1 failure modes, apply targeted regularization fixes + val-set threshold optimization. Same architecture; hyperparameters and one head-side change only. |
+| (Track 2) | post-deadline | future | Different architecture family (likely transformer-based fusion or foundation-backbone). Not covered here. |
+
+> **Terminology disambiguation:** "Phase 1 / Phase 2" in this document refers to the *Track-1 iteration* (v1 vs v2). The Turkish course rubric also uses "Aşama 1 / Aşama 2" to mean *single-task models vs multi-task model*. Both senses appear in every phase of Track 1 — when this doc says "Phase 1" without further qualification it means the iteration; when it says "single-task" or "multi-task" it means the course-stage.
+
+---
+
+# ─────────────────────────────────────────────────────────
+# Phase 1 — v1.0.0 baseline
+# ─────────────────────────────────────────────────────────
+
+The rest of this section documents the **Phase 1 spec as originally written and as actually implemented in v1.0.0**. Phase 2's revisions are layered on top later in this document; do not edit the Phase 1 spec retroactively.
+
+## Goals (Phase 1)
+
+- Three single-task models, one per label family (Object, Event, Attribute), each trained independently.
+- One multi-task model with a shared encoder and three heads, trained jointly.
 - For each: train logs, val/test metrics (micro & macro F1, precision, recall, per-class breakdown), loss curves, and ≥20 qualitative example figures showing both images, ground truth, and predicted labels with their sigmoid scores.
 
 ---
@@ -231,14 +251,121 @@ The course rubric is explicit: **missing `ReadMe.txt` or `requirements.txt` cost
 
 ---
 
-## When to Stop
+## When to Stop (Phase 1)
 
-Track 1 is done when:
+Phase 1 is done when:
 
 - All four configs train without errors.
 - Each training run completes in under 2 hours on a Colab A100.
 - All expected outputs (logs, checkpoints, plots, metrics, qualitative examples) exist.
-- `ReadMe.txt`, `README.md`, and `requirements.txt` are all complete.
 - A smoke test of `eval.py` and `visualize.py` works end-to-end.
 
-Then hand back for review. If you finish faster than expected, the answer is "do nothing extra." Track 2 is where extra effort goes.
+Submission files (`ReadMe.txt`, `requirements.txt`, IEEE report, presentation) are **deferred to whichever phase produces the final winning model** — do not write them on Phase 1 if Phase 2 is planned.
+
+## Phase 1 status — completed 2026-05-26
+
+Shipped as commit `f16d610`, tag `v1.0.0`. Headline test metrics (`best.pt`, threshold=0.5, full held-out test set n=1227):
+
+| family | course-stage | best_ep | macro_F1 | micro_F1 | precision | recall |
+|---|---|---:|---:|---:|---:|---:|
+| object | single-task | 3 | 0.2045 | 0.5244 | 0.3930 | 0.7879 |
+| event | single-task | 8 | 0.2796 | 0.3883 | 0.2911 | 0.5831 |
+| attribute | single-task | 10 | 0.2335 | 0.3692 | 0.2728 | 0.5708 |
+| object | multi-task | 15 | **0.2850** | **0.6381** | 0.5439 | 0.7717 |
+| event | multi-task | 15 | 0.2861 | 0.4036 | 0.3209 | 0.5437 |
+| attribute | multi-task | 15 | 0.2404 | 0.3477 | 0.2482 | 0.5802 |
+| changeflag | both | * | * | ~0.95 | * | * |
+
+Outputs are at `results/track1_v1/`. The macro_F1 lands below the spec's own sanity bounds (object ≥ 0.40, event ≥ 0.35, attribute ≥ 0.30) but the multi-task variant outperforms the single-task variant on every family, which is the Phase 1's main scientific finding.
+
+Full forensic analysis + cross-agent diagnosis (Copilot CLI + Gemini CLI) lives at `results/track1_v1/v1_diagnosis_and_v2_plan.md`. The Phase 2 spec below is the operationalization of those findings.
+
+---
+
+# ─────────────────────────────────────────────────────────
+# Phase 2 — v2 (regularization + threshold optimization)
+# ─────────────────────────────────────────────────────────
+
+Phase 2's job is to fix Phase 1's diagnosed failure modes **without changing the architecture family**. We stay inside Track 1's "obviously correct" framing — no asymmetric losses, no transformer fusion, no foundation backbone, no Query2Label/ML-Decoder. Just targeted hyperparameter changes + a small head-side regularizer + proper threshold protocol.
+
+## Hypotheses (drives every Phase 2 change)
+
+Two convergent diagnoses from Copilot CLI and Gemini CLI on the v1 data:
+
+1. **`pos_weight=50` is over-rewarding positive predictions.** Recall ≫ precision in every family (e.g., object P1 prec=0.39 / rec=0.79). Lowering the clamp ceiling rebalances the loss landscape.
+2. **Classical overfitting present.** Train_loss 1.15 → 0.13 while val_loss climbs after epoch 3 (object) / 8 (event) / 10 (attribute). Best_epoch arrives very early and val macro-F1 degrades afterward — confirms train-set memorization. Stronger weight decay + head dropout slows this trajectory.
+
+A third lever — **per-class threshold optimization on the val set** — is free (no retrain) and is the standard professional protocol for multi-label deployment. Phase 1 evaluated everything at a flat 0.5 threshold; that's a defensible "obvious baseline" choice but leaves measurable gains on the table.
+
+## Architectural delta from Phase 1
+
+Exactly one structural change to the model code, and three config-level changes. Nothing else.
+
+**Model change:**
+- `ChangeClassifier` family heads gain an optional `nn.Dropout(p=head_dropout)` immediately before the final `nn.Linear`. The changeflag head stays plain.
+
+**Config changes** (applied to all four YAMLs `configs/track1_*.yaml`):
+
+```yaml
+model:
+  head_dropout: 0.3              # NEW field; Phase 1 default = 0.0
+training:
+  pos_weight_clamp_max: 10.0     # was 50.0
+  weight_decay: 1.0e-3           # was 1.0e-4 (10×)
+```
+
+Everything else — backbone, fusion, optimizer LRs, schedule, epochs, batch size, early-stop policy, seed, bf16 autocast — stays identical to Phase 1 so the comparison is controlled.
+
+## Phase 2 evaluation protocol
+
+A second change, applied at evaluation time only:
+
+1. **Train v2 to convergence** (early stop on val avg macro-F1, same as Phase 1).
+2. After `best.pt` is selected, run a **per-class threshold sweep on the VAL set** (grid `0.05 … 0.95 step 0.05` per class). Pick per-class thresholds that maximize per-class F1 on val. Save the chosen thresholds alongside the checkpoint as `metrics/thresholds_val.json`.
+3. **Apply the val-optimized thresholds to the TEST set** for the final metrics. Report both the 0.5-flat baseline and the val-tuned numbers side by side.
+
+Tuning thresholds on val (not test) is the protocol both reviewers explicitly flagged as the correct one — Phase 1's test-set-optimistic threshold ablation was diagnostic only, not deployable.
+
+## Implementation tasks (Phase 2)
+
+In order, each independently verifiable:
+
+1. **Add `head_dropout` to `ModelConfig`** in `src/utils/config.py`. Default 0.0 (keeps Phase 1 reproducible).
+2. **Thread `head_dropout` through `ChangeClassifier`**: replace each family `nn.Linear` with `nn.Sequential(nn.Dropout(p), nn.Linear(...))` when `p > 0`.
+3. **Bump config values** in the four YAMLs as above. Bump `run_name` and `output_dir` from `track1_<fam>` to `track1_<fam>_v2` (or similar) so v2 outputs don't overwrite v1.
+4. **Threshold-sweep script** at `src/scripts/tune_thresholds.py`: loads `predictions_val.pt`, sweeps per-class thresholds, writes `thresholds_val.json` next to the checkpoint.
+5. **Eval CLI extension**: `eval.py` accepts `--thresholds <path.json>` to apply per-class thresholds at inference instead of 0.5. Existing 0.5-baseline path stays default.
+6. **Add a val-predictions save step**: `eval.py` already saves `predictions_<split>.pt`; ensure it also runs on val for v2 so the threshold sweep has data. Either re-run `eval.py --split val` after train, or extend the trainer to dump val predictions at best_epoch.
+7. **Run v2 on Colab A100**: same plan as v1 (notebook `colab_runbook.ipynb` already auto-resumes; just point output dirs to v2).
+8. **Tag the result** as `v2.0.0` once metrics are in.
+
+## Phase 2 sanity targets
+
+If the hypotheses are correct, v2 should improve over v1 by **+0.05 to +0.10 macro_F1** across families, and per-class threshold tuning should add another **+0.02 to +0.07** on top. Stacked, that gets multi-task object plausibly to ≥0.40 — clearing the spec's sanity bound. Single-task event/attribute may still fall short; honest framing in the report accepts that.
+
+**Decision tree after v2 completes:**
+
+- Multi-task macro_F1 ≥ sanity bounds across all three families → ship v2 as the final, write report.
+- Significant improvement but still below sanity for one family → still write report on v2; argue spec's bounds were aspirational; consider v3 only if time allows.
+- Marginal improvement (≤ +0.03) → hypotheses were wrong; reopen diagnosis and consider Track-2 escalation (ASL was Copilot's top pick if v2 fails; Gemini accepted it as second line).
+
+## What Phase 2 does NOT do
+
+To keep the contrast clean and the deadline reachable, the following remain reserved for Track 2 and must not be added in v2:
+
+- Asymmetric Loss (ASL), focal loss, distribution-balanced loss
+- ML-Decoder, Query2Label, or any transformer head
+- DINOv2, RemoteCLIP, SAM, or other foundation backbones
+- Cross-attention or any transformer-style fusion
+- GradNorm / PCGrad / Kendall uncertainty for multi-task balancing
+- TTA, EMA, SWA
+- Architectural changes to the fusion module
+- Re-splitting the dataset to remove `_ters_` leakage (the course rubric mandates "splits used as given")
+
+If a candidate change is in the above list and seems necessary, that's the signal to escalate to Track 2 planning, not to bend Phase 2's scope.
+
+---
+
+## When to stop (overall Track 1)
+
+Track 1 is done when **either** Phase 2 produces the final shippable model (and submission deliverables are written for it), **or** Phase 2 fails its decision tree and Track 2 planning begins. Tag the winning artifact and only then move to the IEEE report / `ReadMe.txt` / `requirements.txt` / presentation deliverables.

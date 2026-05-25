@@ -1,0 +1,34 @@
+{
+  "split": "test",
+  "ckpt": "/content/drive/MyDrive/dl_project_outputs/results/track1/multitask/checkpoints/best.pt",
+  "checkpoint_epoch": 15,
+  "object": {
+    "micro_p": 0.5439497716894978,
+    "micro_r": 0.7716599190283401,
+    "micro_f1": 0.6380984265148979,
+    "macro_p": 0.24425346028791203,
+    "macro_r": 0.369139275597923,
+    "macro_f1": 0.2849511016336554
+  },
+  "event": {
+    "micro_p": 0.32086021505376344,
+    "micro_r": 0.543731778425656,
+    "micro_f1": 0.4035704625371923,
+    "macro_p": 0.23013857716446706,
+    "macro_r": 0.39367543652849113,
+    "macro_f1": 0.2860907556445195
+  },
+  "attribute": {
+    "micro_p": 0.24822380106571937,
+    "micro_r": 0.580176440062273,
+    "micro_f1": 0.3476908723371171,
+    "macro_p": 0.17996531107637495,
+    "macro_r": 0.42786254309549293,
+    "macro_f1": 0.24038343033229018
+  },
+  "changeflag": {
+    "changeflag_p": 0.9531772575250836,
+    "changeflag_r": 0.9650112866817155,
+    "changeflag_f1": 0.9590577678070668
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "split": "test",
+  "ckpt": "/content/drive/MyDrive/dl_project_outputs/results/track1/attribute/checkpoints/best.pt",
+  "checkpoint_epoch": 10,
+  "attribute": {
+    "micro_p": 0.2728174603174603,
+    "micro_r": 0.5708354955889985,
+    "micro_f1": 0.36918946131901326,
+    "macro_p": 0.1750300645866437,
+    "macro_r": 0.38649802357349916,
+    "macro_f1": 0.2334573033292655
+  },
+  "changeflag": {
+    "changeflag_p": 0.950110864745011,
+    "changeflag_r": 0.9672686230248307,
+    "changeflag_f1": 0.9586129753914989
+  }
+}

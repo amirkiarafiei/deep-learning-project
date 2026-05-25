@@ -224,4 +224,17 @@ results/**/figures/
 *.ckpt
 *.pth
 *.pt
+*.safetensors
+*.h5
 .mcp.json
+
+# Google Drive multi-part download archives (e.g. dl_project_outputs-…-3-002)
+dl_project_outputs*
+results/**/dl_project_outputs*
+# Local zip archives anywhere under results/
+results/**/*.zip
+# Editor / OS junk
+.DS_Store
+Thumbs.db
+.idea/
+# Note: .vscode/ intentionally NOT ignored — project may ship editor settings.

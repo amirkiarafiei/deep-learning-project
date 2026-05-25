@@ -1,0 +1,8 @@
+2026-05-25 21:31:55 [INFO] Loading checkpoint: /content/drive/MyDrive/dl_project_outputs/results/track1/event/checkpoints/best.pt
+2026-05-25 21:31:55 [INFO] Eval split: test
+2026-05-25 21:31:57 [INFO] Loaded checkpoint from epoch 8
+2026-05-25 21:32:06 [INFO] event: micro_f1=0.3883  macro_f1=0.2796  micro_p=0.2911  micro_r=0.5831
+2026-05-25 21:32:06 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track1/event/metrics/per_class_event_test.csv
+2026-05-25 21:32:06 [INFO] changeflag: f1=0.9509  p=0.9404  r=0.9616
+2026-05-25 21:32:06 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track1/event/metrics/eval_test.json
+2026-05-25 21:32:06 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track1/event/metrics/predictions_test.pt

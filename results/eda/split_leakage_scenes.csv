@@ -1,0 +1,390 @@
+base_scene_id,splits,files
+00018_2_0,test|train,[train]00018_2_0.png; [train]00018_2_0_random_augment.png; [test]00018_ters_2_0.png
+00018_3_0,test|train,[test]00018_3_0.png; [train]00018_ters_3_0.png; [train]00018_ters_3_0_random_augment.png
+00079_3_0,train|val,[val]00079_3_0.png; [val]00079_3_0_random_augment.png; [train]00079_ters_3_0.png; [train]00079_ters_3_0_random_augment.png
+00088_1_0,test|train,[test]00088_1_0.png; [train]00088_ters_1_0.png; [train]00088_ters_1_0_random_augment.png
+00099_2_0,test|train,[train]00099_2_0.png; [train]00099_2_0_random_augment.png; [test]00099_ters_2_0.png
+00133_0_0,test|train,[train]00133_0_0.png; [train]00133_0_0_random_augment.png; [test]00133_ters_0_0.png
+00138_3_0,test|train,[train]00138_3_0.png; [train]00138_3_0_random_augment.png; [test]00138_ters_3_0.png
+00162_1_0,test|train,[test]00162_1_0.png; [train]00162_ters_1_0.png; [train]00162_ters_1_0_random_augment.png
+00162_3_0,test|train,[train]00162_3_0.png; [train]00162_3_0_random_augment.png; [test]00162_ters_3_0.png
+00163_1_0,test|train,[train]00163_1_0.png; [train]00163_1_0_random_augment.png; [test]00163_ters_1_0.png
+00169_0_0,test|train,[train]00169_0_0.png; [train]00169_0_0_random_augment.png; [test]00169_ters_0_0.png
+00169_1_0,train|val,[val]00169_1_0.png; [val]00169_1_0_random_augment.png; [train]00169_ters_1_0.png; [train]00169_ters_1_0_random_augment.png
+00176_2_0,test|train,[test]00176_2_0.png; [train]00176_ters_2_0.png; [train]00176_ters_2_0_random_augment.png
+00179_1_0,test|train,[train]00179_1_0.png; [train]00179_1_0_random_augment.png; [test]00179_ters_1_0.png
+00180_3_0,test|train,[train]00180_3_0.png; [train]00180_3_0_random_augment.png; [test]00180_ters_3_0.png
+00188_0_0,train|val,[train]00188_0_0.png; [train]00188_0_0_random_augment.png; [val]00188_ters_0_0.png; [val]00188_ters_0_0_random_augment.png
+00198_3_0,test|train,[test]00198_3_0.png; [train]00198_ters_3_0.png; [train]00198_ters_3_0_random_augment.png
+00232_2_0,test|train,[train]00232_2_0.png; [train]00232_2_0_random_augment.png; [test]00232_ters_2_0.png
+00232_3_0,train|val,[train]00232_3_0.png; [train]00232_3_0_random_augment.png; [val]00232_ters_3_0.png; [val]00232_ters_3_0_random_augment.png
+00233_0_0,test|train,[train]00233_0_0.png; [train]00233_0_0_random_augment.png; [test]00233_ters_0_0.png
+00257_1_0,test|train,[test]00257_1_0.png; [train]00257_ters_1_0.png; [train]00257_ters_1_0_random_augment.png
+00260_1_0,test|train,[train]00260_1_0.png; [train]00260_1_0_random_augment.png; [test]00260_ters_1_0.png
+00262_2_0,test|val,[val]00262_2_0.png; [val]00262_2_0_random_augment.png; [test]00262_ters_2_0.png
+00262_3_0,train|val,[train]00262_3_0.png; [train]00262_3_0_random_augment.png; [val]00262_ters_3_0.png; [val]00262_ters_3_0_random_augment.png
+00278_3_0,test|train,[train]00278_3_0.png; [train]00278_3_0_random_augment.png; [test]00278_ters_3_0.png
+00279_0_0,test|train,[train]00279_0_0.png; [train]00279_0_0_random_augment.png; [test]00279_ters_0_0.png
+00279_1_0,test|train,[test]00279_1_0.png; [train]00279_ters_1_0.png; [train]00279_ters_1_0_random_augment.png
+00280_0_0,test|train,[test]00280_0_0.png; [train]00280_ters_0_0.png; [train]00280_ters_0_0_random_augment.png
+00286_2_0,train|val,[train]00286_2_0.png; [train]00286_2_0_random_augment.png; [val]00286_ters_2_0.png; [val]00286_ters_2_0_random_augment.png
+00286_3_0,test|train,[train]00286_3_0.png; [train]00286_3_0_random_augment.png; [test]00286_ters_3_0.png
+00301_2_0,test|train,[train]00301_2_0.png; [train]00301_2_0_random_augment.png; [test]00301_ters_2_0.png
+00305_0_0,train|val,[train]00305_0_0.png; [train]00305_0_0_random_augment.png; [val]00305_ters_0_0.png; [val]00305_ters_0_0_random_augment.png
+00305_3_0,train|val,[val]00305_3_0.png; [val]00305_3_0_random_augment.png; [train]00305_ters_3_0.png; [train]00305_ters_3_0_random_augment.png
+00310_0_0,train|val,[train]00310_0_0.png; [train]00310_0_0_random_augment.png; [val]00310_ters_0_0.png; [val]00310_ters_0_0_random_augment.png
+00313_0_0,test|train,[train]00313_0_0.png; [train]00313_0_0_random_augment.png; [test]00313_ters_0_0.png
+00322_1_0,test|train,[test]00322_1_0.png; [train]00322_ters_1_0.png; [train]00322_ters_1_0_random_augment.png
+00322_2_0,train|val,[val]00322_2_0.png; [val]00322_2_0_random_augment.png; [train]00322_ters_2_0.png; [train]00322_ters_2_0_random_augment.png
+00331_2_0,test|train,[train]00331_2_0.png; [train]00331_2_0_random_augment.png; [test]00331_ters_2_0.png
+00333_0_0,train|val,[val]00333_0_0.png; [val]00333_0_0_random_augment.png; [train]00333_ters_0_0.png; [train]00333_ters_0_0_random_augment.png
+00333_2_0,train|val,[train]00333_2_0.png; [train]00333_2_0_random_augment.png; [val]00333_ters_2_0.png; [val]00333_ters_2_0_random_augment.png
+00337_0_0,test|train,[test]00337_0_0.png; [train]00337_ters_0_0.png; [train]00337_ters_0_0_random_augment.png
+00337_1_0,test|train,[train]00337_1_0.png; [train]00337_1_0_random_augment.png; [test]00337_ters_1_0.png
+00338_0_0,test|train,[train]00338_0_0.png; [train]00338_0_0_random_augment.png; [test]00338_ters_0_0.png
+00339_2_0,test|val,[val]00339_2_0.png; [val]00339_2_0_random_augment.png; [test]00339_ters_2_0.png
+00343_2_0,test|train,[test]00343_2_0.png; [train]00343_ters_2_0.png; [train]00343_ters_2_0_random_augment.png
+00344_2_0,test|train,[train]00344_2_0.png; [train]00344_2_0_random_augment.png; [test]00344_ters_2_0.png
+00344_3_0,test|val,[val]00344_3_0.png; [val]00344_3_0_random_augment.png; [test]00344_ters_3_0.png
+00348_1_0,test|train,[test]00348_1_0.png; [train]00348_ters_1_0.png; [train]00348_ters_1_0_random_augment.png
+00348_2_0,test|train,[train]00348_2_0.png; [train]00348_2_0_random_augment.png; [test]00348_ters_2_0.png
+00348_3_0,test|train,[test]00348_3_0.png; [train]00348_ters_3_0.png; [train]00348_ters_3_0_random_augment.png
+00361_0_0,test|train,[test]00361_0_0.png; [train]00361_ters_0_0.png; [train]00361_ters_0_0_random_augment.png
+00362_1_0,test|train,[train]00362_1_0.png; [train]00362_1_0_random_augment.png; [test]00362_ters_1_0.png
+00365_0_0,test|train,[test]00365_0_0.png; [train]00365_ters_0_0.png; [train]00365_ters_0_0_random_augment.png
+00368_2_0,test|train,[test]00368_2_0.png; [train]00368_ters_2_0.png; [train]00368_ters_2_0_random_augment.png
+00374_1_0,train|val,[train]00374_1_0.png; [train]00374_1_0_random_augment.png; [val]00374_ters_1_0.png; [val]00374_ters_1_0_random_augment.png
+00376_0_0,test|train,[test]00376_0_0.png; [train]00376_ters_0_0.png; [train]00376_ters_0_0_random_augment.png
+00376_1_0,test|train,[test]00376_1_0.png; [train]00376_ters_1_0.png; [train]00376_ters_1_0_random_augment.png
+00376_2_0,test|train,[train]00376_2_0.png; [train]00376_2_0_random_augment.png; [test]00376_ters_2_0.png
+00394_1_0,train|val,[train]00394_1_0.png; [train]00394_1_0_random_augment.png; [val]00394_ters_1_0.png; [val]00394_ters_1_0_random_augment.png
+00394_3_0,train|val,[train]00394_3_0.png; [train]00394_3_0_random_augment.png; [val]00394_ters_3_0.png; [val]00394_ters_3_0_random_augment.png
+00403_2_0,test|train,[train]00403_2_0.png; [train]00403_2_0_random_augment.png; [test]00403_ters_2_0.png
+00403_3_0,test|train,[train]00403_3_0.png; [train]00403_3_0_random_augment.png; [test]00403_ters_3_0.png
+00417_1_0,test|train,[train]00417_1_0.png; [train]00417_1_0_random_augment.png; [test]00417_ters_1_0.png
+00417_3_0,test|train,[train]00417_3_0.png; [train]00417_3_0_random_augment.png; [test]00417_ters_3_0.png
+00424_0_0,test|val,[test]00424_0_0.png; [val]00424_ters_0_0.png; [val]00424_ters_0_0_random_augment.png
+00429_0_0,test|train,[test]00429_0_0.png; [train]00429_ters_0_0.png; [train]00429_ters_0_0_random_augment.png
+00430_1_0,test|train,[train]00430_1_0.png; [train]00430_1_0_random_augment.png; [test]00430_ters_1_0.png
+00433_2_0,test|train,[test]00433_2_0.png; [train]00433_ters_2_0.png; [train]00433_ters_2_0_random_augment.png
+00441_0_0,test|train,[train]00441_0_0.png; [train]00441_0_0_random_augment.png; [test]00441_ters_0_0.png
+00451_1_0,test|train,[train]00451_1_0.png; [train]00451_1_0_random_augment.png; [test]00451_ters_1_0.png
+00452_2_0,test|train,[test]00452_2_0.png; [train]00452_ters_2_0.png; [train]00452_ters_2_0_random_augment.png
+00452_3_0,test|train,[train]00452_3_0.png; [train]00452_3_0_random_augment.png; [test]00452_ters_3_0.png
+00453_3_0,test|val,[test]00453_3_0.png; [val]00453_ters_3_0.png; [val]00453_ters_3_0_random_augment.png
+00459_1_0,test|train,[test]00459_1_0.png; [train]00459_ters_1_0.png; [train]00459_ters_1_0_random_augment.png
+00462_0_0,train|val,[train]00462_0_0.png; [train]00462_0_0_random_augment.png; [val]00462_ters_0_0.png; [val]00462_ters_0_0_random_augment.png
+00468_2_0,test|train,[train]00468_2_0.png; [train]00468_2_0_random_augment.png; [test]00468_ters_2_0.png
+00483_1_0,test|train,[train]00483_1_0.png; [train]00483_1_0_random_augment.png; [test]00483_ters_1_0.png
+00490_1_0,train|val,[train]00490_1_0.png; [train]00490_1_0_random_augment.png; [val]00490_ters_1_0.png; [val]00490_ters_1_0_random_augment.png
+00498_1_0,test|val,[test]00498_1_0.png; [val]00498_ters_1_0.png; [val]00498_ters_1_0_random_augment.png
+00504_1_0,train|val,[val]00504_1_0.png; [val]00504_1_0_random_augment.png; [train]00504_ters_1_0.png; [train]00504_ters_1_0_random_augment.png
+00505_2_0,test|train,[train]00505_2_0.png; [train]00505_2_0_random_augment.png; [test]00505_ters_2_0.png
+00505_3_0,train|val,[val]00505_3_0.png; [val]00505_3_0_random_augment.png; [train]00505_ters_3_0.png; [train]00505_ters_3_0_random_augment.png
+00507_1_0,test|train,[train]00507_1_0.png; [train]00507_1_0_random_augment.png; [test]00507_ters_1_0.png
+00508_1_0,test|val,[val]00508_1_0.png; [val]00508_1_0_random_augment.png; [test]00508_ters_1_0.png
+00516_2_0,test|train,[test]00516_2_0.png; [train]00516_ters_2_0.png; [train]00516_ters_2_0_random_augment.png
+00526_0_0,train|val,[val]00526_0_0.png; [val]00526_0_0_random_augment.png; [train]00526_ters_0_0.png; [train]00526_ters_0_0_random_augment.png
+00526_1_0,train|val,[train]00526_1_0.png; [train]00526_1_0_random_augment.png; [val]00526_ters_1_0.png; [val]00526_ters_1_0_random_augment.png
+00526_2_0,train|val,[train]00526_2_0.png; [train]00526_2_0_random_augment.png; [val]00526_ters_2_0.png; [val]00526_ters_2_0_random_augment.png
+00526_3_0,test|train,[test]00526_3_0.png; [train]00526_ters_3_0.png; [train]00526_ters_3_0_random_augment.png
+00539_3_0,test|val,[val]00539_3_0.png; [val]00539_3_0_random_augment.png; [test]00539_ters_3_0.png
+00544_1_0,test|val,[test]00544_1_0.png; [val]00544_ters_1_0.png; [val]00544_ters_1_0_random_augment.png
+00547_1_0,test|train,[train]00547_1_0.png; [train]00547_1_0_random_augment.png; [test]00547_ters_1_0.png
+00547_2_0,test|train,[train]00547_2_0.png; [train]00547_2_0_random_augment.png; [test]00547_ters_2_0.png
+00550_0_0,test|train,[train]00550_0_0.png; [train]00550_0_0_random_augment.png; [test]00550_ters_0_0.png
+00550_1_0,test|train,[test]00550_1_0.png; [train]00550_ters_1_0.png; [train]00550_ters_1_0_random_augment.png
+00559_1_0,test|train,[train]00559_1_0.png; [train]00559_1_0_random_augment.png; [test]00559_ters_1_0.png
+00559_2_0,test|train,[train]00559_2_0.png; [train]00559_2_0_random_augment.png; [test]00559_ters_2_0.png
+00561_0_0,test|train,[train]00561_0_0.png; [train]00561_0_0_random_augment.png; [test]00561_ters_0_0.png
+00561_1_0,test|train,[train]00561_1_0.png; [train]00561_1_0_random_augment.png; [test]00561_ters_1_0.png
+00561_2_0,test|train,[test]00561_2_0.png; [train]00561_ters_2_0.png; [train]00561_ters_2_0_random_augment.png
+00562_2_0,test|train,[train]00562_2_0.png; [train]00562_2_0_random_augment.png; [test]00562_ters_2_0.png
+00569_0_0,test|train,[train]00569_0_0.png; [train]00569_0_0_random_augment.png; [test]00569_ters_0_0.png
+00578_0_0,test|train,[train]00578_0_0.png; [train]00578_0_0_random_augment.png; [test]00578_ters_0_0.png
+00679_1_0,test|train,[train]00679_1_0.png; [train]00679_1_0_random_augment.png; [test]00679_ters_1_0.png
+00679_2_0,test|train,[test]00679_2_0.png; [train]00679_ters_2_0.png; [train]00679_ters_2_0_random_augment.png
+00680_1_0,train|val,[val]00680_1_0.png; [val]00680_1_0_random_augment.png; [train]00680_ters_1_0.png; [train]00680_ters_1_0_random_augment.png
+00687_1_0,train|val,[train]00687_1_0.png; [train]00687_1_0_random_augment.png; [val]00687_ters_1_0.png; [val]00687_ters_1_0_random_augment.png
+00700_0_0,train|val,[val]00700_0_0.png; [val]00700_0_0_random_augment.png; [train]00700_ters_0_0.png; [train]00700_ters_0_0_random_augment.png
+00700_2_0,test|train,[test]00700_2_0.png; [train]00700_ters_2_0.png; [train]00700_ters_2_0_random_augment.png
+00703_0_0,test|train,[train]00703_0_0.png; [train]00703_0_0_random_augment.png; [test]00703_ters_0_0.png
+00707_0_0,test|train,[train]00707_0_0.png; [train]00707_0_0_random_augment.png; [test]00707_ters_0_0.png
+00712_1_0,test|train,[test]00712_1_0.png; [train]00712_ters_1_0.png; [train]00712_ters_1_0_random_augment.png
+00713_3_0,test|train,[test]00713_3_0.png; [train]00713_ters_3_0.png; [train]00713_ters_3_0_random_augment.png
+00716_3_0,train|val,[train]00716_3_0.png; [train]00716_3_0_random_augment.png; [val]00716_ters_3_0.png; [val]00716_ters_3_0_random_augment.png
+00723_0_0,train|val,[val]00723_0_0.png; [val]00723_0_0_random_augment.png; [train]00723_ters_0_0.png; [train]00723_ters_0_0_random_augment.png
+00734_0_0,train|val,[train]00734_0_0.png; [train]00734_0_0_random_augment.png; [val]00734_ters_0_0.png; [val]00734_ters_0_0_random_augment.png
+00738_3_0,test|train,[test]00738_3_0.png; [train]00738_ters_3_0.png; [train]00738_ters_3_0_random_augment.png
+00739_2_0,test|train,[test]00739_2_0.png; [train]00739_ters_2_0.png; [train]00739_ters_2_0_random_augment.png
+00739_3_0,test|train,[test]00739_3_0.png; [train]00739_ters_3_0.png; [train]00739_ters_3_0_random_augment.png
+00743_1_0,train|val,[train]00743_1_0.png; [train]00743_1_0_random_augment.png; [val]00743_ters_1_0.png; [val]00743_ters_1_0_random_augment.png
+00746_3_0,test|train,[test]00746_3_0.png; [train]00746_ters_3_0.png; [train]00746_ters_3_0_random_augment.png
+00762_0_0,test|train,[train]00762_0_0.png; [train]00762_0_0_random_augment.png; [test]00762_ters_0_0.png
+00762_1_0,train|val,[train]00762_1_0.png; [train]00762_1_0_random_augment.png; [val]00762_ters_1_0.png; [val]00762_ters_1_0_random_augment.png
+00762_3_0,train|val,[val]00762_3_0.png; [val]00762_3_0_random_augment.png; [train]00762_ters_3_0.png; [train]00762_ters_3_0_random_augment.png
+00775_1_0,test|train,[test]00775_1_0.png; [train]00775_ters_1_0.png; [train]00775_ters_1_0_random_augment.png
+00781_2_0,test|train,[test]00781_2_0.png; [train]00781_ters_2_0.png; [train]00781_ters_2_0_random_augment.png
+00784_3_0,train|val,[val]00784_3_0.png; [val]00784_3_0_random_augment.png; [train]00784_ters_3_0.png; [train]00784_ters_3_0_random_augment.png
+00787_2_0,test|train,[test]00787_2_0.png; [train]00787_ters_2_0.png; [train]00787_ters_2_0_random_augment.png
+00791_0_0,test|val,[test]00791_0_0.png; [val]00791_ters_0_0.png; [val]00791_ters_0_0_random_augment.png
+00791_1_0,train|val,[train]00791_1_0.png; [train]00791_1_0_random_augment.png; [val]00791_ters_1_0.png; [val]00791_ters_1_0_random_augment.png
+00792_0_0,test|train,[test]00792_0_0.png; [train]00792_ters_0_0.png; [train]00792_ters_0_0_random_augment.png
+00792_3_0,test|train,[test]00792_3_0.png; [train]00792_ters_3_0.png; [train]00792_ters_3_0_random_augment.png
+00807_2_0,train|val,[val]00807_2_0.png; [val]00807_2_0_random_augment.png; [train]00807_ters_2_0.png; [train]00807_ters_2_0_random_augment.png
+00807_3_0,test|val,[val]00807_3_0.png; [val]00807_3_0_random_augment.png; [test]00807_ters_3_0.png
+00813_3_0,test|train,[test]00813_3_0.png; [train]00813_ters_3_0.png; [train]00813_ters_3_0_random_augment.png
+00815_1_0,test|train,[train]00815_1_0.png; [train]00815_1_0_random_augment.png; [test]00815_ters_1_0.png
+00816_3_0,test|val,[test]00816_3_0.png; [val]00816_ters_3_0.png; [val]00816_ters_3_0_random_augment.png
+00828_0_0,test|train,[train]00828_0_0.png; [train]00828_0_0_random_augment.png; [test]00828_ters_0_0.png
+00829_0_0,test|train,[train]00829_0_0.png; [train]00829_0_0_random_augment.png; [test]00829_ters_0_0.png
+00829_1_0,test|train,[train]00829_1_0.png; [train]00829_1_0_random_augment.png; [test]00829_ters_1_0.png
+00841_0_0,test|train,[train]00841_0_0.png; [train]00841_0_0_random_augment.png; [test]00841_ters_0_0.png
+00841_3_0,train|val,[train]00841_3_0.png; [train]00841_3_0_random_augment.png; [val]00841_ters_3_0.png; [val]00841_ters_3_0_random_augment.png
+00852_0_0,test|train,[test]00852_0_0.png; [train]00852_ters_0_0.png; [train]00852_ters_0_0_random_augment.png
+00852_3_0,test|train,[test]00852_3_0.png; [train]00852_ters_3_0.png; [train]00852_ters_3_0_random_augment.png
+00857_2_0,test|train,[test]00857_2_0.png; [train]00857_ters_2_0.png; [train]00857_ters_2_0_random_augment.png
+00857_3_0,test|train,[test]00857_3_0.png; [train]00857_ters_3_0.png; [train]00857_ters_3_0_random_augment.png
+00859_0_0,test|train,[test]00859_0_0.png; [train]00859_ters_0_0.png; [train]00859_ters_0_0_random_augment.png
+00863_1_0,test|train,[test]00863_1_0.png; [train]00863_ters_1_0.png; [train]00863_ters_1_0_random_augment.png
+00864_1_0,train|val,[val]00864_1_0.png; [val]00864_1_0_random_augment.png; [train]00864_ters_1_0.png; [train]00864_ters_1_0_random_augment.png
+00871_2_0,train|val,[train]00871_2_0.png; [train]00871_2_0_random_augment.png; [val]00871_ters_2_0.png; [val]00871_ters_2_0_random_augment.png
+00871_3_0,test|train,[test]00871_3_0.png; [train]00871_ters_3_0.png; [train]00871_ters_3_0_random_augment.png
+00879_0_0,test|train,[train]00879_0_0.png; [train]00879_0_0_random_augment.png; [test]00879_ters_0_0.png
+00880_2_0,test|train,[test]00880_2_0.png; [train]00880_ters_2_0.png; [train]00880_ters_2_0_random_augment.png
+00889_2_0,test|train,[test]00889_2_0.png; [train]00889_ters_2_0.png; [train]00889_ters_2_0_random_augment.png
+00891_3_0,train|val,[train]00891_3_0.png; [train]00891_3_0_random_augment.png; [val]00891_ters_3_0.png; [val]00891_ters_3_0_random_augment.png
+00904_0_0,test|train,[test]00904_0_0.png; [train]00904_ters_0_0.png; [train]00904_ters_0_0_random_augment.png
+00905_3_0,test|train,[test]00905_3_0.png; [train]00905_ters_3_0.png; [train]00905_ters_3_0_random_augment.png
+00906_0_0,test|train,[train]00906_0_0.png; [train]00906_0_0_random_augment.png; [test]00906_ters_0_0.png
+00906_1_0,test|train,[test]00906_1_0.png; [train]00906_ters_1_0.png; [train]00906_ters_1_0_random_augment.png
+00911_1_0,train|val,[train]00911_1_0.png; [train]00911_1_0_random_augment.png; [val]00911_ters_1_0.png; [val]00911_ters_1_0_random_augment.png
+00911_3_0,test|train,[test]00911_3_0.png; [train]00911_ters_3_0.png; [train]00911_ters_3_0_random_augment.png
+00912_0_0,train|val,[train]00912_0_0.png; [train]00912_0_0_random_augment.png; [val]00912_ters_0_0.png; [val]00912_ters_0_0_random_augment.png
+00917_0_0,test|train,[test]00917_0_0.png; [train]00917_ters_0_0.png; [train]00917_ters_0_0_random_augment.png
+00921_1_0,test|train,[test]00921_1_0.png; [train]00921_ters_1_0.png; [train]00921_ters_1_0_random_augment.png
+00921_3_0,test|val,[val]00921_3_0.png; [val]00921_3_0_random_augment.png; [test]00921_ters_3_0.png
+00932_1_0,test|train,[test]00932_1_0.png; [train]00932_ters_1_0.png; [train]00932_ters_1_0_random_augment.png
+00941_2_0,train|val,[val]00941_2_0.png; [val]00941_2_0_random_augment.png; [train]00941_ters_2_0.png; [train]00941_ters_2_0_random_augment.png
+00960_2_0,train|val,[val]00960_2_0.png; [val]00960_2_0_random_augment.png; [train]00960_ters_2_0.png; [train]00960_ters_2_0_random_augment.png
+00960_3_0,train|val,[train]00960_3_0.png; [train]00960_3_0_random_augment.png; [val]00960_ters_3_0.png; [val]00960_ters_3_0_random_augment.png
+00963_0_0,train|val,[train]00963_0_0.png; [train]00963_0_0_random_augment.png; [val]00963_ters_0_0.png; [val]00963_ters_0_0_random_augment.png
+00963_2_0,train|val,[train]00963_2_0.png; [train]00963_2_0_random_augment.png; [val]00963_ters_2_0.png; [val]00963_ters_2_0_random_augment.png
+00965_1_0,test|train,[train]00965_1_0.png; [train]00965_1_0_random_augment.png; [test]00965_ters_1_0.png
+00969_0_0,test|train,[train]00969_0_0.png; [train]00969_0_0_random_augment.png; [test]00969_ters_0_0.png
+01172_0_0,test|val,[test]01172_0_0.png; [val]01172_ters_0_0.png; [val]01172_ters_0_0_random_augment.png
+01233_3_0,test|train,[test]01233_3_0.png; [train]01233_ters_3_0.png; [train]01233_ters_3_0_random_augment.png
+01244_2_0,test|train,[test]01244_2_0.png; [train]01244_ters_2_0.png; [train]01244_ters_2_0_random_augment.png
+01250_0_0,test|train,[test]01250_0_0.png; [train]01250_ters_0_0.png; [train]01250_ters_0_0_random_augment.png
+01250_2_0,train|val,[train]01250_2_0.png; [train]01250_2_0_random_augment.png; [val]01250_ters_2_0.png; [val]01250_ters_2_0_random_augment.png
+01332_2_0,test|train,[train]01332_2_0.png; [train]01332_2_0_random_augment.png; [test]01332_ters_2_0.png
+01399_3_0,test|train,[train]01399_3_0.png; [train]01399_3_0_random_augment.png; [test]01399_ters_3_0.png
+01407_2_0,test|train,[test]01407_2_0.png; [train]01407_ters_2_0.png; [train]01407_ters_2_0_random_augment.png
+01410_1_0,test|train,[train]01410_1_0.png; [train]01410_1_0_random_augment.png; [test]01410_ters_1_0.png
+01413_0_0,test|train,[train]01413_0_0.png; [train]01413_0_0_random_augment.png; [test]01413_ters_0_0.png
+01421_2_0,test|train,[train]01421_2_0.png; [train]01421_2_0_random_augment.png; [test]01421_ters_2_0.png
+01450_2_0,test|train,[train]01450_2_0.png; [train]01450_2_0_random_augment.png; [test]01450_ters_2_0.png
+01460_1_0,test|train,[train]01460_1_0.png; [train]01460_1_0_random_augment.png; [test]01460_ters_1_0.png
+01460_3_0,test|train,[train]01460_3_0.png; [train]01460_3_0_random_augment.png; [test]01460_ters_3_0.png
+01509_0_0,train|val,[train]01509_0_0.png; [train]01509_0_0_random_augment.png; [val]01509_ters_0_0.png; [val]01509_ters_0_0_random_augment.png
+01516_0_0,test|train,[train]01516_0_0.png; [train]01516_0_0_random_augment.png; [test]01516_ters_0_0.png
+01516_2_0,train|val,[train]01516_2_0.png; [train]01516_2_0_random_augment.png; [val]01516_ters_2_0.png; [val]01516_ters_2_0_random_augment.png
+01523_0_0,train|val,[train]01523_0_0.png; [train]01523_0_0_random_augment.png; [val]01523_ters_0_0.png; [val]01523_ters_0_0_random_augment.png
+01526_0_0,test|train,[test]01526_0_0.png; [train]01526_ters_0_0.png; [train]01526_ters_0_0_random_augment.png
+01528_3_0,test|train,[train]01528_3_0.png; [train]01528_3_0_random_augment.png; [test]01528_ters_3_0.png
+01530_1_0,test|train,[train]01530_1_0.png; [train]01530_1_0_random_augment.png; [test]01530_ters_1_0.png
+01530_2_0,test|train,[train]01530_2_0.png; [train]01530_2_0_random_augment.png; [test]01530_ters_2_0.png
+01530_3_0,test|train,[train]01530_3_0.png; [train]01530_3_0_random_augment.png; [test]01530_ters_3_0.png
+01531_2_0,test|train,[train]01531_2_0.png; [train]01531_2_0_random_augment.png; [test]01531_ters_2_0.png
+01532_2_0,test|train,[train]01532_2_0.png; [train]01532_2_0_random_augment.png; [test]01532_ters_2_0.png
+01537_1_0,train|val,[val]01537_1_0.png; [val]01537_1_0_random_augment.png; [train]01537_ters_1_0.png; [train]01537_ters_1_0_random_augment.png
+01546_0_0,train|val,[val]01546_0_0.png; [val]01546_0_0_random_augment.png; [train]01546_ters_0_0.png; [train]01546_ters_0_0_random_augment.png
+01606_2_0,train|val,[val]01606_2_0.png; [val]01606_2_0_random_augment.png; [train]01606_ters_2_0.png; [train]01606_ters_2_0_random_augment.png
+01607_1_0,test|train,[train]01607_1_0.png; [train]01607_1_0_random_augment.png; [test]01607_ters_1_0.png
+01608_0_0,test|train,[train]01608_0_0.png; [train]01608_0_0_random_augment.png; [test]01608_ters_0_0.png
+01608_1_0,test|train,[train]01608_1_0.png; [train]01608_1_0_random_augment.png; [test]01608_ters_1_0.png
+01613_3_0,test|val,[val]01613_3_0.png; [val]01613_3_0_random_augment.png; [test]01613_ters_3_0.png
+01614_1_0,test|train,[test]01614_1_0.png; [train]01614_ters_1_0.png; [train]01614_ters_1_0_random_augment.png
+01615_2_0,train|val,[train]01615_2_0.png; [train]01615_2_0_random_augment.png; [val]01615_ters_2_0.png; [val]01615_ters_2_0_random_augment.png
+01616_0_0,test|train,[test]01616_0_0.png; [train]01616_ters_0_0.png; [train]01616_ters_0_0_random_augment.png
+01616_1_0,train|val,[val]01616_1_0.png; [val]01616_1_0_random_augment.png; [train]01616_ters_1_0.png; [train]01616_ters_1_0_random_augment.png
+01618_1_0,test|train,[train]01618_1_0.png; [train]01618_1_0_random_augment.png; [test]01618_ters_1_0.png
+01619_2_0,test|train,[test]01619_2_0.png; [train]01619_ters_2_0.png; [train]01619_ters_2_0_random_augment.png
+01620_1_0,train|val,[train]01620_1_0.png; [train]01620_1_0_random_augment.png; [val]01620_ters_1_0.png; [val]01620_ters_1_0_random_augment.png
+01620_3_0,train|val,[train]01620_3_0.png; [train]01620_3_0_random_augment.png; [val]01620_ters_3_0.png; [val]01620_ters_3_0_random_augment.png
+01621_1_0,train|val,[train]01621_1_0.png; [train]01621_1_0_random_augment.png; [val]01621_ters_1_0.png; [val]01621_ters_1_0_random_augment.png
+01623_1_0,train|val,[train]01623_1_0.png; [train]01623_1_0_random_augment.png; [val]01623_ters_1_0.png; [val]01623_ters_1_0_random_augment.png
+01624_1_0,test|train,[test]01624_1_0.png; [train]01624_ters_1_0.png; [train]01624_ters_1_0_random_augment.png
+01626_1_0,train|val,[val]01626_1_0.png; [val]01626_1_0_random_augment.png; [train]01626_ters_1_0.png; [train]01626_ters_1_0_random_augment.png
+01626_3_0,train|val,[train]01626_3_0.png; [train]01626_3_0_random_augment.png; [val]01626_ters_3_0.png; [val]01626_ters_3_0_random_augment.png
+01629_1_0,train|val,[train]01629_1_0.png; [train]01629_1_0_random_augment.png; [val]01629_ters_1_0.png; [val]01629_ters_1_0_random_augment.png
+01630_1_0,train|val,[val]01630_1_0.png; [val]01630_1_0_random_augment.png; [train]01630_ters_1_0.png; [train]01630_ters_1_0_random_augment.png
+01634_3_0,train|val,[train]01634_3_0.png; [train]01634_3_0_random_augment.png; [val]01634_ters_3_0.png; [val]01634_ters_3_0_random_augment.png
+01640_0_0,test|train,[test]01640_0_0.png; [train]01640_ters_0_0.png; [train]01640_ters_0_0_random_augment.png
+01640_2_0,test|train,[test]01640_2_0.png; [train]01640_ters_2_0.png; [train]01640_ters_2_0_random_augment.png
+01642_2_0,test|val,[test]01642_2_0.png; [val]01642_ters_2_0.png; [val]01642_ters_2_0_random_augment.png
+01644_0_0,test|train,[train]01644_0_0.png; [train]01644_0_0_random_augment.png; [test]01644_ters_0_0.png
+01644_2_0,train|val,[val]01644_2_0.png; [val]01644_2_0_random_augment.png; [train]01644_ters_2_0.png; [train]01644_ters_2_0_random_augment.png
+01646_0_0,test|train,[train]01646_0_0.png; [train]01646_0_0_random_augment.png; [test]01646_ters_0_0.png
+01651_0_0,test|train,[train]01651_0_0.png; [train]01651_0_0_random_augment.png; [test]01651_ters_0_0.png
+01652_3_0,train|val,[val]01652_3_0.png; [val]01652_3_0_random_augment.png; [train]01652_ters_3_0.png; [train]01652_ters_3_0_random_augment.png
+01653_0_0,train|val,[val]01653_0_0.png; [val]01653_0_0_random_augment.png; [train]01653_ters_0_0.png; [train]01653_ters_0_0_random_augment.png
+01654_2_0,test|val,[test]01654_2_0.png; [val]01654_ters_2_0.png; [val]01654_ters_2_0_random_augment.png
+01657_2_0,test|train,[test]01657_2_0.png; [train]01657_ters_2_0.png; [train]01657_ters_2_0_random_augment.png
+01664_2_0,train|val,[val]01664_2_0.png; [val]01664_2_0_random_augment.png; [train]01664_ters_2_0.png; [train]01664_ters_2_0_random_augment.png
+01666_3_0,test|train,[train]01666_3_0.png; [train]01666_3_0_random_augment.png; [test]01666_ters_3_0.png
+01671_0_0,train|val,[train]01671_0_0.png; [train]01671_0_0_random_augment.png; [val]01671_ters_0_0.png; [val]01671_ters_0_0_random_augment.png
+01672_2_0,test|train,[test]01672_2_0.png; [train]01672_ters_2_0.png; [train]01672_ters_2_0_random_augment.png
+01675_2_0,test|train,[train]01675_2_0.png; [train]01675_2_0_random_augment.png; [test]01675_ters_2_0.png
+01676_0_0,train|val,[train]01676_0_0.png; [train]01676_0_0_random_augment.png; [val]01676_ters_0_0.png; [val]01676_ters_0_0_random_augment.png
+01679_3_0,test|train,[test]01679_3_0.png; [train]01679_ters_3_0.png; [train]01679_ters_3_0_random_augment.png
+01682_0_0,test|train,[train]01682_0_0.png; [train]01682_0_0_random_augment.png; [test]01682_ters_0_0.png
+01684_0_0,train|val,[train]01684_0_0.png; [train]01684_0_0_random_augment.png; [val]01684_ters_0_0.png; [val]01684_ters_0_0_random_augment.png
+01687_1_0,test|train,[test]01687_1_0.png; [train]01687_ters_1_0.png; [train]01687_ters_1_0_random_augment.png
+01690_3_0,test|val,[test]01690_3_0.png; [val]01690_ters_3_0.png; [val]01690_ters_3_0_random_augment.png
+01692_3_0,train|val,[train]01692_3_0.png; [train]01692_3_0_random_augment.png; [val]01692_ters_3_0.png; [val]01692_ters_3_0_random_augment.png
+01694_2_0,test|train,[test]01694_2_0.png; [train]01694_ters_2_0.png; [train]01694_ters_2_0_random_augment.png
+01698_3_0,train|val,[val]01698_3_0.png; [val]01698_3_0_random_augment.png; [train]01698_ters_3_0.png; [train]01698_ters_3_0_random_augment.png
+01704_1_0,train|val,[val]01704_1_0.png; [val]01704_1_0_random_augment.png; [train]01704_ters_1_0.png; [train]01704_ters_1_0_random_augment.png
+01704_2_0,test|train,[train]01704_2_0.png; [train]01704_2_0_random_augment.png; [test]01704_ters_2_0.png
+01704_3_0,test|train,[test]01704_3_0.png; [train]01704_ters_3_0.png; [train]01704_ters_3_0_random_augment.png
+01740_1_0,test|train,[test]01740_1_0.png; [train]01740_ters_1_0.png; [train]01740_ters_1_0_random_augment.png
+01747_2_0,test|train,[test]01747_2_0.png; [train]01747_ters_2_0.png; [train]01747_ters_2_0_random_augment.png
+01748_0_0,test|train,[test]01748_0_0.png; [train]01748_ters_0_0.png; [train]01748_ters_0_0_random_augment.png
+01748_1_0,test|train,[test]01748_1_0.png; [train]01748_ters_1_0.png; [train]01748_ters_1_0_random_augment.png
+01749_3_0,test|train,[test]01749_3_0.png; [train]01749_ters_3_0.png; [train]01749_ters_3_0_random_augment.png
+01752_1_0,train|val,[train]01752_1_0.png; [train]01752_1_0_random_augment.png; [val]01752_ters_1_0.png; [val]01752_ters_1_0_random_augment.png
+01757_0_0,test|train,[test]01757_0_0.png; [train]01757_ters_0_0.png; [train]01757_ters_0_0_random_augment.png
+01758_3_0,test|train,[train]01758_3_0.png; [train]01758_3_0_random_augment.png; [test]01758_ters_3_0.png
+01759_0_0,test|train,[test]01759_0_0.png; [train]01759_ters_0_0.png; [train]01759_ters_0_0_random_augment.png
+01759_1_0,train|val,[val]01759_1_0.png; [val]01759_1_0_random_augment.png; [train]01759_ters_1_0.png; [train]01759_ters_1_0_random_augment.png
+01767_0_0,test|train,[test]01767_0_0.png; [train]01767_ters_0_0.png; [train]01767_ters_0_0_random_augment.png
+01767_1_0,test|train,[test]01767_1_0.png; [train]01767_ters_1_0.png; [train]01767_ters_1_0_random_augment.png
+01774_1_0,train|val,[val]01774_1_0.png; [val]01774_1_0_random_augment.png; [train]01774_ters_1_0.png; [train]01774_ters_1_0_random_augment.png
+01777_0_0,test|train,[test]01777_0_0.png; [train]01777_ters_0_0.png; [train]01777_ters_0_0_random_augment.png
+01777_2_0,train|val,[val]01777_2_0.png; [val]01777_2_0_random_augment.png; [train]01777_ters_2_0.png; [train]01777_ters_2_0_random_augment.png
+01785_1_0,test|train,[train]01785_1_0.png; [train]01785_1_0_random_augment.png; [test]01785_ters_1_0.png
+01785_2_0,test|val,[val]01785_2_0.png; [val]01785_2_0_random_augment.png; [test]01785_ters_2_0.png
+01785_3_0,train|val,[val]01785_3_0.png; [val]01785_3_0_random_augment.png; [train]01785_ters_3_0.png; [train]01785_ters_3_0_random_augment.png
+01788_1_0,test|train,[test]01788_1_0.png; [train]01788_ters_1_0.png; [train]01788_ters_1_0_random_augment.png
+01788_2_0,test|val,[test]01788_2_0.png; [val]01788_ters_2_0.png; [val]01788_ters_2_0_random_augment.png
+01790_3_0,test|train,[train]01790_3_0.png; [train]01790_3_0_random_augment.png; [test]01790_ters_3_0.png
+01792_2_0,test|train,[test]01792_2_0.png; [train]01792_ters_2_0.png; [train]01792_ters_2_0_random_augment.png
+01794_0_0,test|train,[test]01794_0_0.png; [train]01794_ters_0_0.png; [train]01794_ters_0_0_random_augment.png
+01794_2_0,test|train,[test]01794_2_0.png; [train]01794_ters_2_0.png; [train]01794_ters_2_0_random_augment.png
+01795_3_0,test|train,[train]01795_3_0.png; [train]01795_3_0_random_augment.png; [test]01795_ters_3_0.png
+01798_0_0,test|train,[train]01798_0_0.png; [train]01798_0_0_random_augment.png; [test]01798_ters_0_0.png
+01798_2_0,test|train,[test]01798_2_0.png; [train]01798_ters_2_0.png; [train]01798_ters_2_0_random_augment.png
+01800_1_0,test|train,[test]01800_1_0.png; [train]01800_ters_1_0.png; [train]01800_ters_1_0_random_augment.png
+01800_3_0,test|val,[val]01800_3_0.png; [val]01800_3_0_random_augment.png; [test]01800_ters_3_0.png
+01801_2_0,test|train,[test]01801_2_0.png; [train]01801_ters_2_0.png; [train]01801_ters_2_0_random_augment.png
+01805_3_0,test|train,[test]01805_3_0.png; [train]01805_ters_3_0.png; [train]01805_ters_3_0_random_augment.png
+01811_1_0,test|train,[train]01811_1_0.png; [train]01811_1_0_random_augment.png; [test]01811_ters_1_0.png
+01812_3_0,train|val,[val]01812_3_0.png; [val]01812_3_0_random_augment.png; [train]01812_ters_3_0.png; [train]01812_ters_3_0_random_augment.png
+01813_0_0,train|val,[val]01813_0_0.png; [val]01813_0_0_random_augment.png; [train]01813_ters_0_0.png; [train]01813_ters_0_0_random_augment.png
+01813_2_0,train|val,[val]01813_2_0.png; [val]01813_2_0_random_augment.png; [train]01813_ters_2_0.png; [train]01813_ters_2_0_random_augment.png
+01814_3_0,test|train,[test]01814_3_0.png; [train]01814_ters_3_0.png; [train]01814_ters_3_0_random_augment.png
+01819_0_0,test|train,[test]01819_0_0.png; [train]01819_ters_0_0.png; [train]01819_ters_0_0_random_augment.png
+01819_1_0,train|val,[val]01819_1_0.png; [val]01819_1_0_random_augment.png; [train]01819_ters_1_0.png; [train]01819_ters_1_0_random_augment.png
+01820_2_0,train|val,[train]01820_2_0.png; [train]01820_2_0_random_augment.png; [val]01820_ters_2_0.png; [val]01820_ters_2_0_random_augment.png
+01823_3_0,test|train,[train]01823_3_0.png; [train]01823_3_0_random_augment.png; [test]01823_ters_3_0.png
+01824_0_0,train|val,[train]01824_0_0.png; [train]01824_0_0_random_augment.png; [val]01824_ters_0_0.png; [val]01824_ters_0_0_random_augment.png
+01824_1_0,test|train,[train]01824_1_0.png; [train]01824_1_0_random_augment.png; [test]01824_ters_1_0.png
+01828_3_0,test|train,[test]01828_3_0.png; [train]01828_ters_3_0.png; [train]01828_ters_3_0_random_augment.png
+01832_1_0,test|val,[test]01832_1_0.png; [val]01832_ters_1_0.png; [val]01832_ters_1_0_random_augment.png
+01832_3_0,test|train,[train]01832_3_0.png; [train]01832_3_0_random_augment.png; [test]01832_ters_3_0.png
+01833_2_0,test|train,[test]01833_2_0.png; [train]01833_ters_2_0.png; [train]01833_ters_2_0_random_augment.png
+01833_3_0,test|train,[train]01833_3_0.png; [train]01833_3_0_random_augment.png; [test]01833_ters_3_0.png
+01838_3_0,test|train,[train]01838_3_0.png; [train]01838_3_0_random_augment.png; [test]01838_ters_3_0.png
+01843_0_0,train|val,[val]01843_0_0.png; [val]01843_0_0_random_augment.png; [train]01843_ters_0_0.png; [train]01843_ters_0_0_random_augment.png
+01843_2_0,test|train,[test]01843_2_0.png; [train]01843_ters_2_0.png; [train]01843_ters_2_0_random_augment.png
+01843_3_0,test|train,[train]01843_3_0.png; [train]01843_3_0_random_augment.png; [test]01843_ters_3_0.png
+01844_0_0,test|train,[train]01844_0_0.png; [train]01844_0_0_random_augment.png; [test]01844_ters_0_0.png
+01845_0_0,test|train,[train]01845_0_0.png; [train]01845_0_0_random_augment.png; [test]01845_ters_0_0.png
+01845_2_0,test|train,[test]01845_2_0.png; [train]01845_ters_2_0.png; [train]01845_ters_2_0_random_augment.png
+01846_1_0,test|val,[test]01846_1_0.png; [val]01846_ters_1_0.png; [val]01846_ters_1_0_random_augment.png
+01849_1_0,test|train,[test]01849_1_0.png; [train]01849_ters_1_0.png; [train]01849_ters_1_0_random_augment.png
+01852_1_0,train|val,[val]01852_1_0.png; [val]01852_1_0_random_augment.png; [train]01852_ters_1_0.png; [train]01852_ters_1_0_random_augment.png
+01852_2_0,test|train,[train]01852_2_0.png; [train]01852_2_0_random_augment.png; [test]01852_ters_2_0.png
+01852_3_0,test|train,[train]01852_3_0.png; [train]01852_3_0_random_augment.png; [test]01852_ters_3_0.png
+01857_1_0,test|train,[test]01857_1_0.png; [train]01857_ters_1_0.png; [train]01857_ters_1_0_random_augment.png
+01860_2_0,test|train,[train]01860_2_0.png; [train]01860_2_0_random_augment.png; [test]01860_ters_2_0.png
+01866_1_0,train|val,[val]01866_1_0.png; [val]01866_1_0_random_augment.png; [train]01866_ters_1_0.png; [train]01866_ters_1_0_random_augment.png
+01871_1_0,test|train,[train]01871_1_0.png; [train]01871_1_0_random_augment.png; [test]01871_ters_1_0.png
+01875_0_0,test|train,[test]01875_0_0.png; [train]01875_ters_0_0.png; [train]01875_ters_0_0_random_augment.png
+01877_2_0,test|train,[train]01877_2_0.png; [train]01877_2_0_random_augment.png; [test]01877_ters_2_0.png
+01880_0_0,train|val,[val]01880_0_0.png; [val]01880_0_0_random_augment.png; [train]01880_ters_0_0.png; [train]01880_ters_0_0_random_augment.png
+01883_2_0,test|train,[train]01883_2_0.png; [train]01883_2_0_random_augment.png; [test]01883_ters_2_0.png
+01888_3_0,train|val,[val]01888_3_0.png; [val]01888_3_0_random_augment.png; [train]01888_ters_3_0.png; [train]01888_ters_3_0_random_augment.png
+01890_0_0,train|val,[train]01890_0_0.png; [train]01890_0_0_random_augment.png; [val]01890_ters_0_0.png; [val]01890_ters_0_0_random_augment.png
+01890_1_0,train|val,[train]01890_1_0.png; [train]01890_1_0_random_augment.png; [val]01890_ters_1_0.png; [val]01890_ters_1_0_random_augment.png
+01890_3_0,test|val,[val]01890_3_0.png; [val]01890_3_0_random_augment.png; [test]01890_ters_3_0.png
+01892_0_0,test|train,[test]01892_0_0.png; [train]01892_ters_0_0.png; [train]01892_ters_0_0_random_augment.png
+01894_0_0,test|train,[test]01894_0_0.png; [train]01894_ters_0_0.png; [train]01894_ters_0_0_random_augment.png
+01895_0_0,test|train,[test]01895_0_0.png; [train]01895_ters_0_0.png; [train]01895_ters_0_0_random_augment.png
+01895_1_0,train|val,[train]01895_1_0.png; [train]01895_1_0_random_augment.png; [val]01895_ters_1_0.png; [val]01895_ters_1_0_random_augment.png
+01895_2_0,train|val,[val]01895_2_0.png; [val]01895_2_0_random_augment.png; [train]01895_ters_2_0.png; [train]01895_ters_2_0_random_augment.png
+01900_0_0,test|train,[train]01900_0_0.png; [train]01900_0_0_random_augment.png; [test]01900_ters_0_0.png
+01903_2_0,test|train,[train]01903_2_0.png; [train]01903_2_0_random_augment.png; [test]01903_ters_2_0.png
+01993_0_0,test|val,[test]01993_0_0.png; [val]01993_ters_0_0.png; [val]01993_ters_0_0_random_augment.png
+01997_1_0,test|train,[test]01997_1_0.png; [train]01997_ters_1_0.png; [train]01997_ters_1_0_random_augment.png
+01997_3_0,test|train,[test]01997_3_0.png; [train]01997_ters_3_0.png; [train]01997_ters_3_0_random_augment.png
+02003_1_0,test|train,[train]02003_1_0.png; [train]02003_1_0_random_augment.png; [test]02003_ters_1_0.png
+02004_0_0,test|train,[train]02004_0_0.png; [train]02004_0_0_random_augment.png; [test]02004_ters_0_0.png
+02022_0_0,train|val,[val]02022_0_0.png; [val]02022_0_0_random_augment.png; [train]02022_ters_0_0.png; [train]02022_ters_0_0_random_augment.png
+02034_0_0,test|train,[test]02034_0_0.png; [train]02034_ters_0_0.png; [train]02034_ters_0_0_random_augment.png
+02034_2_0,test|train,[test]02034_2_0.png; [train]02034_ters_2_0.png; [train]02034_ters_2_0_random_augment.png
+02044_0_0,test|val,[test]02044_0_0.png; [val]02044_ters_0_0.png; [val]02044_ters_0_0_random_augment.png
+02051_2_0,train|val,[val]02051_2_0.png; [val]02051_2_0_random_augment.png; [train]02051_ters_2_0.png; [train]02051_ters_2_0_random_augment.png
+02057_1_0,test|val,[test]02057_1_0.png; [val]02057_ters_1_0.png; [val]02057_ters_1_0_random_augment.png
+02063_0_0,test|train,[test]02063_0_0.png; [train]02063_ters_0_0.png; [train]02063_ters_0_0_random_augment.png
+02063_1_0,test|train,[train]02063_1_0.png; [train]02063_1_0_random_augment.png; [test]02063_ters_1_0.png
+02063_2_0,test|train,[train]02063_2_0.png; [train]02063_2_0_random_augment.png; [test]02063_ters_2_0.png
+02068_2_0,test|train,[train]02068_2_0.png; [train]02068_2_0_random_augment.png; [test]02068_ters_2_0.png
+02072_1_0,test|val,[val]02072_1_0.png; [val]02072_1_0_random_augment.png; [test]02072_ters_1_0.png
+02077_2_0,test|train,[train]02077_2_0.png; [train]02077_2_0_random_augment.png; [test]02077_ters_2_0.png
+02081_2_0,train|val,[train]02081_2_0.png; [train]02081_2_0_random_augment.png; [val]02081_ters_2_0.png; [val]02081_ters_2_0_random_augment.png
+02081_3_0,test|train,[train]02081_3_0.png; [train]02081_3_0_random_augment.png; [test]02081_ters_3_0.png
+02082_3_0,train|val,[val]02082_3_0.png; [val]02082_3_0_random_augment.png; [train]02082_ters_3_0.png; [train]02082_ters_3_0_random_augment.png
+02087_0_0,test|train,[test]02087_0_0.png; [train]02087_ters_0_0.png; [train]02087_ters_0_0_random_augment.png
+02087_2_0,test|train,[test]02087_2_0.png; [train]02087_ters_2_0.png; [train]02087_ters_2_0_random_augment.png
+02118_1_0,test|val,[val]02118_1_0.png; [val]02118_1_0_random_augment.png; [test]02118_ters_1_0.png
+02130_0_0,train|val,[val]02130_0_0.png; [val]02130_0_0_random_augment.png; [train]02130_ters_0_0.png; [train]02130_ters_0_0_random_augment.png
+02247_2_0,train|val,[val]02247_2_0.png; [val]02247_2_0_random_augment.png; [train]02247_ters_2_0.png; [train]02247_ters_2_0_random_augment.png
+02249_0_0,test|train,[train]02249_0_0.png; [train]02249_0_0_random_augment.png; [test]02249_ters_0_0.png
+02249_1_0,train|val,[val]02249_1_0.png; [val]02249_1_0_random_augment.png; [train]02249_ters_1_0.png; [train]02249_ters_1_0_random_augment.png
+02253_0_0,train|val,[train]02253_0_0.png; [train]02253_0_0_random_augment.png; [val]02253_ters_0_0.png; [val]02253_ters_0_0_random_augment.png
+02253_1_0,test|train,[train]02253_1_0.png; [train]02253_1_0_random_augment.png; [test]02253_ters_1_0.png
+02262_3_0,test|train,[train]02262_3_0.png; [train]02262_3_0_random_augment.png; [test]02262_ters_3_0.png
+02267_3_0,train|val,[val]02267_3_0.png; [val]02267_3_0_random_augment.png; [train]02267_ters_3_0.png; [train]02267_ters_3_0_random_augment.png
+02280_1_0,train|val,[val]02280_1_0.png; [val]02280_1_0_random_augment.png; [train]02280_ters_1_0.png; [train]02280_ters_1_0_random_augment.png
+02280_3_0,train|val,[val]02280_3_0.png; [val]02280_3_0_random_augment.png; [train]02280_ters_3_0.png; [train]02280_ters_3_0_random_augment.png
+02284_2_0,train|val,[train]02284_2_0.png; [train]02284_2_0_random_augment.png; [val]02284_ters_2_0.png; [val]02284_ters_2_0_random_augment.png
+02291_0_0,test|train,[test]02291_0_0.png; [train]02291_ters_0_0.png; [train]02291_ters_0_0_random_augment.png
+02291_1_0,test|val,[test]02291_1_0.png; [val]02291_ters_1_0.png; [val]02291_ters_1_0_random_augment.png
+02297_2_0,test|train,[train]02297_2_0.png; [train]02297_2_0_random_augment.png; [test]02297_ters_2_0.png
+02297_3_0,test|train,[test]02297_3_0.png; [train]02297_ters_3_0.png; [train]02297_ters_3_0_random_augment.png
+02299_0_0,train|val,[val]02299_0_0.png; [val]02299_0_0_random_augment.png; [train]02299_ters_0_0.png; [train]02299_ters_0_0_random_augment.png
+02299_1_0,train|val,[val]02299_1_0.png; [val]02299_1_0_random_augment.png; [train]02299_ters_1_0.png; [train]02299_ters_1_0_random_augment.png
+02299_2_0,train|val,[train]02299_2_0.png; [train]02299_2_0_random_augment.png; [val]02299_ters_2_0.png; [val]02299_ters_2_0_random_augment.png
+02304_2_0,test|val,[test]02304_2_0.png; [val]02304_ters_2_0.png; [val]02304_ters_2_0_random_augment.png
+02304_3_0,test|train,[train]02304_3_0.png; [train]02304_3_0_random_augment.png; [test]02304_ters_3_0.png
+02308_2_0,train|val,[train]02308_2_0.png; [train]02308_2_0_random_augment.png; [val]02308_ters_2_0.png; [val]02308_ters_2_0_random_augment.png
+02309_3_0,test|train,[test]02309_3_0.png; [train]02309_ters_3_0.png; [train]02309_ters_3_0_random_augment.png
+02311_0_0,test|train,[test]02311_0_0.png; [train]02311_ters_0_0.png; [train]02311_ters_0_0_random_augment.png
+02311_1_0,test|train,[train]02311_1_0.png; [train]02311_1_0_random_augment.png; [test]02311_ters_1_0.png
+02319_0_0,test|train,[train]02319_0_0.png; [train]02319_0_0_random_augment.png; [test]02319_ters_0_0.png
+02323_1_0,test|train,[test]02323_1_0.png; [train]02323_ters_1_0.png; [train]02323_ters_1_0_random_augment.png
+02323_2_0,test|train,[test]02323_2_0.png; [train]02323_ters_2_0.png; [train]02323_ters_2_0_random_augment.png
+02323_3_0,train|val,[train]02323_3_0.png; [train]02323_3_0_random_augment.png; [val]02323_ters_3_0.png; [val]02323_ters_3_0_random_augment.png
+02325_3_0,test|train,[test]02325_3_0.png; [train]02325_ters_3_0.png; [train]02325_ters_3_0_random_augment.png
+02334_1_0,train|val,[val]02334_1_0.png; [val]02334_1_0_random_augment.png; [train]02334_ters_1_0.png; [train]02334_ters_1_0_random_augment.png
+02339_0_0,test|train,[test]02339_0_0.png; [train]02339_ters_0_0.png; [train]02339_ters_0_0_random_augment.png
+02339_1_0,test|train,[train]02339_1_0.png; [train]02339_1_0_random_augment.png; [test]02339_ters_1_0.png
+02339_2_0,test|train,[test]02339_2_0.png; [train]02339_ters_2_0.png; [train]02339_ters_2_0_random_augment.png
+02340_0_0,test|train,[train]02340_0_0.png; [train]02340_0_0_random_augment.png; [test]02340_ters_0_0.png
+02340_3_0,train|val,[train]02340_3_0.png; [train]02340_3_0_random_augment.png; [val]02340_ters_3_0.png; [val]02340_ters_3_0_random_augment.png
+02341_1_0,test|train,[test]02341_1_0.png; [train]02341_ters_1_0.png; [train]02341_ters_1_0_random_augment.png
+02342_2_0,test|train,[test]02342_2_0.png; [train]02342_ters_2_0.png; [train]02342_ters_2_0_random_augment.png
+02343_0_0,test|train,[test]02343_0_0.png; [train]02343_ters_0_0.png; [train]02343_ters_0_0_random_augment.png
+02357_2_0,test|train,[train]02357_2_0.png; [train]02357_2_0_random_augment.png; [test]02357_ters_2_0.png

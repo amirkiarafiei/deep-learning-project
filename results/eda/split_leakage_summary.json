@@ -1,0 +1,19 @@
+{
+  "total_samples": 10855,
+  "unique_base_scene_ids": 5200,
+  "leaking_scene_ids": 389,
+  "leak_rate_pct": 7.481,
+  "distribution_scenes_per_split_set": {
+    "train": 3446,
+    "test": 922,
+    "val": 443,
+    "test|train": 246,
+    "train|val": 112,
+    "test|val": 31
+  },
+  "notes": [
+    "Leakage = same base scene appearing in more than one split via the _ters_ (A/B-swapped) twin file.",
+    "Labels differ between an original and its _ters_ variant (events flip, annotators re-labeled), so this is soft leakage not direct memorization.",
+    "Per course PDF instruction (\"Verilerin ayrımları arasında karıştırılmaması, olduğu gibi kullanılması gerekmektedir.\"), splits are used as-is."
+  ]
+}

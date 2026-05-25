@@ -59,9 +59,18 @@ def main() -> None:
     parser.add_argument("--split", default="test", choices=["val", "test"])
     parser.add_argument("--num-samples", type=int, default=20)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--output-dir", type=str, default=None, help="Override output_dir (PNGs + combined PDF written here)")
+    parser.add_argument("--dataset-root", type=str, default=None, help="Override data.dataset_root")
+    parser.add_argument("--json-path", type=str, default=None, help="Override data.json_path")
     args = parser.parse_args()
 
     cfg = load_config(args.config)
+    if args.output_dir is not None:
+        cfg.output_dir = args.output_dir
+    if args.dataset_root is not None:
+        cfg.data.dataset_root = args.dataset_root
+    if args.json_path is not None:
+        cfg.data.json_path = args.json_path
     seed_everything(args.seed)
 
     output_dir = Path(cfg.output_dir)

@@ -46,8 +46,9 @@ Credits are finite. Burn them only on runs that produce usable results.
 - **`colab stop` immediately when a task is done** — including before context-switching. Idle VMs burn credits with nothing executing.
 - **Smoke-test (locally or CPU) before paying for a GPU session.** Run end-to-end on a ~200-sample subset, then provision the GPU.
 - **Verify the GPU before training.** Exec `nvidia-smi`; if Colab handed you the wrong device, stop and re-provision.
-- **Checkpoint every epoch to Drive on long runs.** `/content/` is wiped on session loss; use `/content/drive/MyDrive/.../checkpoints/<run>/`.
-- **Stream logs to a Drive-backed file, flushed per epoch.** Partial results survive a mid-run crash.
+- **All training outputs go to Drive, never `/content/`.** `/content/` is wiped on session loss. Use `--output-dir /content/drive/MyDrive/dl_project_outputs/results/track1/<run>/` so checkpoints, logs, history.csv, and curves all survive a crash.
+- **Cache the timm pretrained weights to Drive** by exporting `HF_HOME=/content/drive/MyDrive/dl_project_outputs/hf_cache` *before* the first `python train.py` invocation. ConvNeXt-Tiny (~110 MB) then survives session loss and re-runs across configs don't re-download.
+- **Trainer writes `last.pt` + `history.csv` + curves after every epoch** and flushes logs per record. Resume any dropped run with `python train.py --config ... --resume <output_dir>/checkpoints/last.pt` — reloads model + optimizer + scheduler + best-so-far + early-stop counter + history; loss bounded to one epoch. Keep `--epochs` consistent across original and resumed runs (the cosine schedule's `T_max` is set at construction).
 
 Guardrails — stop and ask before provisioning if either applies:
 - The task hasn't been smoke-tested (locally or on CPU) yet.

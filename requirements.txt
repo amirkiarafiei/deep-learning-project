@@ -12,3 +12,16 @@
 numpy==1.26.4
 matplotlib==3.9.2
 Pillow==10.4.0
+
+# --- Training / inference (train.py, eval.py, visualize.py) --------------
+# NOTE: these are pinned to what the local venv currently has installed.
+# On Colab the install replaces torch/torchvision with the CUDA wheel via:
+#   pip install torch torchvision --upgrade --index-url https://download.pytorch.org/whl/cu126
+# (or whatever CUDA build matches the runtime — Colab usually has torch
+# pre-installed; only timm/sklearn/PyYAML are guaranteed to need install).
+torch==2.12.0
+torchvision==0.27.0
+timm==1.0.27
+scikit-learn>=1.4,<2.0
+PyYAML>=6.0,<7.0
+tqdm>=4.66

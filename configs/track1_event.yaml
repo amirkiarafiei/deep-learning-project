@@ -1,0 +1,31 @@
+run_name: track1_event
+output_dir: results/track1/event
+seed: 42
+
+data:
+  json_path: dataset/dataset.json
+  dataset_root: dataset
+  image_size: 224
+  batch_size: 64
+  num_workers: 4
+
+model:
+  families: [event]
+  include_changeflag: true
+  pretrained_backbone: true
+
+training:
+  epochs: 30
+  lr_backbone: 1.0e-5
+  lr_head: 1.0e-4
+  weight_decay: 1.0e-4
+  changeflag_weight: 0.5
+  grad_clip: 1.0
+  early_stop_patience: 10
+  eta_min: 1.0e-6
+  pos_weight_clamp_min: 1.0
+  pos_weight_clamp_max: 50.0
+  use_amp: true
+
+evaluation:
+  threshold: 0.5

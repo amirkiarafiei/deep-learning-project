@@ -1,5 +1,7 @@
-run_name: track1_multitask
-output_dir: results/track1/multitask
+# Phase 2 (v2) config — multitask (Object + Event + Attribute joint).
+# Bumped from v1.0.0: pos_weight clamp 50→10, weight_decay 1e-4→1e-3, head_dropout 0.0→0.3.
+run_name: track1_multitask_v2
+output_dir: results/track1_v2/multitask
 seed: 42
 
 data:
@@ -13,18 +15,19 @@ model:
   families: [object, event, attribute]
   include_changeflag: true
   pretrained_backbone: true
+  head_dropout: 0.3
 
 training:
   epochs: 30
   lr_backbone: 1.0e-5
   lr_head: 1.0e-4
-  weight_decay: 1.0e-4
+  weight_decay: 1.0e-3
   changeflag_weight: 0.5
   grad_clip: 1.0
   early_stop_patience: 10
   eta_min: 1.0e-6
   pos_weight_clamp_min: 1.0
-  pos_weight_clamp_max: 50.0
+  pos_weight_clamp_max: 10.0
   use_amp: true
 
 evaluation:

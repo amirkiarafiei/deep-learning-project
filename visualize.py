@@ -8,6 +8,7 @@ formatted as ``label (0.xxx)`` — matches Image 2 of the project PDF.
 from __future__ import annotations
 
 import argparse
+import json
 import random
 from pathlib import Path
 
@@ -62,6 +63,7 @@ def main() -> None:
     parser.add_argument("--output-dir", type=str, default=None, help="Override output_dir (PNGs + combined PDF written here)")
     parser.add_argument("--dataset-root", type=str, default=None, help="Override data.dataset_root")
     parser.add_argument("--json-path", type=str, default=None, help="Override data.json_path")
+    parser.add_argument("--thresholds", type=str, default=None, help="Optional path to thresholds_val.json. When given, per-class thresholds determine which labels are highlighted; PNGs land in a qualitative_tuned/ subfolder so the flat-baseline figures stay intact.")
     args = parser.parse_args()
 
     cfg = load_config(args.config)
@@ -74,8 +76,25 @@ def main() -> None:
     seed_everything(args.seed)
 
     output_dir = Path(cfg.output_dir)
-    qual_dir = output_dir / "qualitative"
+    # When --thresholds is given, write into qualitative_tuned/ so the flat
+    # baseline figures from the previous (flat) run stay intact for comparison.
+    qual_dirname = "qualitative_tuned" if args.thresholds else "qualitative"
+    qual_dir = output_dir / qual_dirname
     qual_dir.mkdir(parents=True, exist_ok=True)
+
+    # Load per-class thresholds if provided.
+    fam_thresholds: dict[str, "list[float] | float"] = {}
+    if args.thresholds:
+        with open(args.thresholds, "r", encoding="utf-8") as fh:
+            thr_data = json.load(fh)
+        for fam in cfg.model.families:
+            if fam in thr_data and "thresholds" in thr_data[fam]:
+                fam_thresholds[fam] = thr_data[fam]["thresholds"]
+            else:
+                fam_thresholds[fam] = cfg.evaluation.threshold
+    else:
+        for fam in cfg.model.families:
+            fam_thresholds[fam] = cfg.evaluation.threshold
     logger = build_logger(f"{cfg.run_name}_viz", output_dir / "logs" / "visualize.txt")
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -90,6 +109,7 @@ def main() -> None:
         families=cfg.model.families,
         include_changeflag=cfg.model.include_changeflag,
         pretrained_backbone=False,
+        head_dropout=cfg.model.head_dropout,
     ).to(device)
     ckpt = torch.load(args.ckpt, map_location=device, weights_only=False)
     model.load_state_dict(ckpt["model_state"])
@@ -120,7 +140,7 @@ def main() -> None:
                 gt_lines.append(f"  {fam}: {', '.join(gt_labels) if gt_labels else '(empty)'}")
                 probs = torch.sigmoid(out[fam])[0].cpu()
                 pairs = encoders[fam].decode_with_scores(
-                    probs, threshold=cfg.evaluation.threshold, top_k=5
+                    probs, threshold=fam_thresholds[fam], top_k=5
                 )
                 pred_str = ", ".join(f"{n} ({s:.3f})" for n, s in pairs) or "(none)"
                 pred_lines.append(f"  {fam}: {pred_str}")

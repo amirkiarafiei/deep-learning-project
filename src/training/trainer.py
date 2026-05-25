@@ -85,6 +85,7 @@ class Trainer:
             families=cfg.model.families,
             include_changeflag=cfg.model.include_changeflag,
             pretrained_backbone=cfg.model.pretrained_backbone,
+            head_dropout=cfg.model.head_dropout,
         ).to(self.device)
         n_params = sum(p.numel() for p in self.model.parameters())
         self.logger.info(f"Model parameters: {n_params/1e6:.2f}M")
@@ -135,6 +136,30 @@ class Trainer:
         """
         self.logger.info(f"Resuming from checkpoint: {ckpt_path}")
         ckpt = torch.load(ckpt_path, map_location=self.device, weights_only=False)
+
+        # Pre-flight: refuse to resume across head-architecture mismatches.
+        # Catches the v1→v2 case (Phase 1 plain Linear heads vs Phase 2
+        # Sequential(Dropout, Linear) heads) with a clear error instead of
+        # cryptic state_dict missing/unexpected keys.
+        ckpt_model_cfg = ckpt.get("config", {}).get("model", {}) or {}
+        ckpt_drop = ckpt_model_cfg.get("head_dropout", 0.0)
+        ckpt_families = ckpt_model_cfg.get("families", [])
+        if ckpt_drop != self.cfg.model.head_dropout:
+            raise ValueError(
+                f"Resume incompatibility: checkpoint trained with "
+                f"head_dropout={ckpt_drop}, current config has "
+                f"head_dropout={self.cfg.model.head_dropout}. Head shapes will "
+                f"not match (plain Linear vs Sequential(Dropout, Linear)). "
+                f"Either start a fresh run or use a checkpoint built with the "
+                f"same head_dropout. (This usually means you're trying to "
+                f"resume v2 training from a v1 checkpoint.)"
+            )
+        if ckpt_families and list(ckpt_families) != list(self.cfg.model.families):
+            raise ValueError(
+                f"Resume incompatibility: checkpoint families={ckpt_families} "
+                f"vs current config families={self.cfg.model.families}."
+            )
+
         self.model.load_state_dict(ckpt["model_state"])
         self.optimizer.load_state_dict(ckpt["optimizer_state"])
         self.scheduler.load_state_dict(ckpt["scheduler_state"])

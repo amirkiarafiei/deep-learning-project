@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Dict, List, Sequence, Union
 
 import numpy as np
 import torch
 from sklearn.metrics import precision_recall_fscore_support
+
+ThresholdSpec = Union[float, Sequence[float], torch.Tensor, np.ndarray]
 
 
 @dataclass
@@ -40,14 +42,26 @@ def family_metrics(
     logits: torch.Tensor,
     targets: torch.Tensor,
     class_names: List[str],
-    threshold: float = 0.5,
+    threshold: ThresholdSpec = 0.5,
 ) -> FamilyMetrics:
     """Compute micro/macro F1 + per-class breakdown for one multi-label family.
 
     ``logits`` and ``targets`` are shape ``(N, C)``. Sigmoid is applied here.
+
+    ``threshold`` is either a scalar (applied uniformly across classes) or a
+    per-class iterable / 1-D tensor of length ``C`` (Phase 2 val-tuned mode).
     """
     probs = torch.sigmoid(logits)
-    preds = (probs >= threshold).to(torch.int32)
+    if isinstance(threshold, (int, float)):
+        thr_t = torch.full((probs.shape[1],), float(threshold), dtype=probs.dtype)
+    else:
+        thr_t = torch.as_tensor(threshold, dtype=probs.dtype).view(-1)
+        if thr_t.shape[0] != probs.shape[1]:
+            raise ValueError(
+                f"per-class threshold must have length {probs.shape[1]}, "
+                f"got {thr_t.shape[0]}"
+            )
+    preds = (probs >= thr_t.view(1, -1)).to(torch.int32)
     y_true = _to_np(targets.to(torch.int32))
     y_pred = _to_np(preds)
 

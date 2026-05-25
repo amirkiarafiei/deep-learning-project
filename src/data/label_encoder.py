@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Dict, Iterable, List, Sequence
+from typing import Dict, Iterable, List, Sequence  # noqa: F401
 
 import torch
 
@@ -62,12 +62,28 @@ class LabelEncoder:
         return [self.classes[i] for i in above]
 
     def decode_with_scores(
-        self, scores: torch.Tensor, threshold: float = 0.5, top_k: int = 5
+        self,
+        scores: torch.Tensor,
+        threshold: "float | Sequence[float] | torch.Tensor" = 0.5,
+        top_k: int = 5,
     ) -> List[tuple[str, float]]:
-        """Return (label, score) pairs above threshold; if none, return top-k."""
+        """Return (label, score) pairs above threshold; if none, return top-k.
+
+        ``threshold`` accepts either a scalar (applied uniformly) or a per-class
+        iterable / 1-D tensor of length ``num_classes``.
+        """
         if scores.ndim != 1 or scores.shape[0] != self.num_classes:
             raise ValueError(f"expected shape ({self.num_classes},), got {tuple(scores.shape)}")
-        idx = (scores >= threshold).nonzero(as_tuple=False).flatten().tolist()
+        if isinstance(threshold, (int, float)):
+            thr_t = torch.full_like(scores, float(threshold))
+        else:
+            thr_t = torch.as_tensor(threshold, dtype=scores.dtype, device=scores.device).view(-1)
+            if thr_t.shape[0] != self.num_classes:
+                raise ValueError(
+                    f"per-class threshold must have length {self.num_classes}, "
+                    f"got {thr_t.shape[0]}"
+                )
+        idx = (scores >= thr_t).nonzero(as_tuple=False).flatten().tolist()
         if not idx:
             idx = torch.topk(scores, k=min(top_k, self.num_classes)).indices.tolist()
         return [(self.classes[i], float(scores[i])) for i in idx]

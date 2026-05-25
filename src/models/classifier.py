@@ -27,6 +27,7 @@ class ChangeClassifier(nn.Module):
         include_changeflag: bool = True,
         pretrained_backbone: bool = True,
         backbone_name: str = "convnext_tiny.fb_in1k",
+        head_dropout: float = 0.0,
     ):
         super().__init__()
         self.families: List[str] = list(families)
@@ -34,13 +35,22 @@ class ChangeClassifier(nn.Module):
             if fam not in NUM_CLASSES:
                 raise ValueError(f"Unknown family: {fam}")
         self.include_changeflag = include_changeflag
+        self.head_dropout = head_dropout
 
         self.backbone = SiameseBackbone(backbone_name, pretrained=pretrained_backbone)
         ch = self.backbone.feature_channels
         self.fusion = ConcatDiffFusion(channels=ch)
 
+        # Family heads optionally wrapped in Dropout (Phase 2 regularization).
+        # Changeflag head stays unregularized — it's already at ~0.95 F1 and
+        # dropout there would hurt without helping.
+        def _make_family_head(in_ch: int, out_ch: int) -> nn.Module:
+            if head_dropout > 0:
+                return nn.Sequential(nn.Dropout(head_dropout), nn.Linear(in_ch, out_ch))
+            return nn.Linear(in_ch, out_ch)
+
         self.heads = nn.ModuleDict(
-            {fam: nn.Linear(ch, NUM_CLASSES[fam]) for fam in self.families}
+            {fam: _make_family_head(ch, NUM_CLASSES[fam]) for fam in self.families}
         )
         self.changeflag_head: nn.Linear | None = (
             nn.Linear(ch, 1) if include_changeflag else None

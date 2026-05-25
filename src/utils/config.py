@@ -23,6 +23,9 @@ class ModelConfig:
     families: List[str] = field(default_factory=lambda: ["object"])
     include_changeflag: bool = True
     pretrained_backbone: bool = True
+    # Phase 2 (v2): dropout applied to family heads only (not changeflag).
+    # 0.0 reproduces Phase 1 (v1.0.0) exactly.
+    head_dropout: float = 0.0
 
 
 @dataclass

@@ -393,7 +393,10 @@ class Trainer:
     # -- LDAM-DRW + cRT helpers --------------------------------------------
 
     def _apply_drw_pos_weight(self) -> None:
-        """Switch every LDAM family loss to inverse-frequency pos_weight (DRW)."""
+        """Switch every LDAM family loss to inverse-frequency pos_weight (DRW)
+        and reset the early-stop patience counter — the loss landscape just
+        changed, so prior epochs of "no improvement" shouldn't count against us.
+        """
         if not hasattr(self, "_drw_applied"):
             self._drw_applied = False
         if self._drw_applied:
@@ -409,9 +412,11 @@ class Trainer:
                 ).to(self.device)
                 loss_fn.set_pos_weight(pw)
         self._drw_applied = True
+        prev_patience = self.epochs_since_improvement
+        self.epochs_since_improvement = 0
         self.logger.info(
             f"  → LDAM-DRW: switched to inverse-frequency pos_weight at epoch "
-            f"{self.cfg.training.ldam_drw_epoch}"
+            f"{self.cfg.training.ldam_drw_epoch}; patience reset {prev_patience}→0"
         )
 
     def save_log_priors(self) -> None:
@@ -494,6 +499,28 @@ class Trainer:
         original_train_loader = self.train_loader
         self.train_loader = crt_loader
 
+        # CRITICAL: swap loss to PLAIN BCE for cRT.
+        # Reason: cRT relies on class-aware SAMPLING for balance. Stacking it
+        # on top of LDAM margins + DRW pos_weight = triple-correction → rare-
+        # class precision collapse. The standard cRT recipe (Kang et al. 2020,
+        # "Decoupling Representation and Classifier") explicitly uses unweighted
+        # softmax/sigmoid loss with class-balanced sampling.
+        original_loss_fn = self.loss_fn
+        plain_family_losses: Dict[str, torch.nn.Module] = {}
+        for fam in self.cfg.model.families:
+            n_classes = self.encoders[fam].num_classes
+            pw_ones = torch.ones(n_classes, dtype=torch.float32, device=self.device)
+            plain_family_losses[fam] = FamilyBCELoss(pw_ones)
+        cf_loss = None
+        if self.cfg.model.include_changeflag:
+            cf_loss = ChangeflagBCELoss(torch.tensor(1.0, device=self.device))
+        self.loss_fn = MultiHeadLoss(
+            family_losses=plain_family_losses,
+            changeflag_loss=cf_loss,
+            changeflag_weight=self.cfg.training.changeflag_weight,
+        ).to(self.device)
+        self.logger.info("cRT loss: plain BCEWithLogitsLoss (no LDAM margins, no pos_weight)")
+
         try:
             crt_best_macro = self.best_val_macro_f1
             for ep in range(1, crt_epochs + 1):
@@ -549,6 +576,7 @@ class Trainer:
             self.logger.info(f"cRT complete. Best macro_f1: {crt_best_macro:.4f}")
         finally:
             self.train_loader = original_train_loader
+            self.loss_fn = original_loss_fn
 
     # -- orchestration -----------------------------------------------------
 

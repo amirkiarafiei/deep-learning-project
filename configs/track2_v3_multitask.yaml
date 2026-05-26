@@ -36,7 +36,6 @@ training:
   weight_decay: 1.0e-4               # Back to v1's level (LDAM handles class balance).
   changeflag_weight: 0.5
   grad_clip: 1.0
-  early_stop_patience: 10
   eta_min: 1.0e-6
   pos_weight_clamp_min: 1.0
   pos_weight_clamp_max: 10.0         # Used by LDAM-DRW Phase B.
@@ -44,10 +43,14 @@ training:
   # LDAM-DRW + cRT settings.
   loss_type: ldam
   ldam_max_m: 0.3                    # conservative max margin; raise to 0.5 if training is stable
-  ldam_s: 30.0
-  ldam_drw_epoch: 10                 # switch from ones-pos_weight to inverse-freq at epoch 10
+  ldam_s: 1.0                        # DISABLED — original LDAM scaling requires feature/weight L2-norm
+                                     # which we don't have on plain nn.Linear heads; s=30 would either
+                                     # be bypassed (network rescales weights) or saturate the sigmoid.
+  ldam_drw_epoch: 5                  # earlier than patience to avoid early-stop firing at DRW
+  early_stop_patience: 15            # bumped so patience doesn't expire right when DRW kicks in
   crt_epochs: 5                      # 5 epochs of head-only retraining on class-aware sampling
-  crt_lr_head: 5.0e-6                # half of lr_head for the cRT phase
+  crt_lr_head: 5.0e-5                # 10× more aggressive than before; heads need real updates
+                                     # during cRT, and they're getting plain-BCE gradients only.
 
 evaluation:
   threshold: 0.5

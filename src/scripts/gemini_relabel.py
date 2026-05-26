@@ -48,40 +48,74 @@ ATTRIBUTE_VOCAB = ["blue", "gray", "green", "large", "huge", "black", "white",
                    "red", "residential", "long", "industrial", "adjacent",
                    "sparse", "dense", "paved", "same", "dark"]
 
-PROMPT_TEMPLATE = """You are a remote-sensing-imagery expert. You will see TWO co-registered aerial RGB images of the same location at TWO different times (the "before" image first, the "after" image second). Your task is to identify what visibly CHANGED between them.
+# Note on image ordering: we send the two images as separate Part objects
+# in the request, interleaved with explicit text headers "BEFORE IMAGE:" /
+# "AFTER IMAGE:" so Gemini can never misread the order. This replaces the
+# old ambiguous "first / second" wording in the prompt.
 
-Three independent label families describe the change. Each is a multi-label set drawn from a closed vocabulary; "none" means no meaningful change in that family.
+PROMPT_TEMPLATE = """You are an expert remote-sensing analyst. You have just seen two co-registered aerial RGB images of the same geographic location, shown above as `BEFORE IMAGE (time t1):` and `AFTER IMAGE (time t2):`. Both are 256x256 views of the same scene from above.
 
-OBJECT — what kind of thing changed (closed vocabulary):
-  {object_vocab}
+Your job: identify what visibly CHANGED between BEFORE and AFTER.
 
-EVENT — the action / transition (closed vocabulary):
-  {event_vocab}
+CRITICAL CALIBRATION RULES — read carefully, this is where most analysts make mistakes:
 
-ATTRIBUTE — descriptive property of the change (closed vocabulary):
-  {attribute_vocab}
+1. **Approximately 28% of pairs in this dataset have NO MEANINGFUL CHANGE.** They look essentially identical apart from minor lighting, registration, or sensor noise. When you cannot point to a specific, persistent, large-enough-to-name structural change between the two images, you MUST return `["none"]` for ALL three families with confidence="unknown".
 
-The current human-supplied labels are below. They may be incomplete, ambiguous, or wrong. The dataset is known to have label-quality issues.
+2. **Do NOT invent or speculate.** If you have to use phrases like "appears to", "might be", "could be", "looks like" in your reasoning, that is a signal to set confidence="unknown" and return ["none"]. Reserve "high" for unambiguous, pixel-level-visible changes you could circle on the image.
 
-  current object: {curr_obj}
-  current event:  {curr_evt}
-  current attribute: {curr_attr}
+3. **Do NOT pattern-match from typical remote-sensing change types.** Just because two images of a city often show construction does not mean THIS pair does. Look at the actual pixels.
 
-Possibly-disagreeing classes the predicting model flagged:
+4. **The current human labels may be wrong but they are NOT systematically zero.** If the current label says `["none"]` and the changeflag is 0, the prior is strongly that nothing changed — do not flip without unambiguous visible evidence.
+
+OUTPUT FORMAT (strict)
+
+Return exactly one JSON object with these five fields and no extra text:
+
+  object_labels:    list of strings drawn ONLY from the OBJECT vocab below
+  event_labels:     list of strings drawn ONLY from the EVENT vocab below
+  attribute_labels: list of strings drawn ONLY from the ATTRIBUTE vocab below
+  confidence:       one of "high" | "medium" | "low" | "unknown"
+  reasoning:        ONE short English sentence, max 25 words, factual (no "appears to / might be / could be")
+
+OBJECT vocab (closed): {object_vocab}, none
+EVENT vocab (closed): {event_vocab}, none
+ATTRIBUTE vocab (closed): {attribute_vocab}, none
+
+CONFIDENCE LADDER
+  "high"     = I can clearly point to the changed region; the change covers a non-trivial portion of the image; my description would survive cross-examination.
+  "medium"   = I see a probable change but the boundary or class is ambiguous (e.g., "is that a building or a parking lot?").
+  "low"      = I see a faint or partial difference, possibly real, possibly noise.
+  "unknown"  = I cannot determine whether anything meaningful changed.
+
+DEFAULTS WHEN UNSURE
+  - confidence = "unknown"  →  return ["none"] in ALL three families.
+  - confidence = "low" with truly minor changes  →  list at most ONE label per family.
+  - Multi-label only when MULTIPLE genuine changes are visible.
+
+CURRENT HUMAN LABELS (may be incomplete or wrong):
+  object:    {curr_obj}
+  event:     {curr_evt}
+  attribute: {curr_attr}
+
+A separately-trained model flagged these possible disagreements with the current labels:
   {disagreements}
 
-Output JSON with these exact fields:
-  - object_labels: list of strings from the OBJECT vocab (empty list or ["none"] if no object change)
-  - event_labels: list of strings from the EVENT vocab
-  - attribute_labels: list of strings from the ATTRIBUTE vocab
-  - confidence: one of "high", "medium", "low", "unknown"
-  - reasoning: ONE short sentence
+EXAMPLES (illustrative — DO NOT copy labels; these are not your image):
 
-Rules:
-- If the two images look identical or you cannot tell, use ["none"] in all three families, confidence="unknown".
-- If you confidently disagree with the current labels (clear visible change they missed, or labeled change you don't see), set confidence="high" and provide YOUR labels.
-- If you're not sure, set confidence="medium" or "low" and provide your best guess.
-- Only use vocabulary terms listed above. Never invent new labels.
+Example 1 — clear single change (high confidence):
+  {{"object_labels": ["building"], "event_labels": ["build"], "attribute_labels": ["large", "gray"],
+    "confidence": "high",
+    "reasoning": "A large gray building was constructed in the upper-left, on previously empty land."}}
+
+Example 2 — no meaningful change (the common case for ~28% of pairs):
+  {{"object_labels": ["none"], "event_labels": ["none"], "attribute_labels": ["none"],
+    "confidence": "unknown",
+    "reasoning": "Both images show the same residential block with no structural difference."}}
+
+Example 3 — ambiguous (medium confidence, single label):
+  {{"object_labels": ["road"], "event_labels": ["turn"], "attribute_labels": ["gray"],
+    "confidence": "medium",
+    "reasoning": "A small road segment in the center appears resurfaced from brown to gray."}}
 """
 
 
@@ -98,6 +132,54 @@ def build_prompt(current_obj, current_evt, current_attr, disagreements=None) -> 
         curr_attr=", ".join(current_attr) if current_attr else "none",
         disagreements=disagreements_str,
     )
+
+
+def sanitize_output(parsed_dict: dict) -> dict:
+    """Validate and clamp the Gemini response to the closed vocabulary.
+
+    Always returns a dict with all 5 expected keys. Invalid labels are
+    silently dropped (and counted). If a family ends up empty after
+    dropping invalid labels, defaults to ["none"].
+    """
+    out: dict = {}
+    dropped: dict = {"object": [], "event": [], "attribute": []}
+    for fam, vocab in (
+        ("object", OBJECT_VOCAB), ("event", EVENT_VOCAB), ("attribute", ATTRIBUTE_VOCAB)
+    ):
+        key = f"{fam}_labels"
+        raw = parsed_dict.get(key, [])
+        if not isinstance(raw, list):
+            raw = [raw] if isinstance(raw, str) else []
+        # Lower-case + strip + filter against the vocab (+ "none")
+        clean = []
+        vocab_set = set(vocab) | {"none"}
+        for lbl in raw:
+            if not isinstance(lbl, str):
+                continue
+            lbl_norm = lbl.lower().strip()
+            if lbl_norm in vocab_set:
+                if lbl_norm not in clean:  # dedup
+                    clean.append(lbl_norm)
+            else:
+                dropped[fam].append(lbl)
+        if not clean:
+            clean = ["none"]
+        out[key] = clean
+
+    conf = parsed_dict.get("confidence", "unknown")
+    if isinstance(conf, str):
+        conf = conf.lower().strip()
+    if conf not in {"high", "medium", "low", "unknown"}:
+        conf = "unknown"
+    out["confidence"] = conf
+
+    reasoning = parsed_dict.get("reasoning", "")
+    if not isinstance(reasoning, str):
+        reasoning = str(reasoning)
+    out["reasoning"] = reasoning.strip()[:300]  # hard cap
+
+    out["_dropped_invalid_labels"] = {k: v for k, v in dropped.items() if v}
+    return out
 
 
 def main() -> None:
@@ -119,6 +201,7 @@ def main() -> None:
         from google import genai
         from google.genai import types
         from pydantic import BaseModel
+        from typing import Literal
     except ImportError as e:
         sys.exit(f"Missing dependency: {e}. Run: pip install google-genai python-dotenv pydantic")
 
@@ -126,11 +209,30 @@ def main() -> None:
     if not os.environ.get("GEMINI_API_KEY"):
         sys.exit("GEMINI_API_KEY not set. Copy .env.example to .env and fill it in.")
 
+    # Pydantic schema with Literal-typed vocabularies. google-genai converts
+    # Literal["a", "b", ...] into JSON Schema enums, which constrains
+    # Gemini's structured output to the exact closed vocabulary.
+    ObjectLabel = Literal[
+        "building", "tree", "road", "field", "vegetation", "water",
+        "parking", "land", "roof", "asphalt", "green", "plant", "none",
+    ]
+    EventLabel = Literal[
+        "build", "remove", "turn", "appear", "replace", "change",
+        "destroy", "increase", "vegetate", "add", "surround", "remain", "none",
+    ]
+    AttributeLabel = Literal[
+        "blue", "gray", "green", "large", "huge", "black", "white",
+        "more", "small", "brown", "empty", "bare", "lush", "middle",
+        "red", "residential", "long", "industrial", "adjacent",
+        "sparse", "dense", "paved", "same", "dark", "none",
+    ]
+    Confidence = Literal["high", "medium", "low", "unknown"]
+
     class LabelOutput(BaseModel):
-        object_labels: list[str]
-        event_labels: list[str]
-        attribute_labels: list[str]
-        confidence: str
+        object_labels: list[ObjectLabel]
+        event_labels: list[EventLabel]
+        attribute_labels: list[AttributeLabel]
+        confidence: Confidence
         reasoning: str
 
     # Build the queue of sample ids to relabel
@@ -192,10 +294,13 @@ def main() -> None:
                     s.get("attribute_labels", []),
                     entry.get("disagreements"),
                 )
+                # Interleave text labels with images so the order is unambiguous.
                 resp = client.models.generate_content(
                     model=args.model,
                     contents=[
+                        "BEFORE IMAGE (time t1):",
                         types.Part.from_bytes(data=a_bytes, mime_type="image/png"),
+                        "AFTER IMAGE (time t2):",
                         types.Part.from_bytes(data=b_bytes, mime_type="image/png"),
                         prompt,
                     ],
@@ -205,6 +310,20 @@ def main() -> None:
                     ),
                 )
                 parsed = resp.parsed
+                # Build the gemini dict from the parsed Pydantic instance (schema-valid)
+                # OR from a JSON parse + sanitize of the raw text (schema-invalid fallback).
+                if parsed is not None:
+                    gemini_dict = parsed.model_dump()
+                    gemini_dict["_schema_valid"] = True
+                else:
+                    try:
+                        raw_dict = json.loads(resp.text or "{}")
+                    except json.JSONDecodeError:
+                        raw_dict = {}
+                    gemini_dict = sanitize_output(raw_dict)
+                    gemini_dict["_schema_valid"] = False
+                    gemini_dict["_raw"] = (resp.text or "")[:1000]
+
                 record = {
                     "sample_id": sid,
                     "current": {
@@ -212,7 +331,7 @@ def main() -> None:
                         "event_labels": s.get("event_labels", []),
                         "attribute_labels": s.get("attribute_labels", []),
                     },
-                    "gemini": parsed.model_dump() if parsed else {"raw": resp.text},
+                    "gemini": gemini_dict,
                 }
                 fh.write(json.dumps(record, ensure_ascii=False) + "\n")
                 fh.flush()

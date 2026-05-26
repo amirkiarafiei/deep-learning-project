@@ -1,0 +1,27 @@
+2026-05-26 15:10:28 [INFO] Loading checkpoint: /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/checkpoints/best.pt
+2026-05-26 15:10:28 [INFO] Eval split: test
+2026-05-26 15:10:30 [INFO] Loaded checkpoint from epoch 18
+2026-05-26 15:10:39 [INFO] object: micro_f1=0.6896  macro_f1=0.2147  micro_p=0.6590  micro_r=0.7231
+2026-05-26 15:10:39 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/metrics/per_class_object_test.csv
+2026-05-26 15:10:39 [INFO] event: micro_f1=0.4157  macro_f1=0.2644  micro_p=0.3583  micro_r=0.4949
+2026-05-26 15:10:39 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/metrics/per_class_event_test.csv
+2026-05-26 15:10:39 [INFO] attribute: micro_f1=0.4043  macro_f1=0.2187  micro_p=0.3264  micro_r=0.5309
+2026-05-26 15:10:39 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/metrics/per_class_attribute_test.csv
+2026-05-26 15:10:39 [INFO] changeflag: f1=0.9557  p=0.9498  r=0.9616
+2026-05-26 15:10:39 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/metrics/eval_test.json
+2026-05-26 15:10:39 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/metrics/predictions_test.pt
+2026-05-26 15:10:46 [INFO] Loading checkpoint: /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/checkpoints/best.pt
+2026-05-26 15:10:46 [INFO] Eval split: test
+2026-05-26 15:10:48 [INFO] Loaded checkpoint from epoch 18
+2026-05-26 15:10:57 [INFO]   using val-tuned per-class thresholds for object from /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/metrics/thresholds_val.json
+2026-05-26 15:10:57 [INFO]   using val-tuned per-class thresholds for event from /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/metrics/thresholds_val.json
+2026-05-26 15:10:57 [INFO]   using val-tuned per-class thresholds for attribute from /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/metrics/thresholds_val.json
+2026-05-26 15:10:57 [INFO] object: micro_f1=0.6464  macro_f1=0.2364  micro_p=0.5644  micro_r=0.7563
+2026-05-26 15:10:57 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/metrics/per_class_object_test_tuned.csv
+2026-05-26 15:10:57 [INFO] event: micro_f1=0.4086  macro_f1=0.2841  micro_p=0.3084  micro_r=0.6050
+2026-05-26 15:10:57 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/metrics/per_class_event_test_tuned.csv
+2026-05-26 15:10:57 [INFO] attribute: micro_f1=0.3211  macro_f1=0.2176  micro_p=0.2158  micro_r=0.6269
+2026-05-26 15:10:57 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/metrics/per_class_attribute_test_tuned.csv
+2026-05-26 15:10:57 [INFO] changeflag: f1=0.9557  p=0.9498  r=0.9616
+2026-05-26 15:10:57 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/metrics/eval_test_tuned.json
+2026-05-26 15:10:57 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/multitask/metrics/predictions_test.pt

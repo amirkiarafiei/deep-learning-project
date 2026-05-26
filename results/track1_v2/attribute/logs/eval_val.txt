@@ -1,0 +1,8 @@
+2026-05-26 15:08:22 [INFO] Loading checkpoint: /content/drive/MyDrive/dl_project_outputs/results/track1_v2/attribute/checkpoints/best.pt
+2026-05-26 15:08:22 [INFO] Eval split: val
+2026-05-26 15:08:24 [INFO] Loaded checkpoint from epoch 12
+2026-05-26 15:08:33 [INFO] attribute: micro_f1=0.3983  macro_f1=0.1970  micro_p=0.3271  micro_r=0.5091
+2026-05-26 15:08:33 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/attribute/metrics/per_class_attribute_val.csv
+2026-05-26 15:08:33 [INFO] changeflag: f1=0.9514  p=0.9464  r=0.9565
+2026-05-26 15:08:33 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/attribute/metrics/eval_val.json
+2026-05-26 15:08:33 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/attribute/metrics/predictions_val.pt

@@ -1,0 +1,17 @@
+2026-05-26 15:08:44 [INFO] Loading checkpoint: /content/drive/MyDrive/dl_project_outputs/results/track1_v2/attribute/checkpoints/best.pt
+2026-05-26 15:08:44 [INFO] Eval split: test
+2026-05-26 15:08:46 [INFO] Loaded checkpoint from epoch 12
+2026-05-26 15:08:55 [INFO] attribute: micro_f1=0.3969  macro_f1=0.2172  micro_p=0.3206  micro_r=0.5210
+2026-05-26 15:08:55 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/attribute/metrics/per_class_attribute_test.csv
+2026-05-26 15:08:55 [INFO] changeflag: f1=0.9591  p=0.9522  r=0.9661
+2026-05-26 15:08:55 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/attribute/metrics/eval_test.json
+2026-05-26 15:08:55 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/attribute/metrics/predictions_test.pt
+2026-05-26 15:09:02 [INFO] Loading checkpoint: /content/drive/MyDrive/dl_project_outputs/results/track1_v2/attribute/checkpoints/best.pt
+2026-05-26 15:09:02 [INFO] Eval split: test
+2026-05-26 15:09:03 [INFO] Loaded checkpoint from epoch 12
+2026-05-26 15:09:13 [INFO]   using val-tuned per-class thresholds for attribute from /content/drive/MyDrive/dl_project_outputs/results/track1_v2/attribute/metrics/thresholds_val.json
+2026-05-26 15:09:13 [INFO] attribute: micro_f1=0.3194  macro_f1=0.2210  micro_p=0.2165  micro_r=0.6087
+2026-05-26 15:09:13 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/attribute/metrics/per_class_attribute_test_tuned.csv
+2026-05-26 15:09:13 [INFO] changeflag: f1=0.9591  p=0.9522  r=0.9661
+2026-05-26 15:09:13 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/attribute/metrics/eval_test_tuned.json
+2026-05-26 15:09:13 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/attribute/metrics/predictions_test.pt

@@ -1,0 +1,17 @@
+2026-05-26 14:58:07 [INFO] Loading checkpoint: /content/drive/MyDrive/dl_project_outputs/results/track1_v2/object/checkpoints/best.pt
+2026-05-26 14:58:07 [INFO] Eval split: test
+2026-05-26 14:58:09 [INFO] Loaded checkpoint from epoch 12
+2026-05-26 15:05:30 [INFO] object: micro_f1=0.6799  macro_f1=0.2673  micro_p=0.6449  micro_r=0.7190
+2026-05-26 15:05:30 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/object/metrics/per_class_object_test.csv
+2026-05-26 15:05:30 [INFO] changeflag: f1=0.9558  p=0.9478  r=0.9639
+2026-05-26 15:05:30 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/object/metrics/eval_test.json
+2026-05-26 15:05:30 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/object/metrics/predictions_test.pt
+2026-05-26 15:05:37 [INFO] Loading checkpoint: /content/drive/MyDrive/dl_project_outputs/results/track1_v2/object/checkpoints/best.pt
+2026-05-26 15:05:37 [INFO] Eval split: test
+2026-05-26 15:05:39 [INFO] Loaded checkpoint from epoch 12
+2026-05-26 15:05:48 [INFO]   using val-tuned per-class thresholds for object from /content/drive/MyDrive/dl_project_outputs/results/track1_v2/object/metrics/thresholds_val.json
+2026-05-26 15:05:48 [INFO] object: micro_f1=0.6088  macro_f1=0.2252  micro_p=0.4890  micro_r=0.8065
+2026-05-26 15:05:48 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/object/metrics/per_class_object_test_tuned.csv
+2026-05-26 15:05:48 [INFO] changeflag: f1=0.9558  p=0.9478  r=0.9639
+2026-05-26 15:05:48 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/object/metrics/eval_test_tuned.json
+2026-05-26 15:05:48 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track1_v2/object/metrics/predictions_test.pt

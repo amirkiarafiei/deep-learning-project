@@ -238,3 +238,16 @@ results/**/*.zip
 Thumbs.db
 .idea/
 # Note: .vscode/ intentionally NOT ignored — project may ship editor settings.
+
+# LaTeX build artifacts (keep only .tex / .bib / .pdf)
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.fls
+*.fdb_latexmk
+*.bcf
+*.run.xml

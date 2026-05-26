@@ -39,6 +39,7 @@ from ..data.dataset import (
 from ..data.label_encoder import LabelEncoder, build_encoders
 from ..data.transforms import build_transforms
 from ..losses.bce import ChangeflagBCELoss, FamilyBCELoss, MultiHeadLoss
+from ..losses.ldam import LDAMMultiLabelLoss, make_ldam_pos_weight
 from ..models.classifier import ChangeClassifier
 from ..utils.config import ExperimentConfig
 from ..utils.logging import build_logger
@@ -216,16 +217,41 @@ class Trainer:
         return train_loader, val_loader, train_ds.label_records()
 
     def _build_loss(self, train_records: List[dict]) -> MultiHeadLoss:
-        family_losses: Dict[str, FamilyBCELoss] = {}
+        family_losses: Dict[str, torch.nn.Module] = {}
         clamp_min = self.cfg.training.pos_weight_clamp_min
         clamp_max = self.cfg.training.pos_weight_clamp_max
+        loss_type = getattr(self.cfg.training, "loss_type", "bce")
+        # Cache class_pos_counts per family for LDAM + logit adjustment downstream.
+        self.class_pos_counts: Dict[str, torch.Tensor] = {}
+        self.total_train_samples: int = len(train_records)
         for fam in self.cfg.model.families:
             pw = compute_pos_weight(
                 train_records, self.encoders[fam], LABEL_KEYS[fam],
                 clamp_min=clamp_min, clamp_max=clamp_max,
             )
-            self.logger.info(f"pos_weight[{fam}] min={pw.min():.2f} max={pw.max():.2f} mean={pw.mean():.2f}")
-            family_losses[fam] = FamilyBCELoss(pw.to(self.device))
+            # Raw counts (not the clamped pos_weight) for LDAM + log priors.
+            counts = torch.zeros(self.encoders[fam].num_classes, dtype=torch.float32)
+            for rec in train_records:
+                for name in rec.get(LABEL_KEYS[fam], []):
+                    if name == "none":
+                        continue
+                    counts[self.encoders[fam].label_to_idx[name] - 1] += 1.0
+            self.class_pos_counts[fam] = counts
+
+            self.logger.info(
+                f"pos_weight[{fam}] min={pw.min():.2f} max={pw.max():.2f} mean={pw.mean():.2f}  "
+                f"class_pos_counts: min={counts.min():.0f} max={counts.max():.0f}"
+            )
+            if loss_type == "ldam":
+                # Phase A starts with ones (DRW: no reweighting); switches to inverse
+                # frequency at ldam_drw_epoch (handled in fit()).
+                family_losses[fam] = LDAMMultiLabelLoss(
+                    class_pos_counts=counts.to(self.device),
+                    max_m=self.cfg.training.ldam_max_m,
+                    s=self.cfg.training.ldam_s,
+                ).to(self.device)
+            else:
+                family_losses[fam] = FamilyBCELoss(pw.to(self.device))
 
         cf_loss = None
         if self.cfg.model.include_changeflag:
@@ -364,6 +390,166 @@ class Trainer:
         metrics["val_avg_macro_f1"] = avg_macro
         return avg_macro, metrics, cat_logits, cat_targets
 
+    # -- LDAM-DRW + cRT helpers --------------------------------------------
+
+    def _apply_drw_pos_weight(self) -> None:
+        """Switch every LDAM family loss to inverse-frequency pos_weight (DRW)."""
+        if not hasattr(self, "_drw_applied"):
+            self._drw_applied = False
+        if self._drw_applied:
+            return
+        for fam in self.cfg.model.families:
+            loss_fn = self.loss_fn.family_losses[fam]
+            if isinstance(loss_fn, LDAMMultiLabelLoss):
+                pw = make_ldam_pos_weight(
+                    self.class_pos_counts[fam],
+                    self.total_train_samples,
+                    clamp_min=self.cfg.training.pos_weight_clamp_min,
+                    clamp_max=self.cfg.training.pos_weight_clamp_max,
+                ).to(self.device)
+                loss_fn.set_pos_weight(pw)
+        self._drw_applied = True
+        self.logger.info(
+            f"  → LDAM-DRW: switched to inverse-frequency pos_weight at epoch "
+            f"{self.cfg.training.ldam_drw_epoch}"
+        )
+
+    def save_log_priors(self) -> None:
+        """Compute log(π_c) per family and save to logit_adjustment.json.
+
+        Reads class_pos_counts cached during _build_loss. The total sample
+        count is total_train_samples. Saved at output_dir / metrics.
+        """
+        from .logit_adjustment import compute_log_priors, save_log_priors
+        priors = {
+            fam: compute_log_priors(self.class_pos_counts[fam], self.total_train_samples)
+            for fam in self.cfg.model.families
+        }
+        path = self.output_dir / "metrics" / "log_priors.json"
+        save_log_priors(priors, path)
+        self.logger.info(f"  saved log priors → {path}")
+
+    def fit_crt(self) -> None:
+        """Classifier Re-Training: freeze backbone+fusion+changeflag head,
+        retrain family heads with class-aware resampling for ``crt_epochs``.
+
+        Called *after* fit() finishes. Saves crt_best.pt + crt_last.pt with the
+        same atomic-write convention. Uses a separate AdamW optimizer over the
+        family-head parameters only at ``crt_lr_head``.
+        """
+        crt_epochs = self.cfg.training.crt_epochs
+        if crt_epochs <= 0:
+            self.logger.info("cRT skipped (crt_epochs <= 0).")
+            return
+
+        from torch.utils.data import DataLoader
+        from ..data.class_balanced_sampler import build_class_aware_sampler
+
+        self.logger.info(f"\n=== cRT phase: {crt_epochs} epochs, head-only retraining on class-aware sampling ===")
+
+        # Load best.pt for the starting weights.
+        best_path = self.output_dir / "checkpoints" / "best.pt"
+        if best_path.exists():
+            self.logger.info(f"Loading best.pt for cRT start: {best_path}")
+            ckpt = torch.load(best_path, map_location=self.device, weights_only=False)
+            self.model.load_state_dict(ckpt["model_state"])
+
+        # Freeze everything except family heads.
+        for p in self.model.backbone.parameters():
+            p.requires_grad = False
+        for p in self.model.fusion.parameters():
+            p.requires_grad = False
+        if self.model.changeflag_head is not None:
+            for p in self.model.changeflag_head.parameters():
+                p.requires_grad = False
+        head_params = []
+        for fam in self.cfg.model.families:
+            head_params.extend(self.model.heads[fam].parameters())
+        n_trainable = sum(p.numel() for p in head_params)
+        self.logger.info(f"cRT trainable parameters: {n_trainable/1e6:.3f}M (family heads only)")
+
+        # New AdamW optimizer over head params only.
+        crt_opt = AdamW(head_params, lr=self.cfg.training.crt_lr_head,
+                       weight_decay=self.cfg.training.weight_decay)
+
+        # Class-aware sampling: build full multi-hot target tensor for the train set.
+        # Re-use train_loader's dataset for record access.
+        train_ds = self.train_loader.dataset
+        # Collect all-sample targets per family.
+        targets_per_family = {fam: [] for fam in self.cfg.model.families}
+        for rec in train_ds.label_records():
+            for fam in self.cfg.model.families:
+                t = self.encoders[fam].encode(rec.get(LABEL_KEYS[fam], []))
+                targets_per_family[fam].append(t)
+        targets_per_family = {fam: torch.stack(v, dim=0) for fam, v in targets_per_family.items()}
+        sampler = build_class_aware_sampler(targets_per_family, self.cfg.model.families)
+        crt_loader = DataLoader(
+            train_ds, batch_size=self.cfg.data.batch_size, sampler=sampler,
+            num_workers=self.cfg.data.num_workers,
+            pin_memory=(self.device.type == "cuda"),
+            worker_init_fn=_seed_worker if self.cfg.data.num_workers > 0 else None,
+            persistent_workers=self.cfg.data.num_workers > 0,
+        )
+        # Swap the loader temporarily.
+        original_train_loader = self.train_loader
+        self.train_loader = crt_loader
+
+        try:
+            crt_best_macro = self.best_val_macro_f1
+            for ep in range(1, crt_epochs + 1):
+                t0 = time.time()
+                self.model.train()
+                running = {"total": 0.0}
+                for fam in self.cfg.model.families:
+                    running[fam] = 0.0
+                if self.cfg.model.include_changeflag:
+                    running["changeflag"] = 0.0
+                n_batches = 0
+                for batch in self.train_loader:
+                    batch = self._move(batch)
+                    crt_opt.zero_grad(set_to_none=True)
+                    if self.use_amp:
+                        with torch.autocast(device_type="cuda", dtype=self.amp_dtype):
+                            _, losses = self._forward_loss(batch)
+                        losses["total"].backward()
+                    else:
+                        _, losses = self._forward_loss(batch)
+                        losses["total"].backward()
+                    torch.nn.utils.clip_grad_norm_(head_params, self.cfg.training.grad_clip)
+                    crt_opt.step()
+                    for k in running:
+                        if k in losses:
+                            running[k] += float(losses[k].detach())
+                    n_batches += 1
+                tr = {k: v / max(n_batches, 1) for k, v in running.items()}
+                val_macro, val_metrics, _, _ = self.validate()
+                elapsed = time.time() - t0
+                self.logger.info(
+                    f"cRT epoch {ep}/{crt_epochs}  train_loss={tr['total']:.4f}  "
+                    f"val_loss={val_metrics['val_loss']:.4f}  val_macro_f1={val_macro:.4f}  "
+                    f"time={elapsed:.1f}s"
+                )
+                if val_macro > crt_best_macro + 1e-6:
+                    crt_best_macro = val_macro
+                    # Save as crt_best.pt
+                    path = self.output_dir / "checkpoints" / "crt_best.pt"
+                    tmp = path.with_suffix(path.suffix + ".tmp")
+                    torch.save({
+                        "epoch": ep,
+                        "model_state": self.model.state_dict(),
+                        "optimizer_state": crt_opt.state_dict(),
+                        "config": _dataclass_to_dict(self.cfg),
+                        "metrics": val_metrics,
+                        "stage": "crt",
+                    }, tmp)
+                    if path.exists():
+                        path.unlink()
+                    tmp.rename(path)
+                    self.logger.info(f"  ✓ cRT new best val_macro_f1={val_macro:.4f}, saved {path.name}")
+            self.logger.info(f"cRT complete. Best macro_f1: {crt_best_macro:.4f}")
+        finally:
+            self.train_loader = original_train_loader
+
     # -- orchestration -----------------------------------------------------
 
     def fit(self) -> None:
@@ -376,6 +562,11 @@ class Trainer:
             )
             return
         for epoch in range(self.start_epoch, epochs + 1):
+            # LDAM-DRW: switch from ones-pos_weight to inverse-frequency pos_weight
+            # exactly once, at ldam_drw_epoch. Idempotent (set every epoch ≥ K).
+            if getattr(self.cfg.training, "loss_type", "bce") == "ldam" \
+                    and epoch >= self.cfg.training.ldam_drw_epoch:
+                self._apply_drw_pos_weight()
             t0 = time.time()
             train_losses = self.train_one_epoch(epoch)
             val_macro, val_metrics, _, _ = self.validate()

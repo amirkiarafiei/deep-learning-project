@@ -43,11 +43,21 @@ class TrainingConfig:
     use_amp: bool = True
     subset_train: int | None = None
     subset_val: int | None = None
+    # Track 2 v3 (A3) additions: LDAM-DRW + cRT.
+    loss_type: str = "bce"             # "bce" (default) | "ldam"
+    ldam_max_m: float = 0.5
+    ldam_s: float = 30.0
+    ldam_drw_epoch: int = 10           # switch to inverse-freq pos_weight from this epoch on
+    crt_epochs: int = 0                # 0 = no cRT phase
+    crt_lr_head: float = 1.0e-5        # head-only LR during cRT (typically lower than Phase A)
 
 
 @dataclass
 class EvaluationConfig:
     threshold: float = 0.5
+    # Track 2 v3 additions: post-hoc adjustments at inference.
+    logit_adjust_tau: float = 0.0      # 0 = no adjustment; 1.0 = full Bayes-optimal
+    tta_views: str = "1"               # "1" = none, "4" = dihedral
 
 
 @dataclass

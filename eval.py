@@ -29,6 +29,9 @@ def main() -> None:
     parser.add_argument("--dataset-root", type=str, default=None, help="Override data.dataset_root")
     parser.add_argument("--json-path", type=str, default=None, help="Override data.json_path")
     parser.add_argument("--thresholds", type=str, default=None, help="Path to thresholds_val.json (Phase 2). When given, per-class thresholds replace the flat 0.5; outputs are written with a `_tuned` suffix so the flat-baseline files stay intact.")
+    parser.add_argument("--logit-adjust", type=str, default=None, help="Path to log_priors.json (Track 2 v3). When given, subtracts τ·log(π_c) from logits at inference.")
+    parser.add_argument("--logit-adjust-tau", type=float, default=1.0, help="Strength τ of logit adjustment (default 1.0, full Bayes-optimal).")
+    parser.add_argument("--tta", type=str, default="1", choices=["1", "4"], help="Test-time augmentation: 1=none, 4=dihedral.")
     args = parser.parse_args()
 
     cfg = load_config(args.config)
@@ -75,21 +78,53 @@ def main() -> None:
         all_targets["changeflag"] = []
     sample_ids = []
 
+    # Optional TTA: average sigmoid scores across dihedral views.
+    use_tta = args.tta != "1"
+    if use_tta:
+        from src.data.tta import tta_predict
+        logger.info(f"TTA: averaging probabilities across {args.tta} dihedral views.")
+
     with torch.no_grad():
         for batch in loader:
             ia = batch["image_A"].to(device, non_blocking=True)
             ib = batch["image_B"].to(device, non_blocking=True)
-            out = model(ia, ib)
-            for fam in cfg.model.families:
-                all_logits[fam].append(out[fam].float().cpu())
-                all_targets[fam].append(batch[f"{fam}_labels"])
-            if cfg.model.include_changeflag:
-                all_logits["changeflag"].append(out["changeflag"].float().cpu())
-                all_targets["changeflag"].append(batch["changeflag"])
+            if use_tta:
+                probs = tta_predict(model, ia, ib, views=args.tta)
+                # Store inverse-sigmoid (logit-like) so downstream threshold + LA code paths
+                # remain consistent. Use logit(prob) with clamping for numerical safety.
+                eps = 1e-6
+                for fam in cfg.model.families:
+                    p = probs[fam].clamp(eps, 1.0 - eps)
+                    pseudo_logit = torch.log(p / (1.0 - p))
+                    all_logits[fam].append(pseudo_logit.float().cpu())
+                    all_targets[fam].append(batch[f"{fam}_labels"])
+                if cfg.model.include_changeflag:
+                    p = probs["changeflag"].clamp(eps, 1.0 - eps)
+                    pseudo_logit = torch.log(p / (1.0 - p))
+                    all_logits["changeflag"].append(pseudo_logit.float().cpu())
+                    all_targets["changeflag"].append(batch["changeflag"])
+            else:
+                out = model(ia, ib)
+                for fam in cfg.model.families:
+                    all_logits[fam].append(out[fam].float().cpu())
+                    all_targets[fam].append(batch[f"{fam}_labels"])
+                if cfg.model.include_changeflag:
+                    all_logits["changeflag"].append(out["changeflag"].float().cpu())
+                    all_targets["changeflag"].append(batch["changeflag"])
             sample_ids.extend(batch["sample_id"])
 
     cat_logits = {k: torch.cat(v, dim=0) for k, v in all_logits.items()}
     cat_targets = {k: torch.cat(v, dim=0) for k, v in all_targets.items()}
+
+    # Optional Logit Adjustment: subtract τ·log(π_c) from each family's logits.
+    if args.logit_adjust:
+        from src.training.logit_adjustment import load_log_priors, apply_logit_adjustment
+        lp = load_log_priors(Path(args.logit_adjust))
+        for fam in cfg.model.families:
+            if fam in lp:
+                cat_logits[fam] = apply_logit_adjustment(cat_logits[fam], lp[fam],
+                                                       tau=args.logit_adjust_tau)
+                logger.info(f"  logit adjustment applied to {fam} (τ={args.logit_adjust_tau})")
 
     metrics_dir = output_dir / "metrics"
     metrics_dir.mkdir(parents=True, exist_ok=True)

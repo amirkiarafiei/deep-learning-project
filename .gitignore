@@ -239,6 +239,13 @@ Thumbs.db
 .idea/
 # Note: .vscode/ intentionally NOT ignored — project may ship editor settings.
 
+# Secrets — never commit
+.env
+.env.local
+*.pem
+*.key
+
+
 # LaTeX build artifacts (keep only .tex / .bib / .pdf)
 *.aux
 *.bbl

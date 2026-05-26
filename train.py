@@ -48,6 +48,13 @@ def main() -> None:
     trainer = Trainer(cfg, resume_from=args.resume)
     trainer.fit()
 
+    # Track 2 v3 hooks: save log-priors for inference-time logit adjustment,
+    # and run the cRT phase if configured.
+    if hasattr(trainer, "save_log_priors"):
+        trainer.save_log_priors()
+    if cfg.training.crt_epochs and cfg.training.crt_epochs > 0:
+        trainer.fit_crt()
+
 
 if __name__ == "__main__":
     main()

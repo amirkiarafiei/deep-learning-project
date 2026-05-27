@@ -56,13 +56,26 @@ def main() -> None:
     loader = DataLoader(ds, batch_size=args.batch_size, shuffle=False,
                        num_workers=args.num_workers, pin_memory=(device.type == "cuda"))
 
+    ckpt = torch.load(args.ckpt, map_location=device, weights_only=False)
+    # Auto-detect head architecture from the checkpoint's state_dict keys.
+    # v1 saved plain Linear heads (`heads.object.weight`); v2 wraps them in
+    # Sequential(Dropout, Linear) (`heads.object.1.weight`). Without this
+    # detection, loading a v1 ckpt with a v2 config raises a state_dict mismatch.
+    sd_keys = ckpt["model_state"].keys()
+    ckpt_head_dropout = cfg.model.head_dropout if any(
+        k.startswith("heads.") and k.endswith(".1.weight") for k in sd_keys
+    ) else 0.0
+    if ckpt_head_dropout != cfg.model.head_dropout:
+        logger.info(
+            f"head_dropout: using {ckpt_head_dropout} (auto-detected from checkpoint) "
+            f"instead of {cfg.model.head_dropout} from config"
+        )
     model = ChangeClassifier(
         families=cfg.model.families,
         include_changeflag=cfg.model.include_changeflag,
         pretrained_backbone=False,
-        head_dropout=cfg.model.head_dropout,
+        head_dropout=ckpt_head_dropout,
     ).to(device)
-    ckpt = torch.load(args.ckpt, map_location=device, weights_only=False)
     model.load_state_dict(ckpt["model_state"])
     model.eval()
     logger.info(f"Loaded checkpoint from epoch {ckpt.get('epoch', '?')}; {len(ds)} train samples")

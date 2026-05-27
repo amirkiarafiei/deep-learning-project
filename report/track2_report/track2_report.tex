@@ -1,0 +1,227 @@
+% =========================================================================
+% BLM5135 — Multi-Label Bi-Temporal Change Classification
+% Track 2 Technical Report (v3 A3 Hybrid: cleanup + LDAM-DRW + cRT + LA + TTA)
+%
+% IEEEtran journal format, two-column, max 5 pages per course rubric.
+% Compile:  pdflatex track2_report.tex && bibtex track2_report \
+%           && pdflatex track2_report.tex && pdflatex track2_report.tex
+% =========================================================================
+\documentclass[journal]{IEEEtran}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{cite}
+\usepackage{hyperref}
+
+\graphicspath{{figures/}%
+  {../../results/track1_v3/multitask/plots/}%
+  {../../results/track1_v3/multitask/qualitative_tuned/}%
+  {../../results/eda/figures/}}
+
+\begin{document}
+
+\title{When Imbalance Tricks Backfire: A Hybrid Long-Tail Pipeline (LDAM-DRW + cRT + Logit Adjustment + TTA) on Multi-Label Bi-Temporal Change Classification}
+
+\author{%
+  Amirkia~Rafiei~Oskooei,
+  \IEEEmembership{BLM5135 -- Y\i ld\i z Technical University}%
+  \thanks{Manuscript prepared May 2026 as the Track-2 technical report for the BLM5135 Deep Learning course project at Y\i ld\i z Technical University. Companion to the Track-1 report, which documents the v1.0.0 / v2.0.0 baselines that this work attempts to surpass.}
+}
+
+\markboth{BLM5135 Deep Learning Course Project --- Track 2}{Rafiei Oskooei: Hybrid Long-Tail Pipeline on Multi-Label Change Classification}
+
+\maketitle
+
+% =========================================================================
+\begin{abstract}
+Track~1 of this project established a ConvNeXt-Tiny Siamese baseline (v1) reaching a test-set average macro-F1 of $0.270$ on a $10{,}855$-pair multi-label change-classification dataset with $270\times$ class imbalance, and demonstrated that classical regularization (v2) cannot push performance further. Track~2 explores a state-of-the-art-style hybrid pipeline (v3, ``A3 Hybrid'') that stacks five long-tail tricks on top of the v1 baseline: (i) Cleanlab-style noisy-label ranking, (ii) Gemini~2.5 Flash re-annotation of the top-500 most suspect train samples under a conservative AND-rule, (iii) the LDAM-DRW loss with deferred class re-weighting, (iv) a classifier-retraining (cRT) stage with class-aware sampling, (v) inference-time multi-label logit adjustment, 4-way dihedral test-time augmentation, and per-class validation-tuned thresholds. \emph{Every single variant of the hybrid pipeline underperforms v1.} The unadjusted v3 model reaches $0.236$ macro-F1 ($\Delta\!-\!0.034$ vs.\ v1); adding logit adjustment monotonically degrades performance with increasing strength $\tau$, ending at $0.175$ ($\Delta\!-\!0.095$). A cross-agent diagnostic study (Copilot~GPT-5.2 and Gemini~3.1~Pro) identifies three independent failure modes: a weakened class-balance signal during training, multi-label-incompatible class-aware sampling in cRT, and a mathematical mismatch between logit adjustment and the dataset's extreme rare-class log-priors. We present the result as a controlled negative finding: aggressive long-tail rebalancing actively harms macro-F1 on this dataset, and the bottleneck warrants data-side or architecture-side approaches reserved for future work.
+\end{abstract}
+
+\begin{IEEEkeywords}
+multi-label classification, long-tail learning, LDAM-DRW, classifier re-training, logit adjustment, test-time augmentation, label cleaning, negative result, LEVIR-CC.
+\end{IEEEkeywords}
+
+% =========================================================================
+\section{Giri\c{s} (Introduction)}\label{sec:giris}
+Track~1 of this project produced a clean Siamese ConvNeXt-Tiny baseline (v1.0.0) on a $10{,}855$-pair multi-label bi-temporal change-classification dataset derived from LEVIR-CC~\cite{liu2022levircc}. Despite achieving a competitive average test macro-F1 of $0.270$ on the three label families (Object/Event/Attribute), v1 left clear room for improvement: per-class breakdowns showed seven Object classes with test support $\le 17$ at macro-F1 $\le 0.21$, and the regularized v2 variant could not lift them. Peer evidence (independently collected from $10+$ classmates working on the same dataset) confirmed a $0.20$--$0.30$ macro-F1 ceiling across multiple backbones (ResNet, ConvNeXt-Tiny, Swin, ViT-Small, EfficientNet), suggesting the bottleneck is structural rather than backbone-specific.
+
+The most natural response to a long-tail ceiling on a multi-label task is to deploy methods designed for exactly that regime. We therefore designed Track~2 v3 (``A3 Hybrid'') around five orthogonal long-tail interventions, each individually validated in the literature:
+\begin{itemize}
+  \item \textbf{Data-side cleanup.} Use a confident-learning ranker~\cite{northcutt2021cleanlab} to surface the most suspect training labels, then re-annotate the top-500 candidates with the Gemini~2.5 Flash multimodal model~\cite{google2024gemini}. A conservative AND-rule (Cleanlab high-disagreement AND Gemini confidence=high AND label-sets differ) is applied to keep noisy interventions out of the dataset.
+  \item \textbf{Loss-side rebalancing.} Replace per-class positive-weighted BCE with the Label-Distribution-Aware Margin loss~\cite{cao2019ldam} under a Deferred Re-Weighting (DRW) schedule.
+  \item \textbf{Two-stage classifier decoupling.} After Phase~A, freeze the backbone and re-train the per-family heads (cRT) on class-aware sampling with plain BCE, following Kang~et~al.~\cite{kang2020decoupling}.
+  \item \textbf{Inference-time logit adjustment.} At test time, subtract $\tau\!\cdot\!\log\pi_c$ from each logit~\cite{menon2021logitadjust} to correct for the prior gap.
+  \item \textbf{Test-time augmentation and per-class thresholds.} 4-way dihedral averaging~\cite{wang2019tta} plus per-class thresholds tuned on the original validation set.
+\end{itemize}
+
+\textbf{The headline result is a strong negative one}: every variant of the hybrid pipeline underperforms the v1 baseline on the test set, and the inference-side stack (logit adjustment + TTA + thresholds) makes the situation strictly worse, not better. This report's contribution is therefore methodological rather than performance-driven: we (i)~establish the negative result with the full ablation, (ii)~conduct a cross-agent diagnostic study to isolate \emph{why} each component fails, (iii)~document two methodology errors that are not obvious from reading the LDAM/cRT/logit-adjustment papers in isolation but emerge when they are stacked, and (iv)~map the implications onto a data-side / architecture-side research agenda for future work beyond the course deadline. The remainder of this report assumes the reader has access to the Track~1 report for the shared backbone, dataset, and fusion architecture details.
+
+% =========================================================================
+\section{Deneysel Analiz (Experimental Analysis)}\label{sec:deneyselanaliz}
+
+\subsection{Pipeline Overview}\label{ssec:pipeline}
+
+The v3 A3 hybrid is best understood as five interventions added on top of an otherwise unchanged Track~1 backbone (Figure~\ref{fig:pipeline}). The shared encoder, feature-level concat-difference fusion, and per-family heads are inherited from v1; only the loss, an additional training stage, and the inference path change.
+
+\begin{figure}[!t]
+  \centering
+  % USER WILL DRAW THE PIPELINE DIAGRAM.  Suggested elements:
+  %  - Stage 0 (Data): Cleanlab -> Gemini relabel -> AND-rule reconcile -> dataset_v3_clean.json
+  %  - Stage 1 (Phase A training): same ConvNeXt-Tiny Siamese model, LDAM loss for first 4 epochs,
+  %    LDAM-DRW (pos_weight kicks in) from epoch 5.
+  %  - Stage 2 (cRT): freeze backbone+fusion, retrain heads with class-aware sampler on plain BCE.
+  %  - Stage 3 (Inference): for each test pair, 4-way dihedral TTA -> sigmoid -> +/- LA(tau) -> per-class thresholds.
+  \fbox{\parbox[c][38mm][c]{0.95\columnwidth}{\centering\itshape Placeholder: pipeline diagram.  To be drawn manually.  Suggested layout: four boxes in sequence: (1)~Data cleanup (Cleanlab $\to$ Gemini relabel $\to$ AND-rule reconcile), (2)~Phase~A training (LDAM-DRW, deferred re-weighting at epoch~5, early-stop patience~15), (3)~cRT phase (frozen backbone, plain BCE, class-aware sampler, 5~epochs), (4)~Inference (4-way dihedral TTA $\to$ optional logit adjustment with strength~$\tau$ $\to$ per-class val-tuned thresholds).}}
+  \caption{The v3 A3 Hybrid pipeline. The backbone and fusion are unchanged from Track~1; only the data, the loss, an additional training stage, and the inference path differ.}
+  \label{fig:pipeline}
+\end{figure}
+
+\subsection{Data-Side Cleanup}\label{ssec:cleanup}
+
+We dump v1 multitask predictions on the training split, rank samples by a Cleanlab-style \emph{strong disagreement} score (per-class self-confidence minus other-class confidence), and submit the top-500 to Gemini~2.5 Flash with a calibrated prompt and a strict Pydantic schema enforcing the closed label vocabulary via JSON-schema enums. Each Gemini response carries a confidence label and a short free-text reasoning string. We reconcile by an \emph{AND-rule}: a label set is replaced only when (i)~Cleanlab flagged the sample (already enforced by the top-500 selection), (ii)~Gemini reports \texttt{confidence=high}, and (iii)~Gemini's label set differs from the original. The conservatism is intentional: prior work~\cite{northcutt2021pervasive} shows that aggressive re-labeling can introduce more noise than it removes when the model used for ranking is itself imperfect.
+
+\textbf{What actually changed.} Of $385$ raw relabel records, only $108$ train samples cleared the AND-rule and produced flips, a rate of $1.3\%$ of training data (val and test are untouched). The flips are heavily \emph{additive}: across all three families, label \emph{additions} outnumber label \emph{removals} by approximately $4\times$. The most-added labels are Object \emph{roof} (43 additions), \emph{land} (23) and \emph{vegetation} (21); Attribute \emph{bare} (36), \emph{gray} (33) and \emph{large} (27). This additive bias matters for the failure-mode analysis in Section~\ref{ssec:diagnosis}.
+
+\subsection{Loss-Side: LDAM-DRW}\label{ssec:ldam}
+
+We replace per-class positive-weighted BCE with LDAM~\cite{cao2019ldam}, which subtracts class-dependent margins $m_c = m_{\max} / n_c^{1/4}$ from each \emph{positive} logit prior to the sigmoid, encouraging the network to push positive scores higher for rare classes. We use $m_{\max} = 0.3$ (a conservative choice; the original paper uses $0.5$ with feature normalization, which our plain \texttt{nn.Linear} heads do not provide). We also set the LDAM temperature $s = 1.0$, effectively disabling the scaling factor that the original formulation pairs with $L_2$-normalised features and weights. The deferred re-weighting (DRW) phase activates per-class positive weights $w_c = (1-\beta) / (1-\beta^{n_c})$ with $\beta = 0.9999$, clamped to $[1,10]$, starting at epoch~5. Patience is increased to 15~epochs (from v1's 10) so that early stopping does not fire exactly when DRW begins. This is the configuration captured in \texttt{configs/track2\_v3\_multitask.yaml}.
+
+\subsection{Classifier Re-Training (cRT)}\label{ssec:crt}
+
+After Phase~A (LDAM-DRW) early-stops or reaches its epoch budget, we freeze the backbone and fusion module, re-initialize the family-head optimizer at a $10\times$ higher learning rate ($5\!\times\!10^{-5}$), and train for 5 additional epochs with two changes: (i)~the loss reverts to plain \texttt{BCEWithLogitsLoss} with unit positive weights, removing the LDAM margins and DRW re-weighting; (ii)~the data loader uses a class-aware sampler that weights each training sample by $\sum_{c \in y^+} 1/n_c$, i.e.\ the sum-reciprocal of its positive labels' frequencies. The cRT checkpoint is kept only if its validation macro-F1 exceeds Phase~A's; otherwise Phase~A's best checkpoint is used at inference, as recommended by~\cite{kang2020decoupling}.
+
+\subsection{Inference-Side: LA + TTA + Thresholds}\label{ssec:inference}
+
+At test time, three optional transformations are composed:
+\begin{itemize}
+  \item \textbf{Logit adjustment} (LA): for each family $f$ and class $c$, subtract $\tau \cdot \log \pi_c^{(f)}$ from the logit, where $\pi_c^{(f)}$ is the per-class positive rate in the (cleaned) training split. The strength $\tau$ is swept over $\{0.0, 0.3, 0.5, 1.0\}$, with $\tau=1.0$ corresponding to the Bayes-optimal correction under the assumption of perfect conditional probability estimates~\cite{menon2021logitadjust}.
+  \item \textbf{Test-time augmentation} (TTA): we average sigmoid probabilities (not raw logits) across the four dihedral views (identity, horizontal flip, vertical flip, both flips) and re-logit for downstream consistency with the LA step.
+  \item \textbf{Per-class thresholds}: tuned by a 19-point grid sweep on the \emph{original} (uncleaned) validation set, applied independently per class and per family at test time. Classes with zero positives in validation are forced to threshold $1.0$.
+\end{itemize}
+Thresholds are tuned on the original (uncleaned) validation set so that the threshold distribution matches the test-set label distribution; the cleaned validation set is reserved for training-time early-stopping signal only.
+
+\subsection{Headline Results}\label{ssec:headline}
+
+Table~\ref{tab:main} compares the v1 multitask baseline with five variants of the v3 A3 hybrid, ordered by total inference-side intervention strength. \emph{Every} variant of v3 underperforms v1 on the average test macro-F1, and the addition of logit adjustment monotonically worsens the result as $\tau$ increases.
+
+\begin{table}[!t]
+  \caption{Main result: macro-F1 on the test split for the v1 baseline and five variants of the v3 A3 Hybrid pipeline. The unadjusted v3 model (flat $0.5$, no TTA, no LA) is already $-0.034$ below v1; logit adjustment monotonically worsens this gap. Best per column in \textbf{bold}.}
+  \label{tab:main}
+  \centering
+  \small
+  \begin{tabular}{@{}lcccc@{}}
+  \toprule
+  Variant & Object & Event & Attribute & \textbf{Avg.} \\
+  \midrule
+  \textbf{v1 multitask (flat 0.5)} & \textbf{0.285} & \textbf{0.286} & \textbf{0.240} & \textbf{0.270} \\
+  \midrule
+  v3 flat 0.5 (no LA, no TTA) & 0.225 & 0.259 & 0.224 & 0.236 \\
+  v3 + TTA + thresholds ($\tau{=}0$) & 0.207 & 0.272 & 0.214 & 0.231 \\
+  v3 + LA $\tau{=}0.3$ + TTA + thr. & 0.209 & 0.261 & 0.202 & 0.224 \\
+  v3 + LA $\tau{=}0.5$ + TTA + thr. & 0.190 & 0.246 & 0.180 & 0.205 \\
+  v3 + LA $\tau{=}1.0$ + TTA + thr. & 0.161 & 0.219 & 0.144 & 0.175 \\
+  \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Two observations dominate.} First, the gap between v1 and v3 already exists at the unadjusted level (v3 flat $= 0.236$ vs.\ v1 $= 0.270$), \emph{before} any LA, TTA or thresholding. The damage is therefore done at training time, not inference time. Second, even the LA-free inference-side stack (TTA + per-class thresholds, $\tau{=}0$) fails to recover the gap: it lands at $0.231$, fractionally below the unadjusted v3 baseline. Per-family, TTA + thresholds slightly help Event ($+0.013$) but hurt Object ($-0.018$) and Attribute ($-0.010$), netting out negative.
+
+\subsection{Per-Class Decomposition}\label{ssec:perclass}
+
+Table~\ref{tab:object-classes} contrasts the v1 multitask and v3 flat Object-family per-class F1 scores. The pattern is unambiguous: v3 \emph{improves} on mid-frequency classes (\emph{water} $+0.094$, \emph{vegetation} $+0.045$, \emph{tree} $+0.021$) but \emph{collapses to zero or near-zero} on the tail (\emph{roof} $0.211\to 0.000$, \emph{parking} $0.164\to 0.050$, \emph{green} $0.500\to 0.000$). The same pattern repeats in the Event family (\emph{surround} $0.140\to 0$, \emph{remain} $0.146\to 0$) and the Attribute family (\emph{paved} $0.211\to 0$, \emph{adjacent} $0.150\to 0$, \emph{same} $0.133\to 0$). Note especially that this collapse occurs at the \emph{flat-threshold, no-LA} setting, which means it is caused by the training-time interventions (LDAM-DRW + cRT + cleanup), not by the inference-side stack.
+
+\begin{table}[!t]
+  \caption{Per-class test-set F1 on the Object family: v1 multitask vs.\ v3 flat. Improvements ($\Delta {>} 0$) on mid-frequency classes are paid for by collapses to zero on rare classes. ``sup.'' is the test-set positive support.}
+  \label{tab:object-classes}
+  \centering
+  \small
+  \begin{tabular}{@{}lcccc@{}}
+  \toprule
+  Class & sup. & v1 F1 & v3 F1 & $\Delta$ \\
+  \midrule
+  building   & 788 & 0.899 & 0.893 & $-0.006$ \\
+  tree       & 128 & 0.381 & 0.402 & $+0.021$ \\
+  road       & 137 & 0.401 & 0.401 & $+0.000$ \\
+  field      &  69 & 0.271 & 0.288 & $+0.017$ \\
+  vegetation &  36 & 0.172 & 0.217 & $+0.045$ \\
+  water      &  31 & 0.239 & 0.333 & $+0.094$ \\
+  parking    &  17 & 0.164 & 0.050 & $-0.114$ \\
+  land       &  10 & 0.182 & 0.111 & $-0.071$ \\
+  \textbf{roof}    &   9 & \textbf{0.211} & \textbf{0.000} & $-0.211$ \\
+  asphalt    &   6 & 0.000 & 0.000 & ---       \\
+  \textbf{green}   &   2 & \textbf{0.500} & \textbf{0.000} & $-0.500$ \\
+  plant      &   2 & 0.000 & 0.000 & ---       \\
+  \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Two distinct failure modes coexist.} At the flat threshold the tail classes collapse from \emph{under-prediction} (high precision, low recall, F1 limited by recall to zero). When LA is added at $\tau{=}1.0$, the same classes flip into \emph{over-prediction}: recall jumps to $0.91$--$0.97$ while precision crashes to $0.08$--$0.14$. These are mathematically opposite signatures with the same downstream effect (low F1), which we will use in Section~\ref{ssec:diagnosis} to disentangle the causes.
+
+\subsection{Training Dynamics}\label{ssec:dynamics}
+
+Figure~\ref{fig:curves} shows the Phase~A training curves of v3 multitask. The model early-stops at epoch~15 (best validation average macro-F1 $= 0.2345$), already below v1's peak validation score, and continues for the full 30-epoch budget while validation slowly drifts downward. The DRW trigger at epoch~5 is visible as a small inflection in the training loss but produces no visible improvement on the validation curve. The cRT phase (epochs $31$--$35$, omitted from the plot for clarity) is more striking: the validation average macro-F1 collapses from $0.2345$ to $0.13$ within a single epoch and never recovers. The trainer correctly retains the Phase~A best checkpoint for downstream inference.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\columnwidth]{train_curves.png}
+  \caption{v3 multitask Phase~A training curves. The model converges below the v1 baseline at epoch~15 (best validation avg.\ macro-F1 $= 0.2345$) and never improves. The cRT phase (not shown) collapses validation to $\approx\!0.13$; the Phase~A best checkpoint is used for all inference.}
+  \label{fig:curves}
+\end{figure}
+
+\subsection{Cross-Agent Diagnostic Study}\label{ssec:diagnosis}
+
+Given the magnitude of the negative result, we conducted a cross-agent diagnostic study to isolate the failure modes. Two independent code-aware assistants (GitHub Copilot using GPT-5.2 and Google Gemini~3.1~Pro), each given the same self-contained briefing of the v3 configuration, the metric tables of Section~\ref{ssec:headline}, the per-class breakdown of Section~\ref{ssec:perclass}, the cleanup flip pattern of Section~\ref{ssec:cleanup}, and our (incorrect) initial hypothesis attributing the failure to a labelling-convention mismatch from the Gemini cleanup. Both agents independently produced overlapping diagnoses; the union of their findings is summarised below.
+
+\subsubsection*{Refuting the convention-drift hypothesis}
+Our initial hypothesis was that Gemini~2.5~Flash, prompted with ``what changed?'', produced richer label sets than the sparse LEVIR-CC annotation convention, so training on the cleaned dataset taught the model to over-predict. Both agents refuted this on two empirical grounds. First, the scale: $108$ flipped samples represent $1.3\%$ of training data, far too small to shift the global labeling convention. Second, the failure direction: the convention-drift hypothesis predicts \emph{over-prediction} at all settings, but the v3 flat-threshold result shows \emph{under-prediction} on tail classes (recall $\to 0$). Over-prediction appears only when LA is enabled, indicating a separate cause.
+
+\subsubsection*{Primary failure modes confirmed by both agents}
+\textbf{(F1) Weakened class-balance signal vs.\ v1 (training time).} The v1 configuration uses BCE with per-class \texttt{pos\_weight} clamped to $[1, 50]$. The v3 configuration drops this clamp to $[1, 10]$ on the assumption that LDAM-DRW will provide the additional balance signal. However, LDAM's margin term $m_c \cdot s$ is multiplied by the temperature $s$, which we set to $1.0$ to avoid the saturation that occurs when $s$ is large and the linear heads are not feature-normalised. With $s = 1.0$ and $m_{\max} = 0.3$, the maximum margin subtracted from any positive logit is only $0.3$, an extremely weak push compared to v1's $50\times$ positive-weighting. Consequently the v3 Phase~A model receives a \emph{strictly weaker} long-tail signal than v1, explaining the tail-class collapse at the flat threshold.
+
+\textbf{(F2) Logit-adjustment magnitude mismatch (inference time).} The per-family log-prior values $\log \pi_c$ range from $-0.30$ (head class \emph{building}) to $-5.95$ (tail class \emph{plant}). At $\tau = 1$ this subtracts up to $+5.95$ from a tail-class logit, more than enough to push it past the sigmoid decision boundary regardless of input. The result is the precision-collapse signature visible in Table~\ref{tab:main}. Logit adjustment was derived for empirical-risk-minimization training (no class weights, no resampling)~\cite{menon2021logitadjust}; stacking it on top of LDAM (margins) $+$ DRW (positive weighting) $+$ cRT (class-aware sampling) constitutes a triple-correction of imbalance, and the additional inference-time adjustment over-shoots.
+
+\textbf{(F3) Multi-label incompatibility of class-aware sampling in cRT.} Class-aware sampling, designed for single-label long-tail classification, weights each sample by the inverse frequency of its (single) label. In a multi-label setting, a sample with both a rare label (\emph{roof}) and a head label (\emph{building}) is up-weighted because of \emph{roof}, but the up-weighting also feeds the head class with that sample at the higher frequency. The label correlation structure that v1 implicitly learned is therefore destroyed, which we conjecture is the proximate cause of the validation $\to 0.13$ collapse during cRT.
+
+\subsubsection*{Auxiliary issues raised by one agent}
+\textbf{Train/test prior mismatch under LA.} The cleanup slightly shifts the training-set positive rates (additive bias documented in Section~\ref{ssec:cleanup}) while the test set remains in its original, sparser convention. Logit adjustment assumes the two priors match.
+
+\textbf{Missing change-flag gating at inference.} The pipeline never gates the per-family logits on the change-flag head, which already achieves $\approx 0.95$ F1. In particular, when the network confidently predicts ``no change'' but LA boosts a tail-class logit past threshold, the resulting false positives are mathematically unrecoverable. We highlight this as the most actionable fix for any future v3 variant.
+
+\subsection{Implications for the Headline}\label{ssec:implications}
+
+The failure of v3 is structural, not a hyperparameter accident. Of the three primary failure modes, none is fixable by re-tuning the existing knobs:
+\begin{itemize}
+  \item (F1) demands raising \texttt{pos\_weight\_clamp\_max} back to $50$ or increasing $s$ in LDAM, but increasing $s$ without feature normalisation saturates the sigmoid.
+  \item (F2) demands restricting LA to ERM-trained models; LA on top of any explicit re-balancing technique inherits the same triple-correction.
+  \item (F3) demands replacing cRT-style class-aware sampling with a multi-label-aware re-weighting scheme that preserves label co-occurrence statistics, which is itself an open research direction.
+\end{itemize}
+Crucially, the LA $\tau$ sweep (Table~\ref{tab:main}) demonstrates that even setting $\tau=0$ does not recover v1's performance, ruling out a simple ``just turn LA off'' fix. Combined with the peer-evidence ceiling at $0.20$--$0.30$ macro-F1 across diverse backbones, this is best read as evidence that the bottleneck on this dataset is \emph{label quality on the long tail}, not optimizer or loss tricks. The v1 baseline therefore remains the project's headline result.
+
+\subsection{Qualitative Examples}\label{ssec:qual}
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\columnwidth]{sample_001_test_008546_02339_ters_1_0.png.png}
+  \caption{Example qualitative panel from v3 multitask inference using LA $\tau{=}1$, TTA and val-tuned thresholds. The same 20-panel set is generated for v1 (Track~1) and v3 (this report) for direct comparison. Full sets are at \texttt{results/track1\_v\{1,3\}/multitask/qualitative\{,\_tuned\}/}.}
+  \label{fig:qual}
+\end{figure}
+
+% =========================================================================
+\section{Sonu\c{c} (Conclusion)}\label{sec:sonuc}
+
+We presented Track~2 of this project as a controlled negative result. A SOTA-style hybrid pipeline assembling five long-tail interventions (Cleanlab + Gemini relabel, LDAM-DRW, cRT, logit adjustment, TTA + per-class thresholds) on top of an unchanged Track~1 backbone fails to surpass the v1 baseline at any setting, and degrades monotonically as inference-side adjustments are layered on. A cross-agent diagnostic study identifies three independent structural failures: a strictly weaker class-balance signal during Phase~A training, a mathematical mismatch between logit adjustment and the dataset's extreme rare-class priors, and a multi-label-incompatibility in cRT's class-aware sampling. The result is consistent with peer evidence that ConvNeXt/ViT-class backbones on this dataset all plateau at $0.20$--$0.30$ macro-F1; the limiting factor appears to be label quality on the long tail rather than the optimization techniques applied. Future work, beyond the course deadline, should therefore pursue \emph{data-side} interventions (full-dataset re-annotation under a sparse-labeling convention, or test-set sanitization on the tail classes specifically) or \emph{architecture-side} changes (foundation backbones such as DINOv2, attention-based fusion with cross-attention between the bi-temporal feature maps), both reserved as v4+ candidates. As a methodological contribution, this report also documents the value of running independent cross-agent diagnoses when a multi-component pipeline fails in a non-obvious way: in our case, two agents independently refuted our initial hypothesis and replaced it with a sharper, testable one.
+
+% =========================================================================
+\section*{Acknowledgments}
+This is the Track~2 deliverable for the BLM5135 \emph{Derin \"O\u{g}renme ve Yapay Sinir A\u{g}lar\i} course at Y\i ld\i z Technical University. The companion Track~1 report covers the v1.0.0 and v2.0.0 baselines. The cross-agent diagnostic study (Section~\ref{ssec:diagnosis}) was conducted with GitHub Copilot CLI (model \texttt{gpt-5.2}) and Google Gemini CLI (model \texttt{gemini-3.1-pro-preview}) as independent code-aware assistants reviewing the same self-contained briefing; both agents declared no prior exposure to this report. The Gemini~2.5~Flash relabeling of the 500 most suspect training samples used the public Google Gen AI SDK with strict Pydantic schema enforcement; raw responses are archived at \texttt{results/track1\_v3/cleanup/gemini\_relabels\_train.jsonl}. All code is released at the project repository on the same main branch as the Track~1 deliverable; the v3 outputs are at \texttt{results/track1\_v3/}.
+
+% =========================================================================
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

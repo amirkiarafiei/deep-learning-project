@@ -1,0 +1,24 @@
+{
+  "total_samples": 10855,
+  "relabel_records": 385,
+  "confidence_distribution": {
+    "medium": 262,
+    "unknown": 11,
+    "high": 111,
+    "low": 1
+  },
+  "flips_per_family": {
+    "object": 101,
+    "event": 99,
+    "attribute": 103
+  },
+  "flips_per_split_family": {
+    "train": {
+      "object": 101,
+      "event": 99,
+      "attribute": 103
+    },
+    "val": {},
+    "test": {}
+  }
+}

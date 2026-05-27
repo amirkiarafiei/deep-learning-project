@@ -1,0 +1,58 @@
+# Track 2 v4 — A2 isolation: Gemini-cleaned dataset + v1's exact training recipe.
+#
+# Purpose: isolate whether the 108-flip Gemini cleanup itself helped or hurt,
+# independent of the broken loss-side stack (LDAM-DRW + cRT + LA) that v3 used.
+#
+# Architecture: identical to v1 (ConvNeXt-Tiny Siamese + concat-diff fusion + 4 heads).
+# Dataset:      cleaned (results/track1_v3/cleanup/dataset_v3_clean.json).
+# Loss:         plain BCEWithLogitsLoss with pos_weight clamp [1, 50]  ← v1's setting.
+# Optimizer:    AdamW, lr_backbone=1e-5 / lr_head=1e-4 / wd=1e-4       ← v1's setting.
+# NO LDAM. NO cRT. NO LA. NO TTA. NO per-class thresholds (eval at flat 0.5).
+#
+# Expected runtime: ~3h on A100 (same as v1 was).
+
+run_name: track2_v4_clean_v1recipe_multitask
+output_dir: results/track1_v4/multitask
+seed: 42
+
+data:
+  # Cleaned dataset produced by src/scripts/reconcile_labels.py during v3 cleanup phase.
+  # On Colab, the run() helper passes --json-path to override this; locally this points
+  # at the same file in the repo's results/ tree.
+  json_path: results/track1_v3/cleanup/dataset_v3_clean.json
+  dataset_root: dataset
+  image_size: 224
+  batch_size: 64
+  num_workers: 4
+
+model:
+  families: [object, event, attribute]
+  include_changeflag: true
+  pretrained_backbone: true
+  head_dropout: 0.0                  # v1's setting — NOT v2's 0.3.
+
+training:
+  epochs: 30
+  lr_backbone: 1.0e-5
+  lr_head: 1.0e-4
+  weight_decay: 1.0e-4               # v1's setting — NOT v2's 1e-3.
+  changeflag_weight: 0.5
+  grad_clip: 1.0
+  early_stop_patience: 10            # v1's patience.
+  eta_min: 1.0e-6
+  pos_weight_clamp_min: 1.0
+  pos_weight_clamp_max: 50.0         # v1's clamp — NOT v2/v3's 10.
+  use_amp: true
+  # Plain BCE — no LDAM, no cRT.
+  loss_type: bce
+  # The fields below are unused when loss_type=bce but kept for trainer-config compatibility.
+  ldam_max_m: 0.0
+  ldam_s: 1.0
+  ldam_drw_epoch: 0
+  crt_epochs: 0
+  crt_lr_head: 0.0
+
+evaluation:
+  threshold: 0.5
+  logit_adjust_tau: 0.0              # Not used; trainer still writes log_priors.json for completeness.
+  tta_views: "1"

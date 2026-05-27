@@ -233,6 +233,23 @@ dl_project_outputs*
 results/**/dl_project_outputs*
 # Local zip archives anywhere under results/
 results/**/*.zip
+# Training checkpoint dirs — never commit; intent is explicit beyond the *.pt glob
+results/**/checkpoints/
+# Throwaway diagnostic / smoke artifacts
+results/_smoke_*/
+# Qualitative figures (PNGs + combined PDF) — regenerable by visualize.py and
+# typically too large to be worth tracking; the IEEE report cites a single one
+# via filename and the rest are diagnostic.
+results/**/qualitative/
+results/**/qualitative_tuned/
+# Derived / regenerable cleanup artifacts (v3 pipeline outputs) — re-create with
+# src/scripts/{find_noisy_labels,gemini_relabel,reconcile_labels}.py if needed.
+results/**/cleanup/dataset_*.json
+results/**/cleanup/noisy_candidates.json
+results/**/cleanup/gemini_relabels_*.jsonl
+# IEEE bare journal template — copied into each report dir as a reference but
+# never used to compile the actual deliverable.
+report/**/bare_jrnl.tex
 # Editor / OS junk
 .DS_Store
 Thumbs.db

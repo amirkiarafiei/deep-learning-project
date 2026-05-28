@@ -11,13 +11,13 @@
 # Expected runtime: ~3h A100 (similar to v1).
 
 run_name: track2_v3_multitask
-output_dir: results/track1_v3/multitask
+output_dir: results/track2_v3/multitask
 seed: 42
 
 data:
   # IMPORTANT: this points at the cleaned dataset produced by
   # src/scripts/reconcile_labels.py. The original dataset.json stays put.
-  json_path: results/track1_v3/cleanup/dataset_v3_clean.json
+  json_path: results/track2_v3/cleanup/dataset_v3_clean.json
   dataset_root: dataset
   image_size: 224
   batch_size: 64

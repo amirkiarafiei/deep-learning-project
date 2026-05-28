@@ -9,7 +9,7 @@ Usage:
     python -m src.scripts.predict_for_cleanlab \\
         --config configs/track1_multitask.yaml \\
         --ckpt results/track1_v1/multitask/checkpoints/best.pt \\
-        --output-dir results/track1_v3/cleanup
+        --output-dir results/track2_v3/cleanup
 """
 
 from __future__ import annotations

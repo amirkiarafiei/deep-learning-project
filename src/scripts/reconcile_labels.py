@@ -13,10 +13,10 @@ how many labels changed per family.
 Usage:
     python -m src.scripts.reconcile_labels \\
         --dataset-json dataset/dataset.json \\
-        --train-relabels results/track1_v3/cleanup/gemini_relabels_train.jsonl \\
-        --val-relabels   results/track1_v3/cleanup/gemini_relabels_val.jsonl \\
-        --output         results/track1_v3/cleanup/dataset_v3_clean.json \\
-        --summary        results/track1_v3/cleanup/reconcile_summary.json
+        --train-relabels results/track2_v3/cleanup/gemini_relabels_train.jsonl \\
+        --val-relabels   results/track2_v3/cleanup/gemini_relabels_val.jsonl \\
+        --output         results/track2_v3/cleanup/dataset_v3_clean.json \\
+        --summary        results/track2_v3/cleanup/reconcile_summary.json
 """
 
 from __future__ import annotations

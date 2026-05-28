@@ -11,10 +11,10 @@ Per call ≈ 1500 input + 300 output tokens. 1500 calls ≈ $2 total.
 Usage:
     # Top-K train candidates:
     python -m src.scripts.gemini_relabel \\
-        --candidates results/track1_v3/cleanup/noisy_candidates.json \\
+        --candidates results/track2_v3/cleanup/noisy_candidates.json \\
         --dataset-json dataset/dataset.json \\
         --dataset-root dataset \\
-        --output results/track1_v3/cleanup/gemini_relabels_train.jsonl \\
+        --output results/track2_v3/cleanup/gemini_relabels_train.jsonl \\
         --max-samples 500
 
     # Entire val set:
@@ -22,7 +22,7 @@ Usage:
         --split val \\
         --dataset-json dataset/dataset.json \\
         --dataset-root dataset \\
-        --output results/track1_v3/cleanup/gemini_relabels_val.jsonl
+        --output results/track2_v3/cleanup/gemini_relabels_val.jsonl
 """
 
 from __future__ import annotations

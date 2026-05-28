@@ -19,8 +19,8 @@
 \usepackage{hyperref}
 
 \graphicspath{{figures/}%
-  {../../results/track1_v3/multitask/plots/}%
-  {../../results/track1_v3/multitask/qualitative_tuned/}%
+  {../../results/track2_v3/multitask/plots/}%
+  {../../results/track2_v3/multitask/qualitative_tuned/}%
   {../../results/eda/figures/}}
 
 \begin{document}
@@ -212,7 +212,7 @@ Crucially, the LA $\tau$ sweep (Table~\ref{tab:main}) demonstrates that even set
 \begin{figure}[!t]
   \centering
   \includegraphics[width=\columnwidth]{sample_001_test_008546_02339_ters_1_0.png.png}
-  \caption{Example qualitative panel from v3 multitask inference using LA $\tau{=}1$, TTA and val-tuned thresholds. The same 20-panel set is generated for v1 (Track~1) and v3 (this report) for direct comparison. Full sets are at \texttt{results/track1\_v\{1,3\}/multitask/qualitative\{,\_tuned\}/}.}
+  \caption{Example qualitative panel from v3 multitask inference using LA $\tau{=}1$, TTA and val-tuned thresholds. The same 20-panel set is generated for v1 (Track~1) and v3 (this report) for direct comparison. Full sets are at \texttt{results/track1\_v1/multitask/qualitative/} and \texttt{results/track2\_v3/multitask/qualitative\_tuned/}.}
   \label{fig:qual}
 \end{figure}
 
@@ -223,7 +223,7 @@ We presented Track~2 of this project as a controlled negative result. A SOTA-sty
 
 % =========================================================================
 \section*{Acknowledgments}
-This is the Track~2 deliverable for the BLM5135 \emph{Derin \"O\u{g}renme ve Yapay Sinir A\u{g}lar\i} course at Y\i ld\i z Technical University. The companion Track~1 report covers the v1.0.0 and v2.0.0 baselines. The cross-agent diagnostic study (Section~\ref{ssec:diagnosis}) was conducted with GitHub Copilot CLI (model \texttt{gpt-5.2}) and Google Gemini CLI (model \texttt{gemini-3.1-pro-preview}) as independent code-aware assistants reviewing the same self-contained briefing; both agents declared no prior exposure to this report. The Gemini~2.5~Flash relabeling of the 500 most suspect training samples used the public Google Gen AI SDK with strict Pydantic schema enforcement; raw responses are archived at \texttt{results/track1\_v3/cleanup/gemini\_relabels\_train.jsonl}. All code is released at the project repository on the same main branch as the Track~1 deliverable; the v3 outputs are at \texttt{results/track1\_v3/}.
+This is the Track~2 deliverable for the BLM5135 \emph{Derin \"O\u{g}renme ve Yapay Sinir A\u{g}lar\i} course at Y\i ld\i z Technical University. The companion Track~1 report covers the v1.0.0 and v2.0.0 baselines. The cross-agent diagnostic study (Section~\ref{ssec:diagnosis}) was conducted with GitHub Copilot CLI (model \texttt{gpt-5.2}) and Google Gemini CLI (model \texttt{gemini-3.1-pro-preview}) as independent code-aware assistants reviewing the same self-contained briefing; both agents declared no prior exposure to this report. The Gemini~2.5~Flash relabeling of the 500 most suspect training samples used the public Google Gen AI SDK with strict Pydantic schema enforcement; raw responses are archived at \texttt{results/track2\_v3/cleanup/gemini\_relabels\_train.jsonl}. All code is released at the project repository on the same main branch as the Track~1 deliverable; the Track~2 outputs are at \texttt{results/track2\_v3/} (v3 hybrid) and \texttt{results/track2\_v4/} (v4 isolation).
 
 % =========================================================================
 \bibliographystyle{IEEEtran}

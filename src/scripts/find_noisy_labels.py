@@ -17,8 +17,8 @@ Notes:
 
 Usage:
     python -m src.scripts.find_noisy_labels \\
-        --predictions results/track1_v3/cleanup/predictions_train.pt \\
-        --output       results/track1_v3/cleanup/noisy_candidates.json \\
+        --predictions results/track2_v3/cleanup/predictions_train.pt \\
+        --output       results/track2_v3/cleanup/noisy_candidates.json \\
         --top-k 1000
 """
 

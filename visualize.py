@@ -22,7 +22,7 @@ from PIL import Image
 from src.data.dataset import ChangeDataset
 from src.data.label_encoder import build_encoders
 from src.data.transforms import build_transforms
-from src.models.classifier import ChangeClassifier
+from src.models import build_model
 from src.utils.config import load_config
 from src.utils.logging import build_logger
 from src.utils.seed import seed_everything
@@ -105,12 +105,8 @@ def main() -> None:
         cfg.data.json_path, cfg.data.dataset_root, args.split, transform, encoders=encoders
     )
 
-    model = ChangeClassifier(
-        families=cfg.model.families,
-        include_changeflag=cfg.model.include_changeflag,
-        pretrained_backbone=False,
-        head_dropout=cfg.model.head_dropout,
-    ).to(device)
+    cfg.model.pretrained_backbone = False
+    model = build_model(cfg).to(device)
     ckpt = torch.load(args.ckpt, map_location=device, weights_only=False)
     model.load_state_dict(ckpt["model_state"])
     model.eval()

@@ -24,7 +24,7 @@ from torch.utils.data import DataLoader
 from src.data.dataset import ChangeDataset
 from src.data.label_encoder import build_encoders
 from src.data.transforms import build_transforms
-from src.models.classifier import ChangeClassifier
+from src.models import build_model
 from src.utils.config import load_config
 from src.utils.logging import build_logger
 
@@ -70,12 +70,9 @@ def main() -> None:
             f"head_dropout: using {ckpt_head_dropout} (auto-detected from checkpoint) "
             f"instead of {cfg.model.head_dropout} from config"
         )
-    model = ChangeClassifier(
-        families=cfg.model.families,
-        include_changeflag=cfg.model.include_changeflag,
-        pretrained_backbone=False,
-        head_dropout=ckpt_head_dropout,
-    ).to(device)
+    cfg.model.pretrained_backbone = False
+    cfg.model.head_dropout = ckpt_head_dropout
+    model = build_model(cfg).to(device)
     model.load_state_dict(ckpt["model_state"])
     model.eval()
     logger.info(f"Loaded checkpoint from epoch {ckpt.get('epoch', '?')}; {len(ds)} train samples")

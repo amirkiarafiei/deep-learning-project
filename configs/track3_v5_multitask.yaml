@@ -1,0 +1,48 @@
+# Track 3 v5 — Multi-task (shared encoder + 3 ML-Decoder heads).
+#
+# Aşama 2 deliverable: one model emits Object + Event + Attribute jointly,
+# sharing the frozen DINOv2 backbone and the cross-attention fusion. Each
+# family has its own ML-Decoder head.
+
+run_name: track3_v5_multitask
+output_dir: results/track3_v5/multitask
+seed: 42
+
+data:
+  json_path: dataset/dataset.json
+  dataset_root: dataset
+  image_size: 224
+  batch_size: 32
+  num_workers: 4
+
+model:
+  families: [object, event, attribute]
+  include_changeflag: true
+  pretrained_backbone: true
+  arch_kind: dinov2_crossattn_mldecoder
+  dinov2_model: dinov2_vitb14
+  freeze_backbone: true
+  fusion_n_heads: 8
+  fusion_n_encoder_layers: 2
+  fusion_dropout: 0.0
+  decoder_n_heads: 8
+  decoder_n_layers: 1
+  decoder_dropout: 0.0
+
+training:
+  epochs: 30
+  lr_backbone: 0.0
+  lr_head: 1.0e-4
+  weight_decay: 1.0e-4
+  changeflag_weight: 0.5
+  grad_clip: 1.0
+  early_stop_patience: 10
+  eta_min: 1.0e-6
+  pos_weight_clamp_min: 1.0
+  pos_weight_clamp_max: 50.0
+  use_amp: true
+  loss_type: bce
+  crt_epochs: 0
+
+evaluation:
+  threshold: 0.5

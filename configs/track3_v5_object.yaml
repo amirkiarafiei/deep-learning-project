@@ -1,0 +1,53 @@
+# Track 3 v5 — Object single-task.
+#
+# DINOv2-Base (frozen) + cross-attention bi-temporal fusion + ML-Decoder head.
+# Loss = plain BCEWithLogits + per-class pos_weight (v1 recipe), so the
+# experiment isolates the architecture change.
+#
+# Trainable params: ~5M (only fusion + ML-Decoder + changeflag head).
+# Backbone DINOv2-Base = 86M params, frozen.
+#
+# Expected runtime: ~30-45 min on A100.
+
+run_name: track3_v5_object
+output_dir: results/track3_v5/object
+seed: 42
+
+data:
+  json_path: dataset/dataset.json
+  dataset_root: dataset
+  image_size: 224                   # DINOv2 vitb14 wants 224×224 (16×16 = 256 patches).
+  batch_size: 32                    # smaller than v1's 64 because DINOv2 forward is heavier.
+  num_workers: 4
+
+model:
+  families: [object]
+  include_changeflag: true
+  pretrained_backbone: true
+  arch_kind: dinov2_crossattn_mldecoder
+  dinov2_model: dinov2_vitb14
+  freeze_backbone: true             # Crucial — only ~5M params train.
+  fusion_n_heads: 8
+  fusion_n_encoder_layers: 2
+  fusion_dropout: 0.0
+  decoder_n_heads: 8
+  decoder_n_layers: 1
+  decoder_dropout: 0.0
+
+training:
+  epochs: 30
+  lr_backbone: 0.0                  # Frozen; LR irrelevant but kept for trainer-API compatibility.
+  lr_head: 1.0e-4                   # Standard for fusion + decoder + head.
+  weight_decay: 1.0e-4
+  changeflag_weight: 0.5
+  grad_clip: 1.0
+  early_stop_patience: 10
+  eta_min: 1.0e-6
+  pos_weight_clamp_min: 1.0
+  pos_weight_clamp_max: 50.0        # v1's setting — gives tail classes a strong gradient.
+  use_amp: true
+  loss_type: bce                    # No LDAM (v3 proved it hurts on this dataset).
+  crt_epochs: 0                     # No cRT (multi-label-incompatible).
+
+evaluation:
+  threshold: 0.5

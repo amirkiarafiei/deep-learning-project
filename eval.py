@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader
 from src.data.dataset import ChangeDataset
 from src.data.label_encoder import build_encoders
 from src.data.transforms import build_transforms
-from src.models.classifier import ChangeClassifier
+from src.models import build_model
 from src.training.metrics import changeflag_metrics, family_metrics
 from src.utils.config import load_config
 from src.utils.logging import build_logger
@@ -60,12 +60,11 @@ def main() -> None:
         num_workers=cfg.data.num_workers, pin_memory=(device.type == "cuda"),
     )
 
-    model = ChangeClassifier(
-        families=cfg.model.families,
-        include_changeflag=cfg.model.include_changeflag,
-        pretrained_backbone=False,
-        head_dropout=cfg.model.head_dropout,
-    ).to(device)
+    # At eval time, the checkpoint provides weights so we skip pretrained
+    # initialization. For DINOv2 (v5) this also avoids re-downloading from
+    # torch.hub on every eval invocation.
+    cfg.model.pretrained_backbone = False
+    model = build_model(cfg).to(device)
     ckpt = torch.load(args.ckpt, map_location=device, weights_only=False)
     model.load_state_dict(ckpt["model_state"])
     model.eval()

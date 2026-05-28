@@ -26,6 +26,18 @@ class ModelConfig:
     # Phase 2 (v2): dropout applied to family heads only (not changeflag).
     # 0.0 reproduces Phase 1 (v1.0.0) exactly.
     head_dropout: float = 0.0
+    # Architecture family. "siamese_convnext" (default) reproduces v1-v4;
+    # "dinov2_crossattn_mldecoder" selects the Track 3 v5 stack.
+    arch_kind: str = "siamese_convnext"
+    # Track 3 v5 hyperparameters (unused when arch_kind == "siamese_convnext").
+    dinov2_model: str = "dinov2_vitb14"
+    freeze_backbone: bool = True
+    fusion_n_heads: int = 8
+    fusion_n_encoder_layers: int = 2
+    fusion_dropout: float = 0.0
+    decoder_n_heads: int = 8
+    decoder_n_layers: int = 1
+    decoder_dropout: float = 0.0
 
 
 @dataclass

@@ -40,7 +40,7 @@ from ..data.label_encoder import LabelEncoder, build_encoders
 from ..data.transforms import build_transforms
 from ..losses.bce import ChangeflagBCELoss, FamilyBCELoss, MultiHeadLoss
 from ..losses.ldam import LDAMMultiLabelLoss, make_ldam_pos_weight
-from ..models.classifier import ChangeClassifier
+from ..models import build_model
 from ..utils.config import ExperimentConfig
 from ..utils.logging import build_logger
 from ..utils.seed import seed_everything
@@ -82,12 +82,7 @@ class Trainer:
 
         self.train_loader, self.val_loader, train_records = self._build_loaders()
 
-        self.model = ChangeClassifier(
-            families=cfg.model.families,
-            include_changeflag=cfg.model.include_changeflag,
-            pretrained_backbone=cfg.model.pretrained_backbone,
-            head_dropout=cfg.model.head_dropout,
-        ).to(self.device)
+        self.model = build_model(cfg).to(self.device)
         n_params = sum(p.numel() for p in self.model.parameters())
         self.logger.info(f"Model parameters: {n_params/1e6:.2f}M")
 

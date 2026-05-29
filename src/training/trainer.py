@@ -370,7 +370,11 @@ class Trainer:
                 outputs, losses = self._forward_loss(batch)
             for k in running:
                 if k in losses:
-                    running[k] += float(losses[k])
+                    # .detach() defensively — if any loss function clobbers the
+                    # outer no_grad context (e.g. a buggy torch.set_grad_enabled),
+                    # the autograd graph would otherwise accumulate across
+                    # validation batches and OOM.
+                    running[k] += float(losses[k].detach())
             n_batches += 1
             for fam in self.cfg.model.families:
                 all_logits[fam].append(outputs[fam].float().cpu())

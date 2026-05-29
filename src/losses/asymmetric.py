@@ -68,15 +68,20 @@ class AsymmetricLoss(nn.Module):
 
         # Asymmetric focal.
         if self.gamma_neg > 0 or self.gamma_pos > 0:
-            if self.disable_torch_grad_focal_loss:
-                torch.set_grad_enabled(False)
-            pt0 = p * targets
-            pt1 = p_neg * (1 - targets)
-            pt = pt0 + pt1
-            one_sided_gamma = self.gamma_pos * targets + self.gamma_neg * (1 - targets)
-            one_sided_w = torch.pow(1 - pt, one_sided_gamma)
-            if self.disable_torch_grad_focal_loss:
-                torch.set_grad_enabled(True)
+            # Use a context manager rather than torch.set_grad_enabled(...) so
+            # we don't leak the grad state when the caller is already inside
+            # @torch.no_grad() (e.g. Trainer.validate). The previous global
+            # set_grad_enabled(True) at the end of this block clobbered the
+            # outer no_grad and caused autograd-graph accumulation across
+            # validation batches → OOM on long val loops.
+            import contextlib
+            ctx = torch.no_grad() if self.disable_torch_grad_focal_loss else contextlib.nullcontext()
+            with ctx:
+                pt0 = p * targets
+                pt1 = p_neg * (1 - targets)
+                pt = pt0 + pt1
+                one_sided_gamma = self.gamma_pos * targets + self.gamma_neg * (1 - targets)
+                one_sided_w = torch.pow(1 - pt, one_sided_gamma)
             loss = loss * one_sided_w
 
         # Per-class positive weight (gives tail classes extra gradient).

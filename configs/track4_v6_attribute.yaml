@@ -38,7 +38,7 @@ training:
   pos_weight_clamp_max: 50.0
   use_amp: true
   # RAL hyperparameters (Park et al. 2023 defaults).
-  loss_type: ral
+  loss_type: asl
   asl_gamma_neg: 4.0
   asl_gamma_pos: 0.0
   asl_clip: 0.05

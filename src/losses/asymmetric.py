@@ -129,26 +129,28 @@ class RobustAsymmetricLoss(nn.Module):
         if self.clip > 0:
             p_neg = (p - self.clip).clamp(min=0)
 
-        # Log terms.
+        # Log terms (always <= 0).
         log_p = torch.log(p.clamp(min=self.eps))
         log_1mp = torch.log((1 - p_neg).clamp(min=self.eps))
 
-        # Polynomial-asymmetric factors.
-        # Positive samples: (1-p)^gamma_pos
-        # Negative samples: p^gamma_neg
+        # Polynomial-asymmetric multiplicative factors (always >= 0).
         pos_w = (1 - p).pow(self.gamma_pos)
         neg_w = p.pow(self.gamma_neg)
 
-        loss_pos = targets * pos_w * log_p
-        loss_neg = (1 - targets) * neg_w * log_1mp
-        loss = loss_pos + loss_neg
-
-        # Hill regularization on positives — penalizes noisy-positive samples
-        # where the model is confident in negative (p << 1).
-        # term ~ lambda_hill * y * (1-p) (a soft prior pushing toward predicting positives)
+        # Hill regularization (multiplicative). For positives, add the Hill
+        # weight ``(lambda - p)^2`` to the polynomial weight; this UP-weights
+        # uncertain positives (p << lambda) and DOWN-weights confident ones.
+        # Hill is a multiplier on log_p (never a separate sign-flipping
+        # subtraction — that was the v6-first-run bug).
         if self.lambda_hill > 0:
-            hill = self.lambda_hill * targets * (1 - p)
-            loss = loss - hill * log_p
+            hill_w = (self.lambda_hill - p).pow(2)
+            pos_w_eff = pos_w + hill_w
+        else:
+            pos_w_eff = pos_w
+
+        loss_pos = targets * pos_w_eff * log_p          # <= 0
+        loss_neg = (1 - targets) * neg_w * log_1mp      # <= 0
+        loss = loss_pos + loss_neg                      # <= 0
 
         # Per-class positive weight.
         if self.pos_weight is not None:

@@ -1,0 +1,4 @@
+2026-05-29 13:18:12 [INFO] Rendering 20 samples from split=test
+2026-05-29 13:18:25 [INFO] Wrote 20 PNGs and a combined PDF: /content/drive/MyDrive/dl_project_outputs/results/track4_v6/object/qualitative/qualitative_test.pdf
+2026-05-29 13:18:34 [INFO] Rendering 20 samples from split=test
+2026-05-29 13:18:47 [INFO] Wrote 20 PNGs and a combined PDF: /content/drive/MyDrive/dl_project_outputs/results/track4_v6/object/qualitative_tuned/qualitative_test.pdf

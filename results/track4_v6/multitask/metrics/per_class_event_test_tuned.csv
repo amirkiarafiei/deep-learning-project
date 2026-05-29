@@ -1,0 +1,13 @@
+class,precision,recall,f1,support
+build,0.0,0.0,0.0,372
+remove,0.0,0.0,0.0,240
+turn,0.0,0.0,0.0,170
+appear,0.0,0.0,0.0,161
+replace,0.0,0.0,0.0,143
+change,0.0,0.0,0.0,69
+destroy,0.0,0.0,0.0,69
+increase,0.0,0.0,0.0,42
+vegetate,0.0,0.0,0.0,37
+add,0.0,0.0,0.0,28
+surround,0.0,0.0,0.0,24
+remain,0.0,0.0,0.0,17

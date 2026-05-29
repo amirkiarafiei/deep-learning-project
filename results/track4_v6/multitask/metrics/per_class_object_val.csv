@@ -1,0 +1,13 @@
+class,precision,recall,f1,support
+building,0.0,0.0,0.0,760
+tree,0.0,0.0,0.0,128
+road,0.0,0.0,0.0,106
+field,0.0,0.0,0.0,74
+vegetation,0.0,0.0,0.0,30
+water,0.0,0.0,0.0,38
+parking,0.0,0.0,0.0,22
+land,0.0,0.0,0.0,20
+roof,0.0,0.0,0.0,10
+asphalt,0.0,0.0,0.0,12
+green,0.0,0.0,0.0,4
+plant,0.0,0.0,0.0,2

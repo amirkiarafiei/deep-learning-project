@@ -1,0 +1,19 @@
+{
+  "split": "val",
+  "ckpt": "/content/drive/MyDrive/dl_project_outputs/results/track3_v5/object/checkpoints/best.pt",
+  "checkpoint_epoch": 13,
+  "thresholds_source": "flat=0.5",
+  "object": {
+    "micro_p": 0.5926756352765321,
+    "micro_r": 0.6575456053067993,
+    "micro_f1": 0.6234276729559748,
+    "macro_p": 0.31580715825273825,
+    "macro_r": 0.26063585488276714,
+    "macro_f1": 0.2608622538144285
+  },
+  "changeflag": {
+    "changeflag_p": 0.9270588235294117,
+    "changeflag_r": 0.9270588235294117,
+    "changeflag_f1": 0.9270588235294117
+  }
+}

@@ -1,0 +1,12 @@
+2026-05-29 00:42:32 [INFO] Loading checkpoint: /content/drive/MyDrive/dl_project_outputs/results/track3_v5/multitask/checkpoints/best.pt
+2026-05-29 00:42:32 [INFO] Eval split: val
+2026-05-29 00:42:36 [INFO] Loaded checkpoint from epoch 8
+2026-05-29 00:42:47 [INFO] object: micro_f1=0.5974  macro_f1=0.2579  micro_p=0.4889  micro_r=0.7678
+2026-05-29 00:42:47 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track3_v5/multitask/metrics/per_class_object_val.csv
+2026-05-29 00:42:47 [INFO] event: micro_f1=0.3742  macro_f1=0.2474  micro_p=0.2626  micro_r=0.6510
+2026-05-29 00:42:47 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track3_v5/multitask/metrics/per_class_event_val.csv
+2026-05-29 00:42:47 [INFO] attribute: micro_f1=0.3533  macro_f1=0.1995  micro_p=0.2503  micro_r=0.6003
+2026-05-29 00:42:47 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track3_v5/multitask/metrics/per_class_attribute_val.csv
+2026-05-29 00:42:47 [INFO] changeflag: f1=0.9136  p=0.8784  r=0.9518
+2026-05-29 00:42:47 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track3_v5/multitask/metrics/eval_val.json
+2026-05-29 00:42:47 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track3_v5/multitask/metrics/predictions_val.pt

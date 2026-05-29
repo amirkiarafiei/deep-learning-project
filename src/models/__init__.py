@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from .classifier import ChangeClassifier
 from .classifier_v5 import ChangeClassifierV5
+from .classifier_v6 import ChangeClassifierV6
 
 
 def build_model(cfg):
@@ -50,10 +51,24 @@ def build_model(cfg):
             decoder_dropout=getattr(cfg.model, "decoder_dropout", 0.0),
         )
 
+    if arch == "convnext_mamba":
+        return ChangeClassifierV6(
+            families=cfg.model.families,
+            include_changeflag=cfg.model.include_changeflag,
+            pretrained_backbone=cfg.model.pretrained_backbone,
+            backbone_name=getattr(cfg.model, "backbone_name", "convnext_tiny.fb_in1k"),
+            n_mamba_blocks=getattr(cfg.model, "n_mamba_blocks", 6),
+            mamba_d_state=getattr(cfg.model, "mamba_d_state", 16),
+            mamba_d_conv=getattr(cfg.model, "mamba_d_conv", 4),
+            mamba_expand=getattr(cfg.model, "mamba_expand", 2),
+            fusion_dropout=getattr(cfg.model, "fusion_dropout", 0.0),
+            head_dropout=cfg.model.head_dropout,
+        )
+
     raise ValueError(
         f"Unknown model.arch_kind={arch!r}. Expected one of "
-        f"['siamese_convnext', 'dinov2_crossattn_mldecoder']."
+        f"['siamese_convnext', 'dinov2_crossattn_mldecoder', 'convnext_mamba']."
     )
 
 
-__all__ = ["ChangeClassifier", "ChangeClassifierV5", "build_model"]
+__all__ = ["ChangeClassifier", "ChangeClassifierV5", "ChangeClassifierV6", "build_model"]

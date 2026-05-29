@@ -1,0 +1,17 @@
+2026-05-29 00:39:13 [INFO] Loading checkpoint: /content/drive/MyDrive/dl_project_outputs/results/track3_v5/event/checkpoints/best.pt
+2026-05-29 00:39:13 [INFO] Eval split: test
+2026-05-29 00:39:17 [INFO] Loaded checkpoint from epoch 8
+2026-05-29 00:39:27 [INFO] event: micro_f1=0.3533  macro_f1=0.2578  micro_p=0.2470  micro_r=0.6203
+2026-05-29 00:39:27 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track3_v5/event/metrics/per_class_event_test.csv
+2026-05-29 00:39:27 [INFO] changeflag: f1=0.9278  p=0.9064  r=0.9503
+2026-05-29 00:39:27 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track3_v5/event/metrics/eval_test.json
+2026-05-29 00:39:27 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track3_v5/event/metrics/predictions_test.pt
+2026-05-29 00:39:35 [INFO] Loading checkpoint: /content/drive/MyDrive/dl_project_outputs/results/track3_v5/event/checkpoints/best.pt
+2026-05-29 00:39:35 [INFO] Eval split: test
+2026-05-29 00:39:38 [INFO] Loaded checkpoint from epoch 8
+2026-05-29 00:39:49 [INFO]   using val-tuned per-class thresholds for event from /content/drive/MyDrive/dl_project_outputs/results/track3_v5/event/metrics/thresholds_val.json
+2026-05-29 00:39:49 [INFO] event: micro_f1=0.3529  macro_f1=0.2453  micro_p=0.2614  micro_r=0.5430
+2026-05-29 00:39:49 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track3_v5/event/metrics/per_class_event_test_tuned.csv
+2026-05-29 00:39:49 [INFO] changeflag: f1=0.9278  p=0.9064  r=0.9503
+2026-05-29 00:39:49 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track3_v5/event/metrics/eval_test_tuned.json
+2026-05-29 00:39:49 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track3_v5/event/metrics/predictions_test.pt

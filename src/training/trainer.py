@@ -38,6 +38,7 @@ from ..data.dataset import (
 )
 from ..data.label_encoder import LabelEncoder, build_encoders
 from ..data.transforms import build_transforms
+from ..losses.asymmetric import AsymmetricLoss, RobustAsymmetricLoss
 from ..losses.bce import ChangeflagBCELoss, FamilyBCELoss, MultiHeadLoss
 from ..losses.ldam import LDAMMultiLabelLoss, make_ldam_pos_weight
 from ..models import build_model
@@ -244,6 +245,25 @@ class Trainer:
                     class_pos_counts=counts.to(self.device),
                     max_m=self.cfg.training.ldam_max_m,
                     s=self.cfg.training.ldam_s,
+                ).to(self.device)
+            elif loss_type == "asl":
+                # Asymmetric Loss (Ridnik 2021). Uses pos_weight as the per-class
+                # positive weight to keep tail-class signal strong.
+                family_losses[fam] = AsymmetricLoss(
+                    gamma_neg=self.cfg.training.asl_gamma_neg,
+                    gamma_pos=self.cfg.training.asl_gamma_pos,
+                    clip=self.cfg.training.asl_clip,
+                    pos_weight=pw.to(self.device),
+                ).to(self.device)
+            elif loss_type == "ral":
+                # Robust Asymmetric Loss (Park 2023). Polynomial-asymmetric +
+                # Hill regularization for noisy positives.
+                family_losses[fam] = RobustAsymmetricLoss(
+                    gamma_neg=self.cfg.training.asl_gamma_neg,
+                    gamma_pos=self.cfg.training.asl_gamma_pos,
+                    clip=self.cfg.training.asl_clip,
+                    lambda_hill=self.cfg.training.ral_lambda_hill,
+                    pos_weight=pw.to(self.device),
                 ).to(self.device)
             else:
                 family_losses[fam] = FamilyBCELoss(pw.to(self.device))

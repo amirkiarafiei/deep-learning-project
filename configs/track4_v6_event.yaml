@@ -1,0 +1,48 @@
+# Track 4 v6 — Object single-task. ConvNeXt-Tiny Siamese + Mamba SSM bi-temporal
+# fusion + linear head + Robust Asymmetric Loss (RAL).
+
+run_name: track4_v6_event
+output_dir: results/track4_v6/event
+seed: 42
+
+data:
+  json_path: dataset/dataset.json
+  dataset_root: dataset
+  image_size: 224
+  batch_size: 32                    # smaller than v1's 64 — fusion adds memory
+  num_workers: 4
+
+model:
+  families: [event]
+  include_changeflag: true
+  pretrained_backbone: true
+  arch_kind: convnext_mamba
+  backbone_name: convnext_tiny.fb_in1k
+  n_mamba_blocks: 6                 # 6 Mamba blocks on the interleaved bi-temporal sequence
+  mamba_d_state: 16                 # SSM state size (Mamba paper default)
+  mamba_d_conv: 4                   # 1-D conv kernel
+  mamba_expand: 2                   # inner expand ratio
+  fusion_dropout: 0.1
+  head_dropout: 0.0
+
+training:
+  epochs: 30
+  lr_backbone: 1.0e-5               # ConvNeXt is unfrozen (v6 lesson: keep backbone trainable)
+  lr_head: 1.0e-4                   # for fusion + heads
+  weight_decay: 1.0e-4
+  changeflag_weight: 0.5
+  grad_clip: 1.0
+  early_stop_patience: 10
+  eta_min: 1.0e-6
+  pos_weight_clamp_min: 1.0
+  pos_weight_clamp_max: 50.0
+  use_amp: true
+  # RAL hyperparameters (Park et al. 2023 defaults).
+  loss_type: ral
+  asl_gamma_neg: 4.0
+  asl_gamma_pos: 0.0
+  asl_clip: 0.05
+  ral_lambda_hill: 1.5
+
+evaluation:
+  threshold: 0.5

@@ -1,0 +1,293 @@
+2026-05-29 00:04:17 [INFO] Run: track3_v5_multitask
+2026-05-29 00:04:17 [INFO] Output dir: /content/drive/MyDrive/dl_project_outputs/results/track3_v5/multitask
+2026-05-29 00:04:17 [INFO] Config: {
+  "run_name": "track3_v5_multitask",
+  "output_dir": "/content/drive/MyDrive/dl_project_outputs/results/track3_v5/multitask",
+  "seed": 42,
+  "data": {
+    "json_path": "/content/drive/MyDrive/dataset/dataset.json",
+    "dataset_root": "/content/drive/MyDrive/dataset",
+    "image_size": 224,
+    "batch_size": 32,
+    "num_workers": 2
+  },
+  "model": {
+    "families": [
+      "object",
+      "event",
+      "attribute"
+    ],
+    "include_changeflag": true,
+    "pretrained_backbone": true,
+    "head_dropout": 0.0,
+    "arch_kind": "dinov2_crossattn_mldecoder",
+    "dinov2_model": "dinov2_vitb14",
+    "freeze_backbone": true,
+    "fusion_n_heads": 8,
+    "fusion_n_encoder_layers": 2,
+    "fusion_dropout": 0.0,
+    "decoder_n_heads": 8,
+    "decoder_n_layers": 1,
+    "decoder_dropout": 0.0
+  },
+  "training": {
+    "epochs": 30,
+    "lr_backbone": 0.0,
+    "lr_head": 0.0001,
+    "weight_decay": 0.0001,
+    "changeflag_weight": 0.5,
+    "grad_clip": 1.0,
+    "early_stop_patience": 10,
+    "eta_min": 1e-06,
+    "pos_weight_clamp_max": 50.0,
+    "pos_weight_clamp_min": 1.0,
+    "use_amp": true,
+    "subset_train": null,
+    "subset_val": null,
+    "loss_type": "bce",
+    "ldam_max_m": 0.5,
+    "ldam_s": 30.0,
+    "ldam_drw_epoch": 10,
+    "crt_epochs": 0,
+    "crt_lr_head": 1e-05
+  },
+  "evaluation": {
+    "threshold": 0.5,
+    "logit_adjust_tau": 0.0,
+    "tta_views": "1"
+  }
+}
+2026-05-29 00:04:17 [INFO] Device: cuda
+2026-05-29 00:04:17 [INFO] GPU: NVIDIA A100-SXM4-40GB
+2026-05-29 00:04:17 [INFO] Train samples: 8438  |  Val samples: 1190
+2026-05-29 00:04:38 [INFO] Model parameters: 143.93M
+2026-05-29 00:04:38 [INFO] pos_weight[object] min=1.00 max=50.00 mean=34.91  class_pos_counts: min=22 max=5474
+2026-05-29 00:04:38 [INFO] pos_weight[event] min=2.30 max=50.00 mean=22.68  class_pos_counts: min=82 max=2554
+2026-05-29 00:04:38 [INFO] pos_weight[attribute] min=1.96 max=50.00 mean=30.18  class_pos_counts: min=46 max=2852
+2026-05-29 00:04:38 [INFO] pos_weight[changeflag] = 1.000
+2026-05-29 00:04:51 [INFO]   [ep 01/30 iter  52/263] loss=4.2536  mem=1.3/42GB  eta_epoch=52s
+2026-05-29 00:05:03 [INFO]   [ep 01/30 iter 104/263] loss=3.9010  mem=1.3/42GB  eta_epoch=38s
+2026-05-29 00:05:15 [INFO]   [ep 01/30 iter 156/263] loss=3.7589  mem=1.3/42GB  eta_epoch=25s
+2026-05-29 00:05:27 [INFO]   [ep 01/30 iter 208/263] loss=3.6508  mem=1.3/42GB  eta_epoch=12s
+2026-05-29 00:05:38 [INFO]   [ep 01/30 iter 260/263] loss=3.5817  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:05:39 [INFO]   [ep 01/30 iter 263/263] loss=3.5796  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:05:48 [INFO] Epoch 1/30  train_loss=3.5796  val_loss=3.7104  val_avg_macro_f1=0.1288  lr=(2.74e-09, 9.97e-05)  time=69.6s
+2026-05-29 00:05:48 [INFO]   train per-head: object=0.9614  event=1.2116  attribute=1.1778  changeflag=0.4576
+2026-05-29 00:05:48 [INFO]   object: val_loss=1.1513  micro_f1=0.5115  macro_f1=0.1686
+2026-05-29 00:05:48 [INFO]   event: val_loss=1.2330  micro_f1=0.2046  macro_f1=0.1219
+2026-05-29 00:05:48 [INFO]   attribute: val_loss=1.1017  micro_f1=0.1316  macro_f1=0.0961
+2026-05-29 00:05:48 [INFO]   changeflag: val_loss=0.4486  f1=0.8559
+2026-05-29 00:05:50 [INFO]   ✓ new best val_avg_macro_f1=0.1288
+2026-05-29 00:06:11 [INFO]   [ep 02/30 iter  52/263] loss=3.2015  mem=1.3/42GB  eta_epoch=53s
+2026-05-29 00:06:23 [INFO]   [ep 02/30 iter 104/263] loss=3.1554  mem=1.3/42GB  eta_epoch=38s
+2026-05-29 00:06:35 [INFO]   [ep 02/30 iter 156/263] loss=3.1151  mem=1.3/42GB  eta_epoch=25s
+2026-05-29 00:06:47 [INFO]   [ep 02/30 iter 208/263] loss=3.0860  mem=1.3/42GB  eta_epoch=12s
+2026-05-29 00:06:58 [INFO]   [ep 02/30 iter 260/263] loss=3.0624  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:06:59 [INFO]   [ep 02/30 iter 263/263] loss=3.0634  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:07:08 [INFO] Epoch 2/30  train_loss=3.0634  val_loss=3.1788  val_avg_macro_f1=0.1845  lr=(1.09e-08, 9.89e-05)  time=70.1s
+2026-05-29 00:07:08 [INFO]   train per-head: object=0.7943  event=1.0686  attribute=1.0349  changeflag=0.3314
+2026-05-29 00:07:08 [INFO]   object: val_loss=0.9127  micro_f1=0.4039  macro_f1=0.1795
+2026-05-29 00:07:08 [INFO]   event: val_loss=1.0671  micro_f1=0.2689  macro_f1=0.2208
+2026-05-29 00:07:08 [INFO]   attribute: val_loss=1.0283  micro_f1=0.2068  macro_f1=0.1532
+2026-05-29 00:07:08 [INFO]   changeflag: val_loss=0.3413  f1=0.9052
+2026-05-29 00:07:10 [INFO]   ✓ new best val_avg_macro_f1=0.1845
+2026-05-29 00:07:45 [INFO]   [ep 03/30 iter  52/263] loss=2.7767  mem=1.3/42GB  eta_epoch=121s
+2026-05-29 00:07:57 [INFO]   [ep 03/30 iter 104/263] loss=2.7916  mem=1.3/42GB  eta_epoch=63s
+2026-05-29 00:08:09 [INFO]   [ep 03/30 iter 156/263] loss=2.7540  mem=1.3/42GB  eta_epoch=36s
+2026-05-29 00:08:37 [INFO]   [ep 03/30 iter 208/263] loss=2.7471  mem=1.3/42GB  eta_epoch=21s
+2026-05-29 00:08:49 [INFO]   [ep 03/30 iter 260/263] loss=2.7298  mem=1.3/42GB  eta_epoch=1s
+2026-05-29 00:08:50 [INFO]   [ep 03/30 iter 263/263] loss=2.7243  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:08:59 [INFO] Epoch 3/30  train_loss=2.7243  val_loss=3.6571  val_avg_macro_f1=0.2040  lr=(2.45e-08, 9.76e-05)  time=103.1s
+2026-05-29 00:08:59 [INFO]   train per-head: object=0.6801  event=0.9721  attribute=0.9408  changeflag=0.2627
+2026-05-29 00:08:59 [INFO]   object: val_loss=1.3170  micro_f1=0.4895  macro_f1=0.1973
+2026-05-29 00:08:59 [INFO]   event: val_loss=1.1610  micro_f1=0.3265  macro_f1=0.2417
+2026-05-29 00:08:59 [INFO]   attribute: val_loss=1.0260  micro_f1=0.2265  macro_f1=0.1729
+2026-05-29 00:08:59 [INFO]   changeflag: val_loss=0.3063  f1=0.9106
+2026-05-29 00:09:01 [INFO]   ✓ new best val_avg_macro_f1=0.2040
+2026-05-29 00:09:37 [INFO]   [ep 04/30 iter  52/263] loss=2.3722  mem=1.3/42GB  eta_epoch=123s
+2026-05-29 00:09:49 [INFO]   [ep 04/30 iter 104/263] loss=2.4211  mem=1.3/42GB  eta_epoch=65s
+2026-05-29 00:10:01 [INFO]   [ep 04/30 iter 156/263] loss=2.3856  mem=1.3/42GB  eta_epoch=37s
+2026-05-29 00:10:29 [INFO]   [ep 04/30 iter 208/263] loss=2.3726  mem=1.3/42GB  eta_epoch=21s
+2026-05-29 00:10:41 [INFO]   [ep 04/30 iter 260/263] loss=2.3361  mem=1.3/42GB  eta_epoch=1s
+2026-05-29 00:10:42 [INFO]   [ep 04/30 iter 263/263] loss=2.3364  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:10:50 [INFO] Epoch 4/30  train_loss=2.3364  val_loss=4.1604  val_avg_macro_f1=0.2129  lr=(4.32e-08, 9.57e-05)  time=104.2s
+2026-05-29 00:10:50 [INFO]   train per-head: object=0.5418  event=0.8633  attribute=0.8378  changeflag=0.1870
+2026-05-29 00:10:50 [INFO]   object: val_loss=1.3411  micro_f1=0.4552  macro_f1=0.2059
+2026-05-29 00:10:50 [INFO]   event: val_loss=1.5034  micro_f1=0.3422  macro_f1=0.2506
+2026-05-29 00:10:50 [INFO]   attribute: val_loss=1.1258  micro_f1=0.2684  macro_f1=0.1821
+2026-05-29 00:10:50 [INFO]   changeflag: val_loss=0.3802  f1=0.8927
+2026-05-29 00:10:53 [INFO]   ✓ new best val_avg_macro_f1=0.2129
+2026-05-29 00:11:29 [INFO]   [ep 05/30 iter  52/263] loss=2.0185  mem=1.3/42GB  eta_epoch=122s
+2026-05-29 00:11:41 [INFO]   [ep 05/30 iter 104/263] loss=2.0074  mem=1.3/42GB  eta_epoch=64s
+2026-05-29 00:12:09 [INFO]   [ep 05/30 iter 156/263] loss=2.0344  mem=1.3/42GB  eta_epoch=48s
+2026-05-29 00:12:20 [INFO]   [ep 05/30 iter 208/263] loss=2.0297  mem=1.3/42GB  eta_epoch=21s
+2026-05-29 00:12:32 [INFO]   [ep 05/30 iter 260/263] loss=2.0030  mem=1.3/42GB  eta_epoch=1s
+2026-05-29 00:12:33 [INFO]   [ep 05/30 iter 263/263] loss=2.0012  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:12:42 [INFO] Epoch 5/30  train_loss=2.0012  val_loss=5.0612  val_avg_macro_f1=0.2332  lr=(6.70e-08, 9.34e-05)  time=103.2s
+2026-05-29 00:12:42 [INFO]   train per-head: object=0.4311  event=0.7396  attribute=0.7564  changeflag=0.1481
+2026-05-29 00:12:42 [INFO]   object: val_loss=1.7004  micro_f1=0.5701  macro_f1=0.2455
+2026-05-29 00:12:42 [INFO]   event: val_loss=1.9023  micro_f1=0.3677  macro_f1=0.2695
+2026-05-29 00:12:42 [INFO]   attribute: val_loss=1.3050  micro_f1=0.2740  macro_f1=0.1847
+2026-05-29 00:12:42 [INFO]   changeflag: val_loss=0.3072  f1=0.9233
+2026-05-29 00:12:47 [INFO]   ✓ new best val_avg_macro_f1=0.2332
+2026-05-29 00:13:20 [INFO]   [ep 06/30 iter  52/263] loss=1.7089  mem=1.3/42GB  eta_epoch=122s
+2026-05-29 00:13:32 [INFO]   [ep 06/30 iter 104/263] loss=1.6854  mem=1.3/42GB  eta_epoch=64s
+2026-05-29 00:13:59 [INFO]   [ep 06/30 iter 156/263] loss=1.6943  mem=1.3/42GB  eta_epoch=47s
+2026-05-29 00:14:11 [INFO]   [ep 06/30 iter 208/263] loss=1.7008  mem=1.3/42GB  eta_epoch=21s
+2026-05-29 00:14:23 [INFO]   [ep 06/30 iter 260/263] loss=1.7033  mem=1.3/42GB  eta_epoch=1s
+2026-05-29 00:14:24 [INFO]   [ep 06/30 iter 263/263] loss=1.7047  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:14:33 [INFO] Epoch 6/30  train_loss=1.7047  val_loss=5.1484  val_avg_macro_f1=0.2306  lr=(9.55e-08, 9.05e-05)  time=103.0s
+2026-05-29 00:14:33 [INFO]   train per-head: object=0.3569  event=0.6421  attribute=0.6534  changeflag=0.1047
+2026-05-29 00:14:33 [INFO]   object: val_loss=1.8875  micro_f1=0.5730  macro_f1=0.2525
+2026-05-29 00:14:33 [INFO]   event: val_loss=1.8059  micro_f1=0.3335  macro_f1=0.2446
+2026-05-29 00:14:33 [INFO]   attribute: val_loss=1.2764  micro_f1=0.3025  macro_f1=0.1946
+2026-05-29 00:14:33 [INFO]   changeflag: val_loss=0.3571  f1=0.9143
+2026-05-29 00:15:06 [INFO]   [ep 07/30 iter  52/263] loss=1.3573  mem=1.3/42GB  eta_epoch=122s
+2026-05-29 00:15:18 [INFO]   [ep 07/30 iter 104/263] loss=1.4156  mem=1.3/42GB  eta_epoch=64s
+2026-05-29 00:15:30 [INFO]   [ep 07/30 iter 156/263] loss=1.4192  mem=1.3/42GB  eta_epoch=36s
+2026-05-29 00:15:41 [INFO]   [ep 07/30 iter 208/263] loss=1.4072  mem=1.3/42GB  eta_epoch=17s
+2026-05-29 00:15:53 [INFO]   [ep 07/30 iter 260/263] loss=1.3970  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:15:54 [INFO]   [ep 07/30 iter 263/263] loss=1.3943  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:16:02 [INFO] Epoch 7/30  train_loss=1.3943  val_loss=7.8025  val_avg_macro_f1=0.2273  lr=(1.28e-07, 8.73e-05)  time=86.5s
+2026-05-29 00:16:02 [INFO]   train per-head: object=0.2863  event=0.5252  attribute=0.5452  changeflag=0.0750
+2026-05-29 00:16:02 [INFO]   object: val_loss=2.6458  micro_f1=0.5685  macro_f1=0.2316
+2026-05-29 00:16:02 [INFO]   event: val_loss=3.0945  micro_f1=0.4114  macro_f1=0.2457
+2026-05-29 00:16:02 [INFO]   attribute: val_loss=1.8561  micro_f1=0.3376  macro_f1=0.2045
+2026-05-29 00:16:02 [INFO]   changeflag: val_loss=0.4124  f1=0.9115
+2026-05-29 00:16:35 [INFO]   [ep 08/30 iter  52/263] loss=1.2059  mem=1.3/42GB  eta_epoch=122s
+2026-05-29 00:16:47 [INFO]   [ep 08/30 iter 104/263] loss=1.1775  mem=1.3/42GB  eta_epoch=64s
+2026-05-29 00:16:59 [INFO]   [ep 08/30 iter 156/263] loss=1.1720  mem=1.3/42GB  eta_epoch=37s
+2026-05-29 00:17:11 [INFO]   [ep 08/30 iter 208/263] loss=1.1620  mem=1.3/42GB  eta_epoch=17s
+2026-05-29 00:17:23 [INFO]   [ep 08/30 iter 260/263] loss=1.1675  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:17:24 [INFO]   [ep 08/30 iter 263/263] loss=1.1656  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:17:33 [INFO] Epoch 8/30  train_loss=1.1656  val_loss=7.4604  val_avg_macro_f1=0.2351  lr=(1.65e-07, 8.36e-05)  time=87.5s
+2026-05-29 00:17:33 [INFO]   train per-head: object=0.2317  event=0.4367  attribute=0.4691  changeflag=0.0564
+2026-05-29 00:17:33 [INFO]   object: val_loss=2.4463  micro_f1=0.5965  macro_f1=0.2578
+2026-05-29 00:17:33 [INFO]   event: val_loss=2.8171  micro_f1=0.3745  macro_f1=0.2475
+2026-05-29 00:17:33 [INFO]   attribute: val_loss=1.9725  micro_f1=0.3541  macro_f1=0.2000
+2026-05-29 00:17:33 [INFO]   changeflag: val_loss=0.4492  f1=0.9126
+2026-05-29 00:17:35 [INFO]   ✓ new best val_avg_macro_f1=0.2351
+2026-05-29 00:18:10 [INFO]   [ep 09/30 iter  52/263] loss=0.9843  mem=1.3/42GB  eta_epoch=113s
+2026-05-29 00:18:23 [INFO]   [ep 09/30 iter 104/263] loss=0.9651  mem=1.3/42GB  eta_epoch=61s
+2026-05-29 00:18:50 [INFO]   [ep 09/30 iter 156/263] loss=0.9726  mem=1.3/42GB  eta_epoch=46s
+2026-05-29 00:19:02 [INFO]   [ep 09/30 iter 208/263] loss=0.9691  mem=1.3/42GB  eta_epoch=21s
+2026-05-29 00:19:14 [INFO]   [ep 09/30 iter 260/263] loss=0.9722  mem=1.3/42GB  eta_epoch=1s
+2026-05-29 00:19:15 [INFO]   [ep 09/30 iter 263/263] loss=0.9709  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:19:23 [INFO] Epoch 9/30  train_loss=0.9709  val_loss=9.1525  val_avg_macro_f1=0.2255  lr=(2.06e-07, 7.96e-05)  time=101.0s
+2026-05-29 00:19:23 [INFO]   train per-head: object=0.1953  event=0.3548  attribute=0.3993  changeflag=0.0431
+2026-05-29 00:19:23 [INFO]   object: val_loss=3.2551  micro_f1=0.6381  macro_f1=0.2430
+2026-05-29 00:19:23 [INFO]   event: val_loss=3.5757  micro_f1=0.3962  macro_f1=0.2280
+2026-05-29 00:19:23 [INFO]   attribute: val_loss=2.0679  micro_f1=0.3344  macro_f1=0.2054
+2026-05-29 00:19:23 [INFO]   changeflag: val_loss=0.5076  f1=0.9192
+2026-05-29 00:19:57 [INFO]   [ep 10/30 iter  52/263] loss=0.7635  mem=1.3/42GB  eta_epoch=122s
+2026-05-29 00:20:09 [INFO]   [ep 10/30 iter 104/263] loss=0.7953  mem=1.3/42GB  eta_epoch=64s
+2026-05-29 00:20:21 [INFO]   [ep 10/30 iter 156/263] loss=0.8084  mem=1.3/42GB  eta_epoch=37s
+2026-05-29 00:20:33 [INFO]   [ep 10/30 iter 208/263] loss=0.8064  mem=1.3/42GB  eta_epoch=17s
+2026-05-29 00:20:45 [INFO]   [ep 10/30 iter 260/263] loss=0.7951  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:20:45 [INFO]   [ep 10/30 iter 263/263] loss=0.7949  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:20:54 [INFO] Epoch 10/30  train_loss=0.7949  val_loss=10.2326  val_avg_macro_f1=0.2233  lr=(2.50e-07, 7.52e-05)  time=87.5s
+2026-05-29 00:20:54 [INFO]   train per-head: object=0.1571  event=0.2875  attribute=0.3386  changeflag=0.0235
+2026-05-29 00:20:54 [INFO]   object: val_loss=3.2563  micro_f1=0.5998  macro_f1=0.2202
+2026-05-29 00:20:54 [INFO]   event: val_loss=3.9297  micro_f1=0.3994  macro_f1=0.2415
+2026-05-29 00:20:54 [INFO]   attribute: val_loss=2.7455  micro_f1=0.3834  macro_f1=0.2082
+2026-05-29 00:20:54 [INFO]   changeflag: val_loss=0.6021  f1=0.9120
+2026-05-29 00:21:27 [INFO]   [ep 11/30 iter  52/263] loss=0.6514  mem=1.3/42GB  eta_epoch=123s
+2026-05-29 00:21:39 [INFO]   [ep 11/30 iter 104/263] loss=0.6435  mem=1.3/42GB  eta_epoch=64s
+2026-05-29 00:21:51 [INFO]   [ep 11/30 iter 156/263] loss=0.6442  mem=1.3/42GB  eta_epoch=37s
+2026-05-29 00:22:03 [INFO]   [ep 11/30 iter 208/263] loss=0.6443  mem=1.3/42GB  eta_epoch=17s
+2026-05-29 00:22:14 [INFO]   [ep 11/30 iter 260/263] loss=0.6480  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:22:15 [INFO]   [ep 11/30 iter 263/263] loss=0.6485  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:22:24 [INFO] Epoch 11/30  train_loss=0.6485  val_loss=11.9842  val_avg_macro_f1=0.2190  lr=(2.97e-07, 7.06e-05)  time=87.3s
+2026-05-29 00:22:24 [INFO]   train per-head: object=0.1282  event=0.2359  attribute=0.2768  changeflag=0.0153
+2026-05-29 00:22:24 [INFO]   object: val_loss=3.7244  micro_f1=0.6037  macro_f1=0.2182
+2026-05-29 00:22:24 [INFO]   event: val_loss=4.6289  micro_f1=0.4117  macro_f1=0.2290
+2026-05-29 00:22:24 [INFO]   attribute: val_loss=3.3033  micro_f1=0.4100  macro_f1=0.2098
+2026-05-29 00:22:24 [INFO]   changeflag: val_loss=0.6551  f1=0.9065
+2026-05-29 00:22:57 [INFO]   [ep 12/30 iter  52/263] loss=0.5211  mem=1.3/42GB  eta_epoch=122s
+2026-05-29 00:23:09 [INFO]   [ep 12/30 iter 104/263] loss=0.5289  mem=1.3/42GB  eta_epoch=64s
+2026-05-29 00:23:21 [INFO]   [ep 12/30 iter 156/263] loss=0.5456  mem=1.3/42GB  eta_epoch=37s
+2026-05-29 00:23:33 [INFO]   [ep 12/30 iter 208/263] loss=0.5396  mem=1.3/42GB  eta_epoch=17s
+2026-05-29 00:23:45 [INFO]   [ep 12/30 iter 260/263] loss=0.5417  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:23:45 [INFO]   [ep 12/30 iter 263/263] loss=0.5398  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:23:54 [INFO] Epoch 12/30  train_loss=0.5398  val_loss=12.3755  val_avg_macro_f1=0.2242  lr=(3.45e-07, 6.58e-05)  time=87.2s
+2026-05-29 00:23:54 [INFO]   train per-head: object=0.1009  event=0.1961  attribute=0.2379  changeflag=0.0097
+2026-05-29 00:23:54 [INFO]   object: val_loss=4.1954  micro_f1=0.6546  macro_f1=0.2402
+2026-05-29 00:23:54 [INFO]   event: val_loss=4.5247  micro_f1=0.3942  macro_f1=0.2201
+2026-05-29 00:23:54 [INFO]   attribute: val_loss=3.3480  micro_f1=0.4104  macro_f1=0.2123
+2026-05-29 00:23:54 [INFO]   changeflag: val_loss=0.6147  f1=0.9236
+2026-05-29 00:24:27 [INFO]   [ep 13/30 iter  52/263] loss=0.4343  mem=1.3/42GB  eta_epoch=122s
+2026-05-29 00:24:39 [INFO]   [ep 13/30 iter 104/263] loss=0.4205  mem=1.3/42GB  eta_epoch=64s
+2026-05-29 00:24:52 [INFO]   [ep 13/30 iter 156/263] loss=0.4225  mem=1.3/42GB  eta_epoch=37s
+2026-05-29 00:25:03 [INFO]   [ep 13/30 iter 208/263] loss=0.4286  mem=1.3/42GB  eta_epoch=17s
+2026-05-29 00:25:15 [INFO]   [ep 13/30 iter 260/263] loss=0.4262  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:25:16 [INFO]   [ep 13/30 iter 263/263] loss=0.4267  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:25:25 [INFO] Epoch 13/30  train_loss=0.4267  val_loss=13.2284  val_avg_macro_f1=0.2089  lr=(3.96e-07, 6.08e-05)  time=87.4s
+2026-05-29 00:25:25 [INFO]   train per-head: object=0.0840  event=0.1424  attribute=0.1958  changeflag=0.0090
+2026-05-29 00:25:25 [INFO]   object: val_loss=4.5410  micro_f1=0.6508  macro_f1=0.1866
+2026-05-29 00:25:25 [INFO]   event: val_loss=5.0094  micro_f1=0.4068  macro_f1=0.2306
+2026-05-29 00:25:25 [INFO]   attribute: val_loss=3.4032  micro_f1=0.3905  macro_f1=0.2095
+2026-05-29 00:25:25 [INFO]   changeflag: val_loss=0.5496  f1=0.9185
+2026-05-29 00:25:58 [INFO]   [ep 14/30 iter  52/263] loss=0.3256  mem=1.3/42GB  eta_epoch=111s
+2026-05-29 00:26:10 [INFO]   [ep 14/30 iter 104/263] loss=0.3403  mem=1.3/42GB  eta_epoch=60s
+2026-05-29 00:26:22 [INFO]   [ep 14/30 iter 156/263] loss=0.3349  mem=1.3/42GB  eta_epoch=35s
+2026-05-29 00:26:33 [INFO]   [ep 14/30 iter 208/263] loss=0.3343  mem=1.3/42GB  eta_epoch=16s
+2026-05-29 00:26:45 [INFO]   [ep 14/30 iter 260/263] loss=0.3410  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:26:46 [INFO]   [ep 14/30 iter 263/263] loss=0.3402  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:26:54 [INFO] Epoch 14/30  train_loss=0.3402  val_loss=14.3073  val_avg_macro_f1=0.2102  lr=(4.48e-07, 5.57e-05)  time=83.9s
+2026-05-29 00:26:54 [INFO]   train per-head: object=0.0672  event=0.1091  attribute=0.1614  changeflag=0.0051
+2026-05-29 00:26:54 [INFO]   object: val_loss=4.2996  micro_f1=0.6191  macro_f1=0.2305
+2026-05-29 00:26:54 [INFO]   event: val_loss=5.7335  micro_f1=0.3960  macro_f1=0.1960
+2026-05-29 00:26:54 [INFO]   attribute: val_loss=4.0017  micro_f1=0.4167  macro_f1=0.2040
+2026-05-29 00:26:54 [INFO]   changeflag: val_loss=0.5450  f1=0.9261
+2026-05-29 00:27:27 [INFO]   [ep 15/30 iter  52/263] loss=0.2605  mem=1.3/42GB  eta_epoch=120s
+2026-05-29 00:27:39 [INFO]   [ep 15/30 iter 104/263] loss=0.2642  mem=1.3/42GB  eta_epoch=64s
+2026-05-29 00:27:51 [INFO]   [ep 15/30 iter 156/263] loss=0.2686  mem=1.3/42GB  eta_epoch=36s
+2026-05-29 00:28:02 [INFO]   [ep 15/30 iter 208/263] loss=0.2720  mem=1.3/42GB  eta_epoch=17s
+2026-05-29 00:28:14 [INFO]   [ep 15/30 iter 260/263] loss=0.2770  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:28:15 [INFO]   [ep 15/30 iter 263/263] loss=0.2768  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:28:23 [INFO] Epoch 15/30  train_loss=0.2768  val_loss=15.5302  val_avg_macro_f1=0.2084  lr=(5.00e-07, 5.05e-05)  time=86.4s
+2026-05-29 00:28:23 [INFO]   train per-head: object=0.0508  event=0.0873  attribute=0.1363  changeflag=0.0047
+2026-05-29 00:28:23 [INFO]   object: val_loss=5.0997  micro_f1=0.6736  macro_f1=0.1906
+2026-05-29 00:28:23 [INFO]   event: val_loss=5.9255  micro_f1=0.4081  macro_f1=0.2255
+2026-05-29 00:28:23 [INFO]   attribute: val_loss=4.2278  micro_f1=0.4133  macro_f1=0.2090
+2026-05-29 00:28:23 [INFO]   changeflag: val_loss=0.5546  f1=0.9290
+2026-05-29 00:28:57 [INFO]   [ep 16/30 iter  52/263] loss=0.2124  mem=1.3/42GB  eta_epoch=122s
+2026-05-29 00:29:09 [INFO]   [ep 16/30 iter 104/263] loss=0.2101  mem=1.3/42GB  eta_epoch=64s
+2026-05-29 00:29:21 [INFO]   [ep 16/30 iter 156/263] loss=0.2088  mem=1.3/42GB  eta_epoch=37s
+2026-05-29 00:29:32 [INFO]   [ep 16/30 iter 208/263] loss=0.2096  mem=1.3/42GB  eta_epoch=17s
+2026-05-29 00:29:44 [INFO]   [ep 16/30 iter 260/263] loss=0.2115  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:29:45 [INFO]   [ep 16/30 iter 263/263] loss=0.2119  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:29:53 [INFO] Epoch 16/30  train_loss=0.2119  val_loss=16.9485  val_avg_macro_f1=0.2050  lr=(5.52e-07, 4.53e-05)  time=86.8s
+2026-05-29 00:29:53 [INFO]   train per-head: object=0.0369  event=0.0625  attribute=0.1109  changeflag=0.0031
+2026-05-29 00:29:53 [INFO]   object: val_loss=5.5770  micro_f1=0.6541  macro_f1=0.1899
+2026-05-29 00:29:53 [INFO]   event: val_loss=6.2477  micro_f1=0.4023  macro_f1=0.2214
+2026-05-29 00:29:53 [INFO]   attribute: val_loss=4.8302  micro_f1=0.4114  macro_f1=0.2036
+2026-05-29 00:29:53 [INFO]   changeflag: val_loss=0.5873  f1=0.9229
+2026-05-29 00:30:25 [INFO]   [ep 17/30 iter  52/263] loss=0.1547  mem=1.3/42GB  eta_epoch=119s
+2026-05-29 00:30:37 [INFO]   [ep 17/30 iter 104/263] loss=0.1662  mem=1.3/42GB  eta_epoch=63s
+2026-05-29 00:30:49 [INFO]   [ep 17/30 iter 156/263] loss=0.1672  mem=1.3/42GB  eta_epoch=36s
+2026-05-29 00:31:01 [INFO]   [ep 17/30 iter 208/263] loss=0.1699  mem=1.3/42GB  eta_epoch=17s
+2026-05-29 00:31:13 [INFO]   [ep 17/30 iter 260/263] loss=0.1678  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:31:13 [INFO]   [ep 17/30 iter 263/263] loss=0.1672  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:31:22 [INFO] Epoch 17/30  train_loss=0.1672  val_loss=18.8612  val_avg_macro_f1=0.1838  lr=(6.04e-07, 4.02e-05)  time=85.9s
+2026-05-29 00:31:22 [INFO]   train per-head: object=0.0303  event=0.0486  attribute=0.0873  changeflag=0.0019
+2026-05-29 00:31:22 [INFO]   object: val_loss=5.9442  micro_f1=0.6486  macro_f1=0.1748
+2026-05-29 00:31:22 [INFO]   event: val_loss=6.7416  micro_f1=0.3885  macro_f1=0.2153
+2026-05-29 00:31:22 [INFO]   attribute: val_loss=5.8801  micro_f1=0.3842  macro_f1=0.1612
+2026-05-29 00:31:22 [INFO]   changeflag: val_loss=0.5907  f1=0.9300
+2026-05-29 00:31:54 [INFO]   [ep 18/30 iter  52/263] loss=0.1297  mem=1.3/42GB  eta_epoch=121s
+2026-05-29 00:32:06 [INFO]   [ep 18/30 iter 104/263] loss=0.1317  mem=1.3/42GB  eta_epoch=63s
+2026-05-29 00:32:18 [INFO]   [ep 18/30 iter 156/263] loss=0.1330  mem=1.3/42GB  eta_epoch=36s
+2026-05-29 00:32:30 [INFO]   [ep 18/30 iter 208/263] loss=0.1357  mem=1.3/42GB  eta_epoch=17s
+2026-05-29 00:32:42 [INFO]   [ep 18/30 iter 260/263] loss=0.1354  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:32:42 [INFO]   [ep 18/30 iter 263/263] loss=0.1351  mem=1.3/42GB  eta_epoch=0s
+2026-05-29 00:32:51 [INFO] Epoch 18/30  train_loss=0.1351  val_loss=19.2700  val_avg_macro_f1=0.1805  lr=(6.55e-07, 3.52e-05)  time=86.5s
+2026-05-29 00:32:51 [INFO]   train per-head: object=0.0253  event=0.0367  attribute=0.0725  changeflag=0.0013
+2026-05-29 00:32:51 [INFO]   object: val_loss=6.0962  micro_f1=0.6691  macro_f1=0.1539
+2026-05-29 00:32:51 [INFO]   event: val_loss=7.0053  micro_f1=0.3861  macro_f1=0.2094
+2026-05-29 00:32:51 [INFO]   attribute: val_loss=5.8747  micro_f1=0.4183  macro_f1=0.1780
+2026-05-29 00:32:51 [INFO]   changeflag: val_loss=0.5877  f1=0.9313
+2026-05-29 00:32:54 [INFO] Early stopping at epoch 18 (no improvement in 10 epochs). Best epoch: 8 (macro_f1=0.2351).
+2026-05-29 00:32:54 [INFO] Training complete. Total time: 28.3 min
+2026-05-29 00:32:54 [INFO] Best epoch: 8  best val_avg_macro_f1: 0.2351
+2026-05-29 00:32:56 [INFO]   saved log priors → /content/drive/MyDrive/dl_project_outputs/results/track3_v5/multitask/metrics/log_priors.json

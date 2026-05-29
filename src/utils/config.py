@@ -38,6 +38,12 @@ class ModelConfig:
     decoder_n_heads: int = 8
     decoder_n_layers: int = 1
     decoder_dropout: float = 0.0
+    # Track 4 v6 hyperparameters (unused when arch_kind != "convnext_mamba").
+    backbone_name: str = "convnext_tiny.fb_in1k"
+    n_mamba_blocks: int = 6
+    mamba_d_state: int = 16
+    mamba_d_conv: int = 4
+    mamba_expand: int = 2
 
 
 @dataclass
@@ -56,12 +62,17 @@ class TrainingConfig:
     subset_train: int | None = None
     subset_val: int | None = None
     # Track 2 v3 (A3) additions: LDAM-DRW + cRT.
-    loss_type: str = "bce"             # "bce" (default) | "ldam"
+    loss_type: str = "bce"             # "bce" (default) | "ldam" | "asl" | "ral"
     ldam_max_m: float = 0.5
     ldam_s: float = 30.0
     ldam_drw_epoch: int = 10           # switch to inverse-freq pos_weight from this epoch on
     crt_epochs: int = 0                # 0 = no cRT phase
     crt_lr_head: float = 1.0e-5        # head-only LR during cRT (typically lower than Phase A)
+    # Track 4 v6 (RAL) additions: Robust Asymmetric Loss hyperparameters.
+    asl_gamma_neg: float = 4.0         # ASL/RAL negative-sample focal/poly exponent
+    asl_gamma_pos: float = 0.0         # ASL/RAL positive-sample focal/poly exponent
+    asl_clip: float = 0.05             # ASL/RAL probability margin for negatives
+    ral_lambda_hill: float = 1.5       # RAL Hill regularization weight
 
 
 @dataclass

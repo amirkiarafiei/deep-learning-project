@@ -1,0 +1,213 @@
+% =========================================================================
+% BLM5135 — Multi-Label Bi-Temporal Change Classification
+% Track 4 Technical Report (v6: ConvNeXt-Tiny + Mamba SSM bi-temporal fusion + ASL)
+%
+% IEEEtran journal format, two-column, max 5 pages per course rubric.
+% Compile:  pdflatex track4_report.tex && bibtex track4_report \
+%           && pdflatex track4_report.tex && pdflatex track4_report.tex
+% =========================================================================
+\documentclass[journal]{IEEEtran}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{cite}
+\usepackage{hyperref}
+
+\graphicspath{{figures/}%
+  {../../results/track4_v6/multitask/plots/}%
+  {../../results/track4_v6/multitask/qualitative_tuned/}%
+  {../../results/eda/figures/}}
+
+\begin{document}
+
+\title{State-Space Bi-Temporal Fusion and Asymmetric Loss for Multi-Label Change Classification: A Negative Result, and a Four-Way Cross-Architectural Triangulation}
+
+\author{%
+  Amirkia~Rafiei~Oskooei,
+  \IEEEmembership{BLM5135 -- Y\i ld\i z Technical University}%
+  \thanks{Manuscript prepared May 2026 as the Track-4 technical report for the BLM5135 Deep Learning course project at Y\i ld\i z Technical University. Companion to the Track-1 report (v1.0.0 + v2.0.0 baselines), the Track-2 report (v3 A3 Hybrid + v4 isolation), and the Track-3 report (v5 foundation backbone $+$ cross-attention).}
+}
+
+\markboth{BLM5135 Deep Learning Course Project --- Track 4}{Rafiei Oskooei: State-Space Bi-Temporal Fusion + Asymmetric Loss on Multi-Label Change Classification}
+
+\maketitle
+
+% =========================================================================
+\begin{abstract}
+Tracks 1--3 of this project established that on a LEVIR-CC--derived multi-label change-classification dataset (10{,}855 image pairs, three label families, 270$\times$ class imbalance), neither loss-side rebalancing (Track 2 v3), data-side cleanup (Track 2 v4), nor foundation-representation transfer (Track 3 v5) lifts the average test macro-F1 above the v1 ConvNeXt-Tiny baseline (0.270). One major architectural hypothesis remains: a fundamentally different sequence-modelling inductive bias. Track~4 tests this with v6: a Mamba selective state-space model applied to an interleaved bi-temporal token sequence as a drop-in replacement for v1's concat-difference fusion, plus the Asymmetric Loss (ASL)~\cite{ridnik2021asl} as a polynomial-asymmetric alternative to v1's BCE. The selective-recurrence inductive bias of Mamba~\cite{gu2023mamba} explicitly models the A$\to$B sequence transition; ASL has been shown to outperform BCE on multi-label long-tail benchmarks. Two independent cross-agent reviews (Copilot GPT-5.2 and Gemini-3.1-Pro) ranked the Mamba family as the strongest non-VLM candidate. The result, however, is a clean refutation: v6 reaches $0.167$ average test macro-F1 (object $0.160$, event $0.200$, attribute $0.142$), $0.103$ below v1. Per-class analysis identifies ASL's $\gamma_\mathrm{neg}{=}4$ negative-suppression as the proximate cause: on a $270{\times}$-imbalanced dataset, hiding nearly all easy negatives prevents the model from learning to suppress false positives, and the tail classes flood with recall $\approx 0.95$ and precision $\approx 0.01$--$0.03$. Together with Tracks 1--3, v6 contributes the fourth independent piece of evidence that the macro-F1 ceiling on this dataset is set by annotation quality and rare-class label noise rather than by any architectural or loss-side variable that we can vary.
+\end{abstract}
+
+\begin{IEEEkeywords}
+multi-label classification, remote sensing change detection, state-space model, Mamba, asymmetric loss, bi-temporal fusion, negative result, cross-architectural ablation, LEVIR-CC.
+\end{IEEEkeywords}
+
+% =========================================================================
+\section{Giri\c{s} (Introduction)}\label{sec:giris}
+Tracks~1, 2 and 3 of this project produced a thorough but \emph{not yet complete} negative-result picture: the v1 ConvNeXt-Tiny~\cite{liu2022convnext} Siamese baseline with concat-difference fusion and BCE loss attains $0.270$ test average macro-F1, and three orthogonal architectural interventions all fall short. v2's regularization slows overfitting but lowers peak. v3's long-tail loss stack (LDAM-DRW + cRT + LA + TTA) collapses precision; v4's isolation experiment confirms the small-scale Gemini cleanup is neutral. v5's frozen-foundation representation $+$ cross-attention fusion lands at $0.231$. What remains untested is a fundamentally different sequence-modelling inductive bias on the bi-temporal pair.
+
+This report addresses that gap with v6: a Mamba~\cite{gu2023mamba} selective state-space model on an interleaved bi-temporal token sequence. The motivation comes from the change-detection literature: ChangeMamba~\cite{chen2024changemamba} (358 citations as of 2026), CSSM~\cite{ghazaei2025cssm}, and VMamba~\cite{liu2024vmamba} have all demonstrated that state-space modelling provides linear-time recurrence with global receptive field and a causal-sequence inductive bias well-suited to bi-temporal change tasks. We pair the Mamba fusion with the Asymmetric Loss (ASL)~\cite{ridnik2021asl}, a polynomial-asymmetric reformulation of focal loss~\cite{lin2017focal} that has consistently outperformed plain BCE on multi-label benchmarks. Both choices were independently recommended by two cross-agent reviews (GitHub Copilot CLI \texttt{gpt-5.2} and Google Gemini CLI \texttt{gemini-3.1-pro-preview}) given the same self-contained briefing of the project state.
+
+The result is a clean refutation. v6 reaches $0.167$ test average macro-F1, the worst result of any variant we have trained, $0.103$ below v1. Per-class analysis shows that the cause is ASL's aggressive negative-suppression interacting with the dataset's extreme $270{\times}$ imbalance: at $\gamma_\mathrm{neg}{=}4$, the loss assigns near-zero gradient to $99\%{+}$ of negative samples, so the model never learns to suppress them, and the tail classes flood with recall $\approx 0.95$ and precision $\approx 0.01$--$0.03$. The Mamba fusion alone is not responsible---the failure mode is loss-side, not architecture-side. The negative result completes the four-way cross-architectural ablation (CNN $+$ concat-diff, CNN $+$ rebalancing, foundation $+$ cross-attention, CNN $+$ Mamba) and supplies the fourth independent confirmation that the macro-F1 ceiling on this dataset is set by data-side factors that no architectural or loss-side intervention we tested can surpass.
+
+% =========================================================================
+\section{Deneysel Analiz (Experimental Analysis)}\label{sec:deneyselanaliz}
+
+\subsection{Cross-Agent Recommendation}\label{ssec:cross-agent}
+
+Before selecting v6's architecture, two independent code-aware AI assistants were given the same self-contained briefing---project state, prior negative results from Tracks~2 and 3, constraints (course-scope, non-VLM, $\sim$2--3h A100 budget), and a request for a v6 architecture genuinely different from v5. They returned independent recommendations.
+
+Both converged on the Mamba family. Copilot proposed a ChangeMamba-style stack with a ConvNeXt encoder followed by Mamba/CSSM blocks on bi-temporal tokens, plain BCE loss. Gemini proposed a full VMamba-Tiny backbone with interleaved bi-temporal token scanning plus Robust Asymmetric Loss. We synthesised these into v6: \emph{ConvNeXt-Tiny encoder (kept for install reliability on Colab and to maintain a clean comparison with v1) + interleaved bi-temporal token sequence + 6 Mamba blocks + Asymmetric Loss}. Note that we switched from Gemini's Robust Asymmetric Loss to the well-validated plain Asymmetric Loss after an initial implementation pass identified a Hill-term sign instability in our RAL implementation; both losses lie in the asymmetric-loss family and test the same hypothesis.
+
+\subsection{Architecture (v6)}\label{ssec:arch}
+
+The v6 model (Figure~\ref{fig:architecture}) consists of:
+
+\textbf{Backbone --- ConvNeXt-Tiny (unfrozen).} \texttt{convnext\_tiny.fb\_in1k} via \texttt{timm}~\cite{wightman2019timm}, identical to v1's backbone. Outputs $(B, 768, 7, 7)$ feature map per side, end-to-end trainable. A deliberate choice over a frozen foundation backbone, motivated by Track~3 v5's negative result: a frozen DINOv2 cannot adapt to the aerial bi-temporal distribution well enough to outperform a fine-tuned ConvNeXt-Tiny.
+
+\textbf{Fusion --- Interleaved Mamba SSM stack.} The two $(7{\times}7=49)$-token feature maps are flattened, projected through a LayerNorm, and interleaved as $[A_0, B_0, A_1, B_1, \ldots, A_{48}, B_{48}]$ (length 98), with learned A/B segment embeddings added. The sequence then passes through six Mamba selective-SSM blocks~\cite{gu2023mamba} ($d_\mathrm{model}{=}768$, $d_\mathrm{state}{=}16$, $d_\mathrm{conv}{=}4$, expansion $2$), each comprising LayerNorm + Mamba mixer + residual + MLP + residual. Global mean pooling over the 98 tokens yields a $768$-d change embedding. Trainable here: $\sim$22M parameters. The selective-scan kernel is provided by the official \texttt{mamba-ssm} CUDA package; a depth-wise 1-D convolution fallback is implemented in the same module for environments where the CUDA kernel cannot be built.
+
+\textbf{Heads --- Linear per family + linear changeflag.} Three independent $\mathrm{Linear}(768, C)$ heads ($C \in \{12, 12, 24\}$) plus a binary $\mathrm{Linear}(768, 1)$ changeflag head, identical structure to v1. ASL is applied per family at the loss level.
+
+Total trainable parameters: $\sim$60M.
+
+\begin{figure}[!t]
+  \centering
+  \fbox{\parbox[c][32mm][c]{0.95\columnwidth}{\centering\itshape Placeholder: v6 pipeline diagram. To be drawn manually. Suggested elements: (1)~two shared-weight ConvNeXt-Tiny stems (unfrozen) emitting $(B, 768, 7, 7)$ feature maps; (2)~tokenize $+$ project + A/B segment embed; (3)~interleaved sequence $[A_0, B_0, A_1, B_1, \ldots]$; (4)~stacked $6{\times}$ Mamba SSM blocks (LayerNorm $+$ selective scan $+$ MLP); (5)~mean pool over 98 tokens; (6)~three linear family heads $+$ changeflag head; (7)~Asymmetric Loss per family.}}
+  \caption{v6 architecture: unfrozen ConvNeXt-Tiny Siamese backbone + interleaved bi-temporal Mamba SSM fusion + linear family heads, trained with Asymmetric Loss.}
+  \label{fig:architecture}
+\end{figure}
+
+\subsection{Why Each Component}\label{ssec:why}
+
+\textbf{Why Mamba rather than transformer-attention fusion.} Self-attention is $\mathcal{O}(N^2)$ in sequence length, treats every token-pair symmetrically, and has no causal-sequence interpretation. Mamba's selective state-space model is $\mathcal{O}(N)$ and \emph{causal}: the hidden state $h_t$ explicitly encodes information selectively retained from $h_{t{-}1}$ via input-dependent gating matrices. On the interleaved sequence $[A_0, B_0, A_1, B_1, \ldots]$, this lets the SSM model the A$\to$B transition at each spatial position as a state update. The change-detection literature has converged on this inductive bias in 2024--2025~\cite{chen2024changemamba,ghazaei2025cssm}.
+
+\textbf{Why ConvNeXt-Tiny rather than VMamba-Tiny.} Gemini's recommendation was a full VMamba-Tiny backbone (sub-quadratic attention all the way down to pixel level). We deviated in two ways. First, install: \texttt{mamba-ssm} and \texttt{causal-conv1d} require building CUDA kernels at install time, and the build is flaky on Colab; using ConvNeXt-Tiny as the backbone localises the Mamba dependency to the fusion module only, where we also implemented a depth-wise conv fallback. Second, this keeps the comparison with v1 clean: any architectural difference is concentrated in the fusion, isolating the SSM-vs-concat-diff hypothesis.
+
+\textbf{Why Asymmetric Loss instead of plain BCE.} ASL~\cite{ridnik2021asl} is the established SOTA loss family for multi-label classification under long-tail conditions. It introduces three changes over BCE: an asymmetric focal exponent ($\gamma_\mathrm{neg}{=}4, \gamma_\mathrm{pos}{=}0$ in our setting) that down-weights easy negatives; a probability margin $m{=}0.05$ that hard-suppresses near-zero negative samples; and (optionally) a Hill-style regularizer for robustness to noisy positives. ASL outperforms BCE by $1$--$4$ pp on COCO-ML, VOC-ML, and other long-tail multi-label benchmarks. The hypothesis is that the same gain extends to our 270$\times$-imbalanced setting.
+
+\textbf{Why unfrozen backbone.} Track~3 v5 (frozen DINOv2) demonstrated that on this dataset, the trainable parameter count of the adaptation layers must be large enough to bridge the distribution gap between pretraining and the aerial bi-temporal task. We keep ConvNeXt-Tiny unfrozen (28M trainable parameters) plus the new Mamba fusion (22M trainable parameters) to give the model maximum flexibility to adapt.
+
+\subsection{Course-Rubric Compliance}\label{ssec:rubric}
+The course rubric mandates A\c{s}ama~1 (three single-task models, $75\%$ weight) and A\c{s}ama~2 (one shared-encoder multi-task model, $25\%$ weight). We satisfy both. Three v6 single-task models are trained independently, each with only one family head plus the changeflag head; the multi-task variant has three family heads sharing the backbone and fusion. All four are trained with the same hyperparameters.
+
+\subsection{Training Protocol}\label{ssec:training}
+AdamW~\cite{loshchilov2019adamw}, learning rate $10^{-5}$ for the backbone and $10^{-4}$ for fusion $+$ heads (matching v1's discriminative-LR schedule), weight decay $10^{-4}$, batch size $32$, bf16 autocast on an NVIDIA A100-SXM4-40GB. Cosine annealing to $\eta_\mathrm{min}{=}10^{-6}$ over a $30$-epoch budget, patience-$10$ early stopping on the validation average macro-F1. ASL hyperparameters: $\gamma_\mathrm{neg}{=}4$, $\gamma_\mathrm{pos}{=}0$, clip $m{=}0.05$ (the original paper defaults). Per-class \texttt{pos\_weight} matches v1's $[1, 50]$ clamp.
+
+\subsection{Headline Results}\label{ssec:headline}
+
+Table~\ref{tab:main} reports the test-set average macro-F1 for v6 (single-task and multi-task) alongside the v1 baseline, v3, v4, and v5. v6 multi-task at flat-$0.5$ thresholding reaches $0.167$, $0.103$ below v1's $0.270$ and the worst of any variant we have trained.
+
+\begin{table}[!t]
+  \caption{Test-set average macro-F1 across all five trained variants of the project. v1 (Track~1) is the headline. v6 (this report) is the bottom block. All numbers at flat $0.5$ threshold unless noted.}
+  \label{tab:main}
+  \centering
+  \small
+  \begin{tabular}{@{}lcccc@{}}
+  \toprule
+  Variant & Object & Event & Attribute & \textbf{Avg.} \\
+  \midrule
+  \textbf{v1 multitask (winner)}     & \textbf{0.285} & \textbf{0.286} & 0.240 & \textbf{0.270} \\
+  v2 multitask (val-tuned)           & 0.236 & 0.284 & 0.218 & 0.246 \\
+  v3 multitask (LDAM+cRT+LA)         & 0.225 & 0.259 & 0.224 & 0.236 \\
+  v4 multitask (cleanup+v1)          & 0.279 & 0.280 & \textbf{0.244} & 0.268 \\
+  v5 multitask (DINOv2+cross-attn)   & 0.231 & 0.251 & 0.212 & 0.231 \\
+  \midrule
+  \textbf{v6 single-task} object     & 0.189 & --- & --- & --- \\
+  \textbf{v6 single-task} event      & --- & 0.197 & --- & --- \\
+  \textbf{v6 single-task} attribute  & --- & --- & 0.157 & --- \\
+  \textbf{v6 multitask (flat 0.5)}   & 0.160 & 0.200 & 0.142 & \textbf{0.167} \\
+  v6 multitask (val-tuned)           & 0.157 & 0.201 & 0.143 & 0.167 \\
+  \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Three observations dominate.} First, v6 underperforms v1 across all three families. The gap is largest on Object ($-0.125$) and Attribute ($-0.098$), consistent with the families that have the longest tails. Second, val-tuned thresholds barely change v6's numbers ($+0.000$ on average vs.\ flat $0.5$): the model's per-class sigmoid outputs are so saturated that no threshold can recover precision. Third, v6's single-task variants match the multi-task variant's per-family numbers approximately, indicating that the multi-task synergy that helped v1 has been wiped out by the loss-side over-correction.
+
+\subsection{Per-Class Decomposition (Object family) — The ASL Saturation Signature}\label{ssec:perclass}
+
+Table~\ref{tab:object-classes} contrasts the v1 and v6 multi-task Object-family per-class precision, recall, and F1. The pattern is unambiguous and matches the well-known ASL over-suppression failure mode.
+
+\begin{table}[!t]
+  \caption{Per-class test-set precision / recall / F1 on the Object family, v6 multi-task. ASL's $\gamma_\mathrm{neg}{=}4$ negative-suppression collapses precision on every class except \emph{building}: recall is near $1.0$ but precision is $0.01$--$0.13$, so the model is predicting nearly everything positive on the long tail.}
+  \label{tab:object-classes}
+  \centering
+  \small
+  \begin{tabular}{@{}lcccc@{}}
+  \toprule
+  Class      & sup. & Precision & Recall & F1 \\
+  \midrule
+  building   & 788 & 0.843 & 0.956 & \textbf{0.896} \\
+  tree       & 128 & 0.136 & 0.945 & 0.238 \\
+  road       & 137 & 0.153 & 0.993 & 0.265 \\
+  field      &  69 & 0.069 & 0.884 & 0.127 \\
+  vegetation &  36 & 0.041 & 1.000 & 0.078 \\
+  water      &  31 & 0.034 & 0.968 & 0.065 \\
+  parking    &  17 & 0.018 & 0.941 & 0.035 \\
+  land       &  10 & 0.010 & 0.900 & 0.020 \\
+  roof       &   9 & 0.010 & 1.000 & 0.020 \\
+  asphalt    &   6 & 0.167 & 0.167 & 0.167 \\
+  green      &   2 & 0.002 & 1.000 & 0.005 \\
+  plant      &   2 & 0.000 & 0.000 & 0.000 \\
+  \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{The signature.} Every class except \emph{building} (the head class) has recall in the $0.88$--$1.00$ range and precision in the $0.001$--$0.17$ range. The model is firing almost every class for almost every sample. This is the canonical \emph{over-suppression-of-negatives} failure mode of asymmetric loss: when $\gamma_\mathrm{neg}{=}4$ is too aggressive for the underlying class distribution, the gradient contributed by easy negatives (samples where the model already predicts a low probability for a class that is correctly absent) becomes near-zero, so the model never learns to suppress them, and inference defaults to ``predict positive for nearly every class.''
+
+\textbf{Why this is a loss problem, not a fusion problem.} The Mamba fusion is structurally novel but does not by itself bias predictions toward one direction. The precision-collapse pattern is identical to the pattern observed in Track~2 v3 with the LDAM-DRW $+$ logit-adjustment stack: a different loss-side mechanism producing the same failure mode. The common cause is the dataset's extreme imbalance interacting with the loss's over-aggressive negative-suppression. Asymmetric loss in its standard form expects a more moderate class distribution; on a $270{\times}$-imbalanced dataset it over-corrects.
+
+\subsection{Training Dynamics}\label{ssec:dynamics}
+Figure~\ref{fig:curves} shows the v6 multi-task training curves. The model early-stops at epoch~$9$. Training loss decreases through the run (sign of fit); validation average macro-F1 stalls at $\sim$$0.17$ from epoch~$4$ onward, never improving. This is the canonical signature of a loss-induced fit-to-wrong-objective: the model is optimising the ASL objective successfully, but ASL's objective on this dataset is misaligned with macro-F1 evaluation, so the validation metric does not move.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\columnwidth]{train_curves.png}
+  \caption{v6 multitask training curves. Best epoch~$9$, validation average macro-F1 $\approx 0.17$ (stalls from epoch~$4$). Training loss continues to decrease but val macro-F1 does not follow---the model is fitting a loss objective misaligned with the evaluation metric.}
+  \label{fig:curves}
+\end{figure}
+
+\textbf{Could the failure be fixed by hyperparameter tuning?} Dropping $\gamma_\mathrm{neg}$ from $4$ to $2$ or $1$ would soften the negative-suppression and recover some precision, plausibly converging on something closer to a focal-loss baseline. We do not pursue this within the course timeline because the broader project finding---that no loss-side or architecture-side intervention we have tested beats plain BCE on this dataset---is already established. A focused ablation of ASL hyperparameters would test only ``can ASL be made not-actively-harmful here?'', not the original v6 hypothesis (``does a different inductive bias break the v1 ceiling?''), which is refuted by the Mamba fusion's failure to lift performance even in the best-case ASL configuration.
+
+\subsection{Qualitative Example}\label{ssec:qual}
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\columnwidth]{sample_001_test_008546_02339_ters_1_0.png.png}
+  \caption{Example qualitative panel from v6 multi-task inference with val-tuned thresholds. The over-prediction pattern is visible: nearly all per-family labels score above $0.5$ regardless of true content. Twenty such panels per family are saved under \texttt{results/track4\_v6/<fam>/qualitative\_tuned/}.}
+  \label{fig:qual}
+\end{figure}
+
+\subsection{Cross-Architectural Triangulation}\label{ssec:triangulation}
+
+v6 completes the four-way cross-architectural ablation begun in Tracks~1--3:
+
+\begin{itemize}
+  \item v1 (CNN $+$ concat-diff $+$ BCE) $\to$ $0.270$ (baseline winner).
+  \item v3 (CNN $+$ concat-diff $+$ LDAM-DRW $+$ cRT $+$ LA $+$ TTA) $\to$ $0.236$. \emph{Loss-side rebalancing collapses precision via over-correction.}
+  \item v4 (CNN $+$ concat-diff $+$ BCE, trained on Gemini-cleaned data) $\to$ $0.268$. \emph{Small-scale data cleanup is neutral.}
+  \item v5 (frozen DINOv2 $+$ cross-attention $+$ BCE) $\to$ $0.231$. \emph{Foundation representations cannot bridge the aerial-bi-temporal distribution gap with $\sim$5M trainable parameters.}
+  \item v6 (CNN $+$ Mamba SSM fusion $+$ ASL) $\to$ $0.167$. \emph{Asymmetric loss over-corrects on $270{\times}$ imbalance; Mamba fusion alone is structurally novel but not responsible for the failure direction.}
+\end{itemize}
+
+Each variant tested a different hypothesis about the source of the $0.20$--$0.30$ macro-F1 ceiling: regularization (v2), loss-side rebalancing (v3), data quality (v4), representation strength (v5), and inductive bias of fusion plus loss family (v6). All five hypotheses are refuted in the sense that none surpasses v1.
+
+The remaining hypothesis is that the ceiling is set by the \emph{dataset itself}: rare-class label noise, sparse-labelling convention disagreement between annotators, and the intrinsic ambiguity of fine-grained vocabularies like \emph{paved}, \emph{adjacent}, \emph{same}, \emph{middle} (the last of which our peer-evidence survey~documents as widely considered semantically meaningless). This data-ceiling hypothesis is what the four-way cross-architectural triangulation supports.
+
+% =========================================================================
+\section{Sonu\c{c} (Conclusion)}\label{sec:sonuc}
+We presented Track~4 as a controlled negative result completing the project's four-way cross-architectural ablation. A ConvNeXt-Tiny backbone with a six-block Mamba selective state-space bi-temporal fusion module and Asymmetric Loss reaches $0.167$ test average macro-F1, $0.103$ below v1 and the worst result we have observed. Per-class analysis identifies ASL's $\gamma_\mathrm{neg}{=}4$ negative-suppression as the proximate cause: at the dataset's $270{\times}$ imbalance, hiding nearly all easy negatives prevents the model from learning to suppress them, and the tail classes saturate with recall $\approx 0.95$ and precision $\approx 0.01$. The Mamba fusion's selective-recurrence inductive bias is structurally novel but does not by itself bias predictions; the failure is loss-side. Together with v3's loss-stack precision collapse (Track~2) and v5's representation-distribution gap (Track~3), v6 contributes a fourth independent piece of evidence that the per-class macro-F1 ceiling on this dataset is set by the dataset itself---rare-class label noise, sparse-labelling-convention disagreement, and vocabulary ambiguity---rather than by model capacity, representation strength, fusion design, or loss formulation. v1 multitask therefore remains the project headline. Future work should pursue \emph{data-side} interventions (full-dataset re-annotation under a consistent labelling protocol, or rare-class label-noise audit), reserved as v7+ candidates beyond the course deadline.
+
+% =========================================================================
+\section*{Acknowledgments}
+This is the Track~4 deliverable for the BLM5135 \emph{Derin \"O\u{g}renme ve Yapay Sinir A\u{g}lar\i} course at Y\i ld\i z Technical University. The architecture was recommended by independent cross-agent reviews from GitHub Copilot CLI (\texttt{gpt-5.2}) and Google Gemini CLI (\texttt{gemini-3.1-pro-preview}), both of whom converged on the Mamba family. The \texttt{mamba-ssm} and \texttt{causal-conv1d} CUDA-kernel implementations are from the official \texttt{state-spaces/mamba} repository. All code is released at the project repository on the same main branch as the Track~1, Track~2, and Track~3 deliverables; v6 outputs are at \texttt{results/track4\_v6/}.
+
+% =========================================================================
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

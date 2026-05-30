@@ -1,0 +1,204 @@
+% =========================================================================
+% BLM5135 — Multi-Label Bi-Temporal Change Classification
+% Track 3 Technical Report (v5: DINOv2 frozen + cross-attention fusion + ML-Decoder)
+%
+% IEEEtran journal format, two-column, max 5 pages per course rubric.
+% Compile:  pdflatex track3_report.tex && bibtex track3_report \
+%           && pdflatex track3_report.tex && pdflatex track3_report.tex
+% =========================================================================
+\documentclass[journal]{IEEEtran}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{cite}
+\usepackage{hyperref}
+
+\graphicspath{{figures/}%
+  {../../results/track3_v5/multitask/plots/}%
+  {../../results/track3_v5/multitask/qualitative_tuned/}%
+  {../../results/eda/figures/}}
+
+\begin{document}
+
+\title{Foundation Vision Representations and Cross-Attention Bi-Temporal Fusion for Multi-Label Change Classification: A Negative Result}
+
+\author{%
+  Amirkia~Rafiei~Oskooei,
+  \IEEEmembership{BLM5135 -- Y\i ld\i z Technical University}%
+  \thanks{Manuscript prepared May 2026 as the Track-3 technical report for the BLM5135 Deep Learning course project at Y\i ld\i z Technical University. Companion to the Track-1 report (v1.0.0 + v2.0.0 baselines), the Track-2 report (v3 A3 Hybrid + v4 isolation), and the Track-4 report (v6 state-space-model variant).}
+}
+
+\markboth{BLM5135 Deep Learning Course Project --- Track 3}{Rafiei Oskooei: Foundation Representations + Cross-Attention Fusion on Multi-Label Change Classification}
+
+\maketitle
+
+% =========================================================================
+\begin{abstract}
+Tracks 1 and 2 of this project established that on a LEVIR-CC--derived multi-label change-classification dataset (10{,}855 image pairs, three label families, 270$\times$ class imbalance), neither regularization nor a stacked long-tail loss pipeline can lift average test macro-F1 above the v1 ConvNeXt-Tiny baseline (0.270). One natural remaining hypothesis is that the bottleneck is \emph{representation quality}: v1 uses ImageNet-1k pretraining on 1.4M images, while modern self-supervised vision foundation models are pretrained on $\sim$100$\times$ more data and demonstrably yield stronger transferable features. Track~3 tests this hypothesis with v5: a frozen DINOv2-Base backbone (86M parameters, LVD-142M self-supervised pretraining) paired with a cross-attention bi-temporal fusion module and per-family ML-Decoder transformer heads. Only $\sim$5M parameters train end-to-end. The result is a clean refutation: v5 reaches 0.231 average test macro-F1 (object 0.231, event 0.251, attribute 0.212), a $0.039$ regression vs.\ v1. We attribute this to a distribution gap between DINOv2's natural-image pretraining and the aerial bi-temporal change task that the small trainable head cannot bridge. Combined with Tracks 1, 2, and 4, this contributes the third independent piece of evidence that the per-class macro-F1 ceiling on this dataset is set by annotation quality rather than by model capacity or representation strength.
+\end{abstract}
+
+\begin{IEEEkeywords}
+multi-label classification, remote sensing change detection, vision foundation models, DINOv2, cross-attention, ML-Decoder, transfer learning, negative result, LEVIR-CC.
+\end{IEEEkeywords}
+
+% =========================================================================
+\section{Giri\c{s} (Introduction)}\label{sec:giris}
+Track~1 of this project~\cite{liu2022levircc} produced a clean ConvNeXt-Tiny~\cite{liu2022convnext} Siamese baseline achieving test average macro-F1 of $0.270$, with regularization (v2) failing to lift this further. Track~2 attempted a stacked long-tail pipeline (label cleanup, LDAM-DRW, classifier re-training, logit adjustment, test-time augmentation) and observed catastrophic precision collapse; an isolation experiment confirmed the data-side cleanup itself was neutral. Two architectural directions remain for the data-ceiling argument to be fully triangulated: \emph{foundation representations} (this report, Track~3) and \emph{state-space-model fusion} (Track~4). This report addresses the first.
+
+The hypothesis under test is that the v1 baseline is bottlenecked by the relatively limited capacity of ConvNeXt-Tiny's ImageNet-1k pretraining (28M parameters, 1.4M training images). Modern vision foundation models such as DINOv2~\cite{oquab2024dinov2} are pretrained at self-supervised scale (86M parameters, 142M training images) and have repeatedly demonstrated stronger transferable features on downstream classification and dense-prediction tasks. The MIDOG 2025 Task~2 winner~\cite{balezo2025midog}, for instance, used DINOv3-H+ pretrained on natural images, fine-tuned with LoRA on $\sim$1.3M parameters, to achieve first place on a $\sim$143K-image histopathology classification task with severe distribution gap. If a similar foundation-backbone + small-adapter recipe works on our aerial-bi-temporal change task, the v1 ceiling will be broken.
+
+In addition to swapping the backbone we replace two further components, motivated by the recent change-detection and multi-label classification literature: (i) v1's concat-difference fusion is replaced with explicit cross-attention between A and B token sequences, matching the dominant paradigm in CSTSUNet~\cite{wu2023cstsunet}, MIFNet~\cite{xie2025mifnet}, and SCADNet~\cite{xu2022scad}; (ii) v1's sigmoid-on-pooled-features classification heads are replaced with the ML-Decoder~\cite{ridnik2023mldecoder} (related: Query2Label~\cite{liu2021query2label}, C-Tran~\cite{lanchantin2021ctran}), which represents each class as a learnable query that attends to feature tokens. The result is a fully transformer-attention-based stack on top of a foundation backbone---an architecturally distinct alternative to v1.
+
+The headline result of this report is a refutation. v5 reaches $0.231$ test average macro-F1, $0.039$ below v1's $0.270$, with no family ahead. The per-class analysis (Section~\ref{ssec:perclass}) shows v5 recovers some mid-frequency classes that v1 missed but loses ground on the head class \emph{building} and on several tail classes. We interpret this as a distribution-gap symptom: DINOv2's representations are general but not aerial-bi-temporal-specific, and the $\sim$5M trainable parameters of fusion plus heads are insufficient to bridge that gap on 8{,}438 training samples. We frame the negative result as a third independent confirmation of the data-ceiling hypothesis that Tracks~1, 2, and 4 collectively establish.
+
+% =========================================================================
+\section{Deneysel Analiz (Experimental Analysis)}\label{sec:deneyselanaliz}
+
+\subsection{Architecture (v5)}\label{ssec:arch}
+
+The v5 model (Figure~\ref{fig:architecture}) consists of three components:
+
+\textbf{Backbone --- DINOv2-Base, frozen.} \texttt{dinov2\_vitb14} from the official \texttt{facebookresearch/dinov2} \texttt{torch.hub} repository, 86M parameters, ImageNet-resolution patch-14 ViT-B/14 architecture. For each $224{\times}224$ input image, the backbone emits 256 patch tokens at $d{=}768$. The \texttt{[CLS]} token is discarded; the cross-attention fusion composes its own global representation. \emph{All backbone weights are frozen}~--- we set \texttt{requires\_grad{=}False} and call \texttt{.eval()} on the encoder so dropout and any normalisation statistics also remain inference-mode.
+
+\textbf{Fusion --- Two-direction cross-attention plus self-attention encoder.} Given $\mathrm{tokens}_A$ and $\mathrm{tokens}_B \in \mathbb{R}^{B \times 256 \times 768}$, two cross-attention blocks compute $A_\mathrm{cond} = \mathrm{CrossAttn}(Q{=}A, K,V{=}B)$ and $B_\mathrm{cond} = \mathrm{CrossAttn}(Q{=}B, K,V{=}A)$. The mean-pooled difference $(A_\mathrm{cond} - B_\mathrm{cond})$ is projected through a LayerNorm + Linear to produce a single difference token. The concatenated sequence $[A_\mathrm{cond}; B_\mathrm{cond}; \mathrm{diff}]$ (length 513) is augmented with three learned segment embeddings and passed through two self-attention encoder layers (8 heads, $4{\times}$ FFN, pre-norm). Trainable here: $\sim$3M parameters.
+
+\textbf{Heads --- ML-Decoder, one per family.} Each ML-Decoder~\cite{ridnik2023mldecoder} maintains $C$ learnable class-query embeddings of dimension 768 ($C{=}12$ for Object, $C{=}12$ for Event, $C{=}24$ for Attribute), passes them through a transformer decoder layer that cross-attends to the 513-token fusion output, then applies a shared $\mathrm{Linear}(768,1)$ to emit per-class logits. Self-attention between class queries inside the decoder implicitly models label co-occurrence. Trainable across the three ML-Decoders and the binary changeflag head: $\sim$1M parameters.
+
+Total parameter count: $\sim$91M; \emph{trainable}: $\sim$5M.
+
+\begin{figure}[!t]
+  \centering
+  \fbox{\parbox[c][32mm][c]{0.95\columnwidth}{\centering\itshape Placeholder: v5 pipeline diagram. To be drawn manually. Suggested elements: (1)~two shared-weight DINOv2-Base stems (frozen) emitting 256 patch tokens each; (2)~two cross-attention blocks (A$\to$B and B$\to$A); (3)~difference token from pooled $(A_\mathrm{cond}{-}B_\mathrm{cond})$; (4)~two self-attention encoder layers on the 513-token joint sequence with segment embeddings; (5)~one ML-Decoder per family with $C$ learnable class queries cross-attending to the fusion output; (6)~auxiliary changeflag head from mean-pooled fusion.}}
+  \caption{v5 architecture: frozen DINOv2-Base + cross-attention bi-temporal fusion + per-family ML-Decoder heads. Only $\sim$5M parameters train.}
+  \label{fig:architecture}
+\end{figure}
+
+\subsection{Why each component}\label{ssec:why}
+
+\textbf{Why frozen DINOv2 rather than fine-tuned.} With 8{,}438 training samples, fine-tuning all 86M backbone parameters would severely overfit; even fine-tuning the last layers risks the well-known catastrophic-forgetting effect on foundation features. Freezing keeps the strong general-purpose representation intact and constrains the trainable surface to $\sim$5M parameters, an order of magnitude below the v1 baseline (28M). The MIDOG 2025 Task~2 winner~\cite{balezo2025midog} successfully applied a similar recipe (DINOv3 frozen + LoRA on $\sim$1.3M parameters) on histopathology data with severe distribution gap, suggesting the recipe transfers to other out-of-distribution applications.
+
+\textbf{Why cross-attention fusion.} v1's concat-difference fusion is the simplest defensible baseline but treats A and B symmetrically and discards spatial alignment. Cross-attention has an \emph{explicit alignment} interpretation: for each query position in A, the attention weights identify the most-relevant positions in B and form the residual representation. This is the dominant fusion paradigm in recent change-detection literature~\cite{wu2023cstsunet,xie2025mifnet,xu2022scad}.
+
+\textbf{Why ML-Decoder.} Multi-label classification with sigmoid-on-pooled-features (v1's choice) discards spatial information and assumes class-independent decisions. ML-Decoder~\cite{ridnik2023mldecoder} represents each class as a learnable query that can attend to whichever spatial region carries its evidence, and the decoder's self-attention between queries provides implicit label-co-occurrence modelling. ML-Decoder reports gains over sigmoid-on-features on every standard multi-label benchmark (COCO-ML, VOC-ML, Open Images, NUS-WIDE).
+
+\textbf{Loss.} \texttt{BCEWithLogitsLoss} with per-class \texttt{pos\_weight} clamped to $[1,50]$, identical to v1. We deliberately do not change the loss because the failure mode under test is representation quality, orthogonal to loss-side intervention, and Track~2 already demonstrated that stacking advanced losses on top of weakened representations only makes things worse.
+
+\subsection{Course-Rubric Compliance}\label{ssec:rubric}
+The course rubric mandates A\c{s}ama~1 (three single-task models, $75\%$ weight) and A\c{s}ama~2 (one shared-encoder multi-task model, $25\%$ weight). We satisfy both: three independent single-task variants of v5 (one ML-Decoder head per family) are trained separately, and one multi-task variant trains all three ML-Decoders jointly on the same shared backbone $+$ fusion. The frozen-backbone design means the three single-task models do not share \emph{weights} (each has its own freshly-trained fusion and ML-Decoder), only \emph{design}.
+
+\subsection{Training Protocol}\label{ssec:training}
+We train each variant with AdamW~\cite{loshchilov2019adamw} at a single learning rate of $10^{-4}$ for the fusion and ML-Decoder, weight decay $10^{-4}$, batch size $32$, bf16 autocast on an NVIDIA A100-SXM4-40GB. The backbone learning rate is $0$ (frozen). We use cosine annealing to $\eta_\mathrm{min}{=}10^{-6}$ over a $30$-epoch budget with patience-$10$ early stopping on the validation average macro-F1.
+
+\subsection{Headline Results}\label{ssec:headline}
+
+Table~\ref{tab:main} reports the test-set average macro-F1 for v5 (single-task and multi-task) alongside the v1 baseline and the variants from Tracks 2 and 4. v5 multi-task at flat-$0.5$ thresholding reaches $0.231$, $0.039$ below v1's $0.270$. The single-task variants are even lower: object $0.189$, event $0.197$, attribute $0.157$.
+
+\begin{table}[!t]
+  \caption{Test-set average macro-F1 across all five trained variants of the project. v1 (Track~1, baseline) is the headline. v5 (this report) is the third row from the bottom. All numbers at flat $0.5$ threshold unless noted.}
+  \label{tab:main}
+  \centering
+  \small
+  \begin{tabular}{@{}lcccc@{}}
+  \toprule
+  Variant & Object & Event & Attribute & \textbf{Avg.} \\
+  \midrule
+  \textbf{v1 multitask (winner)}  & \textbf{0.285} & \textbf{0.286} & 0.240 & \textbf{0.270} \\
+  v2 multitask (val-tuned)        & 0.236 & 0.284 & 0.218 & 0.246 \\
+  v3 multitask (LDAM+cRT+LA)      & 0.225 & 0.259 & 0.224 & 0.236 \\
+  v4 multitask (cleanup+v1)       & 0.279 & 0.280 & \textbf{0.244} & 0.268 \\
+  \midrule
+  \textbf{v5 single-task} object  & 0.189 & --- & --- & --- \\
+  \textbf{v5 single-task} event   & --- & 0.197 & --- & --- \\
+  \textbf{v5 single-task} attribute & --- & --- & 0.157 & --- \\
+  \textbf{v5 multitask (flat 0.5)} & 0.231 & 0.251 & 0.212 & 0.231 \\
+  v5 multitask (val-tuned)        & 0.230 & 0.243 & 0.216 & 0.230 \\
+  \midrule
+  v6 multitask (Mamba+ASL)        & 0.160 & 0.200 & 0.142 & 0.167 \\
+  \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Three observations dominate.} First, v5 underperforms v1 across all three families and on the average. Second, the multi-task model out-performs all three single-task v5 variants on their respective families (e.g.\ event $0.251$ multi-task vs.\ $0.197$ single-task), reproducing the multi-task synergy that Track~1 documented for v1. Third, val-tuned thresholds barely change the v5 numbers ($-0.001$ on average vs.\ flat $0.5$), in contrast to v2 where threshold tuning gave a clearer $+0.013$ lift on object; we attribute this to v5's lower-confidence sigmoid outputs (a consequence of the frozen-backbone $+$ small-adapter design) that the per-class threshold sweep cannot exploit.
+
+\subsection{Per-Class Decomposition (Object family)}\label{ssec:perclass}
+
+Table~\ref{tab:object-classes} contrasts the v1 multitask and v5 multitask Object-family per-class F1 scores. The pattern is mixed and informative.
+
+\begin{table}[!t]
+  \caption{Per-class test-set F1 on the Object family: v1 multitask vs.\ v5 multitask, flat 0.5. v5 recovers some mid-frequency classes (\emph{water}, \emph{vegetation}) but loses ground on head and several tail classes.}
+  \label{tab:object-classes}
+  \centering
+  \small
+  \begin{tabular}{@{}lcccc@{}}
+  \toprule
+  Class & sup. & v1 F1 & v5 F1 & $\Delta$ \\
+  \midrule
+  building   & 788 & \textbf{0.899} & 0.877 & $-0.022$ \\
+  tree       & 128 & 0.381 & 0.396 & $+0.015$ \\
+  road       & 137 & 0.401 & 0.434 & $+0.033$ \\
+  field      &  69 & 0.271 & 0.273 & $+0.002$ \\
+  vegetation &  36 & 0.172 & 0.184 & $+0.012$ \\
+  water      &  31 & 0.239 & 0.216 & $-0.023$ \\
+  parking    &  17 & 0.164 & 0.133 & $-0.031$ \\
+  land       &  10 & 0.182 & 0.000 & $-0.182$ \\
+  roof       &   9 & 0.211 & 0.061 & $-0.150$ \\
+  asphalt    &   6 & 0.000 & \textbf{0.200} & $+0.200$ \\
+  green      &   2 & 0.500 & 0.000 & $-0.500$ \\
+  plant      &   2 & 0.000 & 0.000 & ---       \\
+  \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Why v5's macro-F1 dropped despite mid-frequency gains.} v5 makes small absolute improvements on mid-frequency classes (\emph{tree}, \emph{road}, \emph{field}, \emph{vegetation}) and a surprising large improvement on \emph{asphalt} (support 6: $0.000{\to}0.200$). However, the head class \emph{building} (support 788, the dominant contributor to micro-F1) drops by $0.022$, and three rare classes (\emph{land}, \emph{roof}, \emph{green}) drop sharply or collapse to zero. Since macro-F1 weighs every class equally, the rare-class collapses dominate. The per-family pattern is consistent: v5 helps where supervised features under-fit (mid-frequency, perceptually-distinct categories like vegetation/road) and hurts where the small trainable head cannot specialise (rare classes with limited training data) or where v1's stronger end-to-end learning had already saturated (head class \emph{building}).
+
+\subsection{Training Dynamics}\label{ssec:dynamics}
+Figure~\ref{fig:curves} shows the v5 multi-task training curves. The model early-stops at epoch~$8$ (best validation average macro-F1 $\approx 0.24$). Overfitting onset is much earlier than v1's epoch~$15$ baseline despite the larger total parameter count: only $\sim$5M parameters are actually being optimised, so the regularising effect of the small adapter is overwhelmed by the limited representational alignment with the aerial-bi-temporal distribution. The training loss continues to decrease past the best-validation epoch (sign of fit), but the validation loss begins rising---the canonical overfitting signature.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\columnwidth]{train_curves.png}
+  \caption{v5 multitask training curves. Best epoch~$8$, validation average macro-F1 $\approx 0.24$; early-stopping fires at epoch~$18$.}
+  \label{fig:curves}
+\end{figure}
+
+\textbf{Countermeasures and their limits.} The frozen backbone is itself the primary regularizer (only $\sim$5M trainable parameters out of 91M). Additional countermeasures inherited from v1 include AdamW weight decay, cosine learning-rate schedule, gradient clipping, and early stopping. These are sufficient to constrain overfitting; they do not, however, close the representation-distribution gap, which is the dominant failure mode in v5.
+
+\subsection{Why v5 Underperformed}\label{ssec:why-failed}
+
+We attribute v5's regression vs.\ v1 to three compounding factors.
+
+\textbf{Distribution gap.} DINOv2 was self-supervised on LVD-142M---a curated dataset of natural images dominated by ImageNet-style object photos. Aerial bi-temporal pairs of small urban/rural scenes lie far from this distribution. The Frozen-backbone $+$ small-adapter recipe works when the downstream task is in-distribution or when a fine-tuning surface large enough to bridge the gap is available (e.g.\ LoRA on $\sim$1.3M parameters in~\cite{balezo2025midog}). With only $\sim$5M trainable parameters and aerial RGB inputs, neither condition is met.
+
+\textbf{Sub-resolution information loss.} DINOv2 vitb14 expects $224{\times}224$ inputs to produce $16{\times}16{=}256$ patch tokens. Our dataset images are natively $256{\times}256$; we resize down to $224$. The aerial-scene resolution loss may be material at this scale (especially for small objects like \emph{roof}, \emph{parking}, \emph{plant}) where v1's ConvNeXt-Tiny operates at full $256$ resolution with $7{\times}7$ stride-32 features.
+
+\textbf{Lower effective fine-tuning capacity.} v1 fine-tunes all 28M ConvNeXt-Tiny parameters end-to-end. v5 fine-tunes only $\sim$5M parameters on top of frozen 86M. For 8{,}438 training samples this is an order-of-magnitude smaller signal path through which to adapt to the data distribution, and the head must compensate for the entire distribution gap.
+
+\subsection{Qualitative Example}\label{ssec:qual}
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\columnwidth]{sample_001_test_008546_02339_ters_1_0.png.png}
+  \caption{Example qualitative panel from v5 multitask inference with val-tuned thresholds. Twenty such panels per family are saved under \texttt{results/track3\_v5/<fam>/qualitative\_tuned/}; the combined PDFs aggregate them.}
+  \label{fig:qual}
+\end{figure}
+
+% =========================================================================
+\section{Sonu\c{c} (Conclusion)}\label{sec:sonuc}
+We presented Track~3 as a controlled negative result: a frozen foundation backbone (DINOv2-Base on LVD-142M) plus a cross-attention bi-temporal fusion plus per-family ML-Decoder transformer heads, trained with the same plain BCE loss as v1, fails to surpass the v1 ConvNeXt-Tiny baseline. The headline test average macro-F1 falls from $0.270$ (v1) to $0.231$ (v5). Per-class analysis shows v5 helps where features under-fit (mid-frequency perceptually-distinct categories) and hurts where v1's stronger end-to-end fine-tuning had already saturated or where rare-class signal is too sparse for the small trainable adapter to recover. We attribute the result to a representation-distribution gap between DINOv2's natural-image pretraining and our aerial bi-temporal task, compounded by sub-resolution information loss at $224{\times}224$ and a $\sim$5M-parameter trainable surface that is insufficient to bridge the gap with $8{,}438$ training samples.
+
+This is the third independent piece of negative-result evidence in the project, after Track~2's loss-side and data-side ablations. Combined with Track~4's state-space-model variant (v6, which also underperforms v1), the resulting four-way cross-architectural ablation strongly indicates that the per-class macro-F1 ceiling on this dataset is set by annotation quality and the inherent ambiguity of fine-grained change vocabularies rather than by model capacity, representation strength, fusion design, or loss formulation. v1 multitask therefore remains the project headline, and future work should pursue \emph{data-side} interventions (full-dataset re-annotation under a consistent labelling protocol) or \emph{at-scale fine-tuning} of a foundation backbone with a LoRA-sized adapter trained on a $\sim$100$\times$-larger dataset---both reserved as v7+ candidates beyond the course deadline.
+
+% =========================================================================
+\section*{Acknowledgments}
+This is the Track~3 deliverable for the BLM5135 \emph{Derin \"O\u{g}renme ve Yapay Sinir A\u{g}lar\i} course at Y\i ld\i z Technical University. DINOv2 weights were obtained via the official \texttt{facebookresearch/dinov2} \texttt{torch.hub} repository. All code is released at the project repository on the same main branch as the Track~1, Track~2, and Track~4 deliverables; v5 outputs are at \texttt{results/track3\_v5/}.
+
+% =========================================================================
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

@@ -6,3 +6,11 @@
 2026-05-29 13:19:07 [INFO] changeflag: f1=0.8333  p=0.7143  r=1.0000
 2026-05-29 13:19:07 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/metrics/eval_val.json
 2026-05-29 13:19:07 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/metrics/predictions_val.pt
+2026-05-30 01:19:25 [INFO] Loading checkpoint: /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/checkpoints/best.pt
+2026-05-30 01:19:25 [INFO] Eval split: val
+2026-05-30 01:19:28 [INFO] Loaded checkpoint from epoch 6
+2026-05-30 01:19:36 [INFO] event: micro_f1=0.2216  macro_f1=0.1934  micro_p=0.1259  micro_r=0.9261
+2026-05-30 01:19:37 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/metrics/per_class_event_val.csv
+2026-05-30 01:19:37 [INFO] changeflag: f1=0.9418  p=0.9608  r=0.9235
+2026-05-30 01:19:37 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/metrics/eval_val.json
+2026-05-30 01:19:38 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/metrics/predictions_val.pt

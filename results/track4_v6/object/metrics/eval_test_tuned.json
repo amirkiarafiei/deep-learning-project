@@ -1,19 +1,19 @@
 {
   "split": "test",
   "ckpt": "/content/drive/MyDrive/dl_project_outputs/results/track4_v6/object/checkpoints/best.pt",
-  "checkpoint_epoch": 1,
+  "checkpoint_epoch": 11,
   "thresholds_source": "/content/drive/MyDrive/dl_project_outputs/results/track4_v6/object/metrics/thresholds_val.json",
   "object": {
-    "micro_p": 0.0,
-    "micro_r": 0.0,
-    "micro_f1": 0.0,
-    "macro_p": 0.0,
-    "macro_r": 0.0,
-    "macro_f1": 0.0
+    "micro_p": 0.29395900755124055,
+    "micro_r": 0.8825910931174089,
+    "micro_f1": 0.44102771596196644,
+    "macro_p": 0.14036362812187508,
+    "macro_r": 0.4964219740140919,
+    "macro_f1": 0.19344650775580477
   },
   "changeflag": {
-    "changeflag_p": 0.7220863895680522,
-    "changeflag_r": 1.0,
-    "changeflag_f1": 0.8386180785612872
+    "changeflag_p": 0.9476614699331849,
+    "changeflag_r": 0.9604966139954854,
+    "changeflag_f1": 0.9540358744394619
   }
 }

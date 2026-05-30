@@ -1,35 +1,35 @@
 {
   "split": "test",
   "ckpt": "/content/drive/MyDrive/dl_project_outputs/results/track4_v6/multitask/checkpoints/best.pt",
-  "checkpoint_epoch": 1,
+  "checkpoint_epoch": 9,
   "thresholds_source": "flat=0.5",
   "object": {
-    "micro_p": 0.0,
-    "micro_r": 0.0,
-    "micro_f1": 0.0,
-    "macro_p": 0.0,
-    "macro_r": 0.0,
-    "macro_f1": 0.0
+    "micro_p": 0.13216255769447258,
+    "micro_r": 0.9506072874493927,
+    "micro_f1": 0.2320616722672465,
+    "macro_p": 0.12354550488454182,
+    "macro_r": 0.8127700025021208,
+    "macro_f1": 0.1596932102429133
   },
   "event": {
-    "micro_p": 0.0,
-    "micro_r": 0.0,
-    "micro_f1": 0.0,
-    "macro_p": 0.0,
-    "macro_r": 0.0,
-    "macro_f1": 0.0
+    "micro_p": 0.1225866916588566,
+    "micro_r": 0.9533527696793003,
+    "micro_f1": 0.21723966118584953,
+    "macro_p": 0.1222816208829512,
+    "macro_r": 0.9484845860031488,
+    "macro_f1": 0.20046927359371494
   },
   "attribute": {
-    "micro_p": 0.0,
-    "micro_r": 0.0,
-    "micro_f1": 0.0,
-    "macro_p": 0.0,
-    "macro_r": 0.0,
-    "macro_f1": 0.0
+    "micro_p": 0.08626752309062778,
+    "micro_r": 0.9548521017125065,
+    "micro_f1": 0.1582387340901273,
+    "macro_p": 0.08605953812352096,
+    "macro_r": 0.9517189528057166,
+    "macro_f1": 0.14243734044401823
   },
   "changeflag": {
-    "changeflag_p": 0.7220863895680522,
-    "changeflag_r": 1.0,
-    "changeflag_f1": 0.8386180785612872
+    "changeflag_p": 0.9553264604810997,
+    "changeflag_r": 0.9413092550790068,
+    "changeflag_f1": 0.9482660602615123
   }
 }

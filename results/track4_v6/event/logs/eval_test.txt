@@ -15,3 +15,20 @@
 2026-05-29 13:19:50 [INFO] changeflag: f1=0.8386  p=0.7221  r=1.0000
 2026-05-29 13:19:50 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/metrics/eval_test_tuned.json
 2026-05-29 13:19:50 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/metrics/predictions_test.pt
+2026-05-30 01:19:57 [INFO] Loading checkpoint: /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/checkpoints/best.pt
+2026-05-30 01:19:57 [INFO] Eval split: test
+2026-05-30 01:20:00 [INFO] Loaded checkpoint from epoch 6
+2026-05-30 01:20:08 [INFO] event: micro_f1=0.2249  macro_f1=0.1973  micro_p=0.1284  micro_r=0.9045
+2026-05-30 01:20:09 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/metrics/per_class_event_test.csv
+2026-05-30 01:20:09 [INFO] changeflag: f1=0.9282  p=0.9525  r=0.9052
+2026-05-30 01:20:09 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/metrics/eval_test.json
+2026-05-30 01:20:10 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/metrics/predictions_test.pt
+2026-05-30 01:20:24 [INFO] Loading checkpoint: /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/checkpoints/best.pt
+2026-05-30 01:20:24 [INFO] Eval split: test
+2026-05-30 01:20:27 [INFO] Loaded checkpoint from epoch 6
+2026-05-30 01:20:36 [INFO]   using val-tuned per-class thresholds for event from /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/metrics/thresholds_val.json
+2026-05-30 01:20:36 [INFO] event: micro_f1=0.2252  macro_f1=0.1970  micro_p=0.1289  micro_r=0.8892
+2026-05-30 01:20:36 [INFO]   per-class metrics → /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/metrics/per_class_event_test_tuned.csv
+2026-05-30 01:20:36 [INFO] changeflag: f1=0.9282  p=0.9525  r=0.9052
+2026-05-30 01:20:36 [INFO] Summary → /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/metrics/eval_test_tuned.json
+2026-05-30 01:20:36 [INFO] Full prediction matrix → /content/drive/MyDrive/dl_project_outputs/results/track4_v6/event/metrics/predictions_test.pt

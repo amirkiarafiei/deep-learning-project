@@ -1,35 +1,35 @@
 {
   "split": "test",
   "ckpt": "/content/drive/MyDrive/dl_project_outputs/results/track4_v6/multitask/checkpoints/best.pt",
-  "checkpoint_epoch": 1,
+  "checkpoint_epoch": 9,
   "thresholds_source": "/content/drive/MyDrive/dl_project_outputs/results/track4_v6/multitask/metrics/thresholds_val.json",
   "object": {
-    "micro_p": 0.0,
-    "micro_r": 0.0,
-    "micro_f1": 0.0,
-    "macro_p": 0.0,
-    "macro_r": 0.0,
-    "macro_f1": 0.0
+    "micro_p": 0.13309189678587596,
+    "micro_r": 0.9522267206477733,
+    "micro_f1": 0.23354185284480192,
+    "macro_p": 0.11974315464809089,
+    "macro_r": 0.7994038968821536,
+    "macro_f1": 0.15733769404160122
   },
   "event": {
-    "micro_p": 0.0,
-    "micro_r": 0.0,
-    "micro_f1": 0.0,
-    "macro_p": 0.0,
-    "macro_r": 0.0,
-    "macro_f1": 0.0
+    "micro_p": 0.1228813559322034,
+    "micro_r": 0.9511661807580175,
+    "micro_f1": 0.2176450967311541,
+    "macro_p": 0.12305639992584981,
+    "macro_r": 0.9473314073403794,
+    "macro_f1": 0.20145742786631962
   },
   "attribute": {
-    "micro_p": 0.0,
-    "micro_r": 0.0,
-    "micro_f1": 0.0,
-    "macro_p": 0.0,
-    "macro_r": 0.0,
-    "macro_f1": 0.0
+    "micro_p": 0.09030946240825233,
+    "micro_r": 0.9449922158796056,
+    "micro_f1": 0.16486351908016839,
+    "macro_p": 0.08652690723888894,
+    "macro_r": 0.9027051053028471,
+    "macro_f1": 0.14266805547802405
   },
   "changeflag": {
-    "changeflag_p": 0.7220863895680522,
-    "changeflag_r": 1.0,
-    "changeflag_f1": 0.8386180785612872
+    "changeflag_p": 0.9553264604810997,
+    "changeflag_r": 0.9413092550790068,
+    "changeflag_f1": 0.9482660602615123
   }
 }
